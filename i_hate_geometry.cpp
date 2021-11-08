@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "maths.h"
+#include "player.h"
 
 int main()
 {
@@ -32,13 +33,11 @@ int main()
 		// Logique
 		sf::Time elapsedTime = clock.restart(); //< Calcul du temps écoulé depuis la dernière boucle
 
-		PlayerMovement( circle, elapsedTime.asSeconds());
+		PlayerMovement(circle, elapsedTime.asSeconds());
 
 		// Rendu
 		window.clear();
-
 		window.draw(circle);
-
 		window.display();
 	}
 }

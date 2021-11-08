@@ -1,6 +1,4 @@
 #pragma once
-class Player{
-public:
 
-private:
-};
+#include <SFML/Graphics.hpp>
+
