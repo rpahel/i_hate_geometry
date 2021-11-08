@@ -1,11 +1,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
-void RectMovement(sf::CircleShape& circle, float deltaTime);
+#include "maths.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1200, 900), "Ma première fenêtre");
+	sf::RenderWindow window(sf::VideoMode(1200, 900), "I hate geometry");
 	window.setVerticalSyncEnabled(true);
 
 	sf::CircleShape circle(50);
@@ -33,7 +32,7 @@ int main()
 		// Logique
 		sf::Time elapsedTime = clock.restart(); //< Calcul du temps écoulé depuis la dernière boucle
 
-		RectMovement( circle, elapsedTime.asSeconds());
+		PlayerMovement( circle, elapsedTime.asSeconds());
 
 		// Rendu
 		window.clear();
@@ -42,22 +41,4 @@ int main()
 
 		window.display();
 	}
-}
-
-// Gestion des déplacement d'un rectangle
-void RectMovement(sf::CircleShape& circle, float deltaTime)
-{
-	float speed = 300.f; // 300 pixels par seconde
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		circle.move(sf::Vector2f(0.f, -speed * deltaTime));
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		circle.move(sf::Vector2f(0.f, speed * deltaTime));
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		circle.move(sf::Vector2f(-speed * deltaTime, 0.f));
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		circle.move(sf::Vector2f(speed * deltaTime, 0.f));
 }
