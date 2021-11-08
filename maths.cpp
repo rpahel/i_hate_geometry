@@ -4,7 +4,7 @@
 // Gestion des déplacement d'un player
 void PlayerMovement(sf::CircleShape& circle, float deltaTime)
 {
-	float speed = 600.f; // 600 pixels par seconde
+	float speed = 300.f; // 600 pixels par seconde
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 		circle.move(sf::Vector2f(0.f, -speed * deltaTime));
@@ -19,10 +19,36 @@ void PlayerMovement(sf::CircleShape& circle, float deltaTime)
 		circle.move(sf::Vector2f(speed * deltaTime, 0.f));
 }
 
+void CheckWallCollision(sf::CircleShape& player, sf::FloatRect boundingBoxes[4], float deltaTime)
+{
+	float force = 5.0f;
+	sf::FloatRect playerBox = player.getGlobalBounds();
+
+	if (playerBox.intersects(boundingBoxes[0])) //Sud
+	{
+		player.move(sf::Vector2f(0, -1) * force);
+	}
+
+	if (playerBox.intersects(boundingBoxes[1])) //Nord
+	{
+		player.move(sf::Vector2f(0, 1) * force);
+	}
+
+	if (playerBox.intersects(boundingBoxes[2])) //Est
+	{
+		player.move(sf::Vector2f(-1, 0) * force);
+	}
+
+	if (playerBox.intersects(boundingBoxes[3])) //West
+	{
+		player.move(sf::Vector2f(1, 0) * force);
+	}
+}
+
 // Gestion des collisions
 void CheckCollision(sf::CircleShape& player, sf::CircleShape& object, float deltaTime)
 {
-	float speed = 8.f;
+	float speed = 12.f;
 	// Check si les deux cercles se superposent
 	if((player.getPosition().x - object.getPosition().x) * (player.getPosition().x - object.getPosition().x) + 
 		(player.getPosition().y - object.getPosition().y) * (player.getPosition().y - object.getPosition().y) <= 
@@ -33,5 +59,4 @@ void CheckCollision(sf::CircleShape& player, sf::CircleShape& object, float delt
 		player.move(playerToObject * -0.5f * deltaTime * speed);
 		object.move(playerToObject * 0.5f * deltaTime * speed);
 	}
-	// S'ils ne se superposent pas, rien faire
 }

@@ -4,3 +4,4 @@
 
 void PlayerMovement(sf::CircleShape& player, float deltaTime);
 void CheckCollision(sf::CircleShape& player, sf::CircleShape& object, float deltaTime);
+void CheckWallCollision(sf::CircleShape& player, sf::FloatRect boundingBoxes[4], float deltaTime);
