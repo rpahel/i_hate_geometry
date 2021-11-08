@@ -13,6 +13,9 @@ int main()
 	sf::CircleShape circle(50);
 	circle.setPosition(sf::Vector2f(400.f, 300.f));
 
+	//Enemy
+	sf::RectangleShape rectangle = RandomEnemySpawn();
+
 	sf::Clock clock;
 
 	while (window.isOpen())
@@ -41,7 +44,7 @@ int main()
 		// Rendu
 		window.clear();
 		window.draw(circle);
-		window.draw(RandomEnemySpawn());
+		window.draw(rectangle);
 		window.display();
 	}
 }
