@@ -1,19 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <list>
 #include "maths.h"
 #include "player.h"
 #include "enemy.h"
-
-sf::CircleShape SpawnPlayer()
-{
-	sf::CircleShape player(25);
-	player.setFillColor(sf::Color::Transparent);
-	player.setOutlineThickness(2);
-	player.setOutlineColor(sf::Color::Cyan);
-	player.setPosition(575, 425);
-	return player;
-}
 
 int main()
 {
@@ -36,6 +25,7 @@ int main()
 	sf::RectangleShape wallWest(sf::Vector2f(thickness, 900));
 	wallWest.setFillColor(sf::Color(100, 100, 100));
 
+	// On prend les hitbox des murs
 	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()};
 
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
