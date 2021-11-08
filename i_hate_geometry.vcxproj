@@ -153,9 +153,11 @@
   <ItemGroup>
     <ClCompile Include="i_hate_geometry.cpp" />
     <ClCompile Include="maths.cpp" />
+    <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maths.h" />
+    <ClInclude Include="player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
