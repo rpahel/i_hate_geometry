@@ -8,6 +8,7 @@ struct Player {
 };
 
 enum PlayerState {
+
 	Alive,
 	Dead,
 	Moving,
@@ -15,13 +16,15 @@ enum PlayerState {
 };
 
 struct Enemy{
-
+	
+	bool isStatic = false;
 	int life;
 	int speed;
 	int damage;
 };
 
 enum EnemyState {
+
 	Alive,
 	Dead,
 	Moving,
@@ -29,6 +32,7 @@ enum EnemyState {
 };
 
 struct Item {
+
 	int heal;
 	int damage;
 	int gainSpeed;
@@ -36,9 +40,29 @@ struct Item {
 };
 
 struct bullet {
+
 	int bulletSpeed;
 	int bulletDamage;
 	int bulletSize;
 	int bulletNumber;
 };
 
+struct Decor {
+
+	bool isStatic = true;
+};
+
+struct Boss {
+
+	int life;
+	int speed;
+	int damage;
+};
+
+enum BossState {
+
+	Alive,
+	Dead,
+	Moving,
+	Attacking,
+};

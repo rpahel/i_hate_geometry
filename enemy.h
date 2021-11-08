@@ -2,4 +2,4 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-sf::RectangleShape RandomEnemySpawn();
+sf::RectangleShape RandomEnemySpawn(bool isSpawning);
