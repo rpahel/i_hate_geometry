@@ -9,13 +9,13 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1200, 900), "I hate geometry");
 	window.setVerticalSyncEnabled(true);
 
-	//Player
-	sf::CircleShape circle(50);
-	circle.setPosition(sf::Vector2f(400.f, 300.f));
+	sf::CircleShape player(50);
+	player.setPosition(sf::Vector2f(200.f, 400.f));
 
-	//Enemy
 	sf::RectangleShape rectangle = RandomEnemySpawn();
-
+	sf::CircleShape ennemy(50);
+	ennemy.setFillColor(sf::Color::Red);
+	ennemy.setPosition(sf::Vector2f(800.f, 400.f));
 	sf::Clock clock;
 
 	while (window.isOpen())
@@ -36,15 +36,19 @@ int main()
 		}
 
 		// Logique
-		sf::Time elapsedTime = clock.restart(); //< Calcul du temps écoulé depuis la dernière boucle
+		sf::Time elapsedTime = clock.restart(); // Calcul du temps ï¿½coulï¿½ depuis la derniï¿½re boucle
 
-		PlayerMovement(circle, elapsedTime.asSeconds());
-	
+		PlayerMovement( player, elapsedTime.asSeconds());
+		//BiggerCheckCollisions(player, ennemies, elapsedTime.asSeconds()); // Faire un CheckCollision pour chaque ennemy de la liste ennemies;
+		CheckCollision(player, ennemy, elapsedTime.asSeconds());
 
 		// Rendu
 		window.clear();
-		window.draw(circle);
 		window.draw(rectangle);
+
+		window.draw(ennemy);
+		window.draw(player);
+
 		window.display();
 	}
 }
