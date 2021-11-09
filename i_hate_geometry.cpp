@@ -87,7 +87,7 @@ int main()
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 
-		if(moveDuration > 3.f)
+		if(moveDuration > 1.f)
 		{
 			for (auto it = enemies.begin(); it != enemies.end(); ++it)
 			{

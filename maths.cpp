@@ -21,7 +21,7 @@ void PlayerMovement(sf::CircleShape& circle, float deltaTime)
 		circle.move(sf::Vector2f(speed * deltaTime, 0.f));
 }
 
-void CheckWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4], float deltaTime)
+void CheckPlayerWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4], float deltaTime)
 {
 	float force = 5.0f;
 	sf::FloatRect playerBox = object.getGlobalBounds();
@@ -47,6 +47,21 @@ void CheckWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4],
 	}
 }
 
+void CheckEnemyWallCollision(Enemy& enemy, sf::FloatRect boundingBoxes[4])
+{
+	sf::FloatRect enemyBox = enemy.shape.getGlobalBounds();
+
+	if (enemyBox.intersects(boundingBoxes[0]) || enemyBox.intersects(boundingBoxes[1])) // Sud || Nord
+	{
+		enemy.direction = sf::Vector2f(enemy.direction.x, -enemy.direction.y);
+	}
+
+	if (enemyBox.intersects(boundingBoxes[2]) || enemyBox.intersects(boundingBoxes[3])) // Est || West
+	{
+		enemy.direction = sf::Vector2f(-enemy.direction.x, enemy.direction.y);
+	}
+}
+
 // Gestion des collisions
 void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float deltaTime)
 {
@@ -66,13 +81,14 @@ void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float de
 void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
-	CheckWallCollision(player, boundingBoxes, deltaTime);
+	CheckPlayerWallCollision(player, boundingBoxes, deltaTime);
 
 	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur
 	for(auto it = enemies.begin(); it != enemies.end(); ++it)
 	{
 		CheckCollision(player, it->shape, deltaTime);
-		CheckWallCollision(it->shape, boundingBoxes, deltaTime);
+		CheckEnemyWallCollision(*it, boundingBoxes);
+		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime);
 	}
 }
 
@@ -91,7 +107,10 @@ void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float de
 
 void ChangeEnemyDirection(sf::Vector2f& direction)
 {
-	direction = RandomDirection();
+	if((rand() % 3) + 1 == 1) // Chaque ennemi a une chance sur 3 de changer de direction quand la fonction est appelée
+	{
+		direction = RandomDirection();
+	}
 }
 
 void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
