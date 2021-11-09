@@ -36,16 +36,19 @@ int main()
 	// On prend les hitbox des murs
 	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()};
 
+	int level = 0;
+	bool isLoadingRoom = false;
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
 	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
 
 	sf::Clock clock;
 	sf::Clock clock2;
 
-	sf::CircleShape player;
+	sf::CircleShape player;	
 
-	std::list<Enemy> enemies;
+	std::list<Enemy> enemies;	  //Listes des enemies et des différentes bullet
 	std::list<Bullet> bullets;
+	std::list<EnemyBullet> enemyBullet;
 
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
@@ -75,8 +78,21 @@ int main()
 		if(isNewRoom)
 		{
 			player = SpawnPlayer();
-			SpawnEnemies(enemies, numberOfEnemies, thickness);
+			SpawnEnemies(enemies, numberOfEnemies + level, thickness);
+			level++;
 			isNewRoom = false;
+		}
+
+
+		//Change de salle lorsque tout les ennemies sont dead
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			isLoadingRoom = true;
+			enemies.clear();
+			bullets.clear();
+			player.setPosition(600, 450);
+			isNewRoom = true;
+			isLoadingRoom = false;
 		}
 
 		// Logique
@@ -86,8 +102,9 @@ int main()
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
 		PlayerMovement(player, elapsedTime.asSeconds());
+		GetEnemyPosition(enemies);
 
-		if(moveDuration > 1.f)
+		if(moveDuration > 1.f) //Cooldown changement de direction des enemy
 		{
 			for (auto it = enemies.begin(); it != enemies.end(); ++it)
 			{
@@ -106,6 +123,11 @@ int main()
 			MoveBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
 
+		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		{
+			MoveEnemyBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
+		}
+
 		//FireBullets
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
@@ -115,6 +137,14 @@ int main()
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				SpawnBullet(bullets, player, mousePos, thickness, radians);
 				timeSinceLastFire = 0;
+			}
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+		{
+			for (auto it = enemies.begin(); it != enemies.end(); ++it)
+			{
+				SpawnEnemiesBullet(enemyBullet, enemies, player, thickness);
 			}
 		}
 
@@ -133,11 +163,21 @@ int main()
 			window.draw(it->shape);
 		}
 
-		window.draw(player);
-		window.draw(wallNorth);
-		window.draw(wallEast);
-		window.draw(wallSouth);
-		window.draw(wallWest);
+		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		{
+			window.draw(it->shape);
+		}
+
+		std::cout << enemyBullet.size() << std::endl;
+
+		if (isLoadingRoom == false)
+		{
+			window.draw(player);
+			window.draw(wallNorth);
+			window.draw(wallEast);
+			window.draw(wallSouth);
+			window.draw(wallWest);
+		}
 
 		window.display();
 	}
