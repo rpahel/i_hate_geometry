@@ -48,8 +48,8 @@ int main()
 	std::list<Bullet> bullets;
 
 	sf::Vector2f mousePos;
-	float fireRate = 4.0f;
-	float nextFireTime = 0.0f;
+	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
+	float nextFireTime = 0.2f; // Durée avant de pouvoir tirer;
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
@@ -81,7 +81,7 @@ int main()
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
-		sf::Time time = clock2.getElapsedTime(); // Calcul du temps depuis le début le lancement du programme
+		timeSinceLastFire += elapsedTime.asSeconds(); // Calcul du temps depuis le début le lancement du programme
 
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
@@ -107,14 +107,14 @@ int main()
 		}
 
 		//FireBullets
-		if(time.asSeconds() >= nextFireTime)
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (timeSinceLastFire >= nextFireTime)
 			{
 				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				SpawnBullet(bullets, player, mousePos, thickness, radians);
-				nextFireTime = time.asSeconds() + 1.0f / fireRate;
+				timeSinceLastFire = 0;
 			}
 		}
 

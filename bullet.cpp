@@ -7,6 +7,10 @@ void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, sf::Vector
 	Bullet bullet;
 	bullet.name = "bullet" + std::to_string(bullets.size());
 	bullet.direction = mousePos - player.getPosition();
+
+	float amplitude = sqrtf(bullet.direction.x * bullet.direction.x + bullet.direction.y * bullet.direction.y); // longueur du vecteur
+	bullet.direction = bullet.direction / amplitude; // Normalisation du vecteur
+
 	bullet.rotation = std::atan2(bullet.direction.x, bullet.direction.y);
 	bullet.shape.setRotation(bullet.rotation);
 	bullet.shape.setPosition(player.getPosition().x, player.getPosition().y);

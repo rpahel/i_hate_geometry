@@ -115,6 +115,6 @@ void ChangeEnemyDirection(sf::Vector2f& direction)
 
 void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
 {
-	float speed = 2.0f;
+	float speed = 800.0f;
 	bullet.move(direction * speed * deltaTime);
 }
