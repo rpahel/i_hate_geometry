@@ -3,4 +3,4 @@
 #include <SFML/Graphics.hpp>
 
 void PlayerMovement(sf::CircleShape& player, float deltaTime);
-void CheckCollision(sf::CircleShape& player, sf::CircleShape& object, float deltaTime);
+void CheckAllTheCollisions(sf::CircleShape& player, std::list<sf::CircleShape>& enemies, sf::FloatRect boundingBoxes[4], float deltaTime);
