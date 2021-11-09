@@ -1,11 +1,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <list>
 #include "maths.h"
 #include "player.h"
 #include "enemy.h"
 
 int main()
 {
+	srand(time(NULL)); //On laisse ça là pour les random
+
 	sf::RenderWindow window(sf::VideoMode(1200, 900), "I hate geometry");
 	window.setVerticalSyncEnabled(true);
 
@@ -34,6 +37,9 @@ int main()
 
 	sf::CircleShape player;
 
+	std::list<sf::CircleShape> enemies;
+	int numberOfEnemies = 10; //Nombre d'ennemis à la première salle
+
 	while (window.isOpen())
 	{
 		// Inputs
@@ -55,23 +61,24 @@ int main()
 		if(isNewRoom)
 		{
 			player = SpawnPlayer();
+			SpawnEnemies(enemies, numberOfEnemies, thickness);
 			isNewRoom = false;
 		}
-
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
 
 		PlayerMovement(player, elapsedTime.asSeconds());
-		CheckWallCollision(player, boundingBoxes, elapsedTime.asSeconds());
-		//BiggerCheckCollisions(player, ennemies, elapsedTime.asSeconds()); // Faire un CheckCollision pour chaque ennemy de la liste ennemies;
-		//CheckCollision(player, enemy, elapsedTime.asSeconds());
+		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // Faire un CheckCollision pour chaque enemy de la liste enemies
 
 		// Rendu
 		window.clear();
 
-		//window.draw(rectangle);
-		//window.draw(enemy);
+		for(auto it = enemies.begin(); it != enemies.end(); it++)
+		{
+			window.draw(*it);
+		}
+
 		window.draw(player);
 		window.draw(wallNorth);
 		window.draw(wallEast);

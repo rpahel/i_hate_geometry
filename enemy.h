@@ -1,5 +1,5 @@
 #pragma once
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include <list>
 
-sf::RectangleShape RandomEnemySpawn();
+void SpawnEnemies(std::list<sf::CircleShape>& enemies, int numberOfEnemies, int thickness);
