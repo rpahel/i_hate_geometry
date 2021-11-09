@@ -5,6 +5,7 @@
 #include "maths.h"
 #include "player.h"
 #include "enemy.h"
+#include "bullet.h"
 
 int main()
 {
@@ -40,6 +41,9 @@ int main()
 	sf::CircleShape player;
 
 	std::list<sf::CircleShape> enemies;
+	std::list<sf::RectangleShape> bullets;
+	bool canFire = true;
+	
 	int numberOfEnemies = 10; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 
@@ -73,6 +77,13 @@ int main()
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
 		PlayerMovement(player, elapsedTime.asSeconds());
+
+		//FireBullets
+		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			SpawnBullet(bullets, player);
+		}
+
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		for (auto it = enemies.begin(); it != enemies.end(); ++it)
@@ -84,6 +95,11 @@ int main()
 		window.clear();
 
 		for(auto it = enemies.begin(); it != enemies.end(); ++it)
+		{
+			window.draw(*it);
+		}
+
+		for (auto it = bullets.begin(); it != bullets.end(); ++it)
 		{
 			window.draw(*it);
 		}
