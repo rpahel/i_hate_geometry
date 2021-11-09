@@ -44,8 +44,7 @@ int main()
 	sf::CircleShape player;
 
 	std::list<Enemy> enemies;
-	std::list<sf::RectangleShape> bullets;
-	bool canFire = true;
+	std::list<Bullet> bullets;
 	float fireRate = 4.0f;
 	float nextFireTime = 0.0f;
 	
@@ -90,7 +89,7 @@ int main()
 		{
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				SpawnBullet(bullets, player);
+				SpawnBullet(bullets, player, thickness);
 				nextFireTime = time.asSeconds() + 1.0f / fireRate;
 			}
 		}
@@ -108,7 +107,7 @@ int main()
 
 		for (auto it = bullets.begin(); it != bullets.end(); ++it)
 		{
-			window.draw(*it);
+			window.draw(it->shape);
 		}
 
 		window.draw(player);
