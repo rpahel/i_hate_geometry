@@ -3,7 +3,7 @@
 #include <list>
 #include "struct.h"
 
-// Gestion des déplacement d'un player
+// Gestion des dï¿½placement d'un player
 void PlayerMovement(sf::CircleShape& circle, float deltaTime)
 {
 	float speed = 300.f; // 600 pixels par seconde
@@ -56,7 +56,7 @@ void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float de
 		(objectA.getPosition().y - objectB.getPosition().y) * (objectA.getPosition().y - objectB.getPosition().y) <= 
 		(objectA.getRadius() + objectB.getRadius()) * (objectA.getRadius() + objectB.getRadius())) // dX^2 + dY^2 <= (R1 - R2)^2
 	{
-		// S'ils se superposent, les déplacer pour qu'ils ne se superposent plus
+		// S'ils se superposent, les dï¿½placer pour qu'ils ne se superposent plus
 		sf::Vector2f playerToObject = objectB.getPosition() - objectA.getPosition();
 		objectA.move(playerToObject * -0.5f * deltaTime * speed);
 		objectB.move(playerToObject * 0.5f * deltaTime * speed);
@@ -92,4 +92,10 @@ void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float de
 void ChangeEnemyDirection(sf::Vector2f& direction)
 {
 	direction = RandomDirection();
+}
+
+void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
+{
+	float speed = 2.0f;
+	bullet.move(direction * speed * deltaTime);
 }

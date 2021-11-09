@@ -11,4 +11,5 @@ struct Bullet{
 	std::string name;
 	sf::RectangleShape shape;
 	sf::Vector2f direction;
+	float rotation;
 };

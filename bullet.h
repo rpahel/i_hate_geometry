@@ -3,4 +3,4 @@
 #include <list>
 #include "struct.h"
 
-void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, int thickness);
+void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, sf::Vector2f mousePos, int thickness, float radians);
