@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <unordered_map>
+#include <time.h>
+#include "windows.h"
 #include "maths.h"
 #include "player.h"
 #include "enemy.h"
@@ -37,12 +39,15 @@ int main()
 	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
 
 	sf::Clock clock;
+	sf::Clock clock2;
 
 	sf::CircleShape player;
 
 	std::list<sf::CircleShape> enemies;
 	std::list<sf::RectangleShape> bullets;
 	bool canFire = true;
+	float fireRate = 4.0f;
+	float nextFireTime = 0.0f;
 	
 	int numberOfEnemies = 10; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
@@ -74,14 +79,23 @@ int main()
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
+		sf::Time time = clock2.getElapsedTime(); // Calcul du temps depuis le début le lancement du programme
+
+		std::cout << time.asSeconds() << std::endl;
+
+
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 
 		//FireBullets
-		if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if(time.asSeconds() >= nextFireTime)
 		{
-			SpawnBullet(bullets, player);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			{
+				SpawnBullet(bullets, player);
+				nextFireTime = time.asSeconds() + 1.0f / fireRate;
+			}
 		}
 
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
