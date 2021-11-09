@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
+#include "struct.h"
 
 // Gestion des déplacement d'un player
 void PlayerMovement(sf::CircleShape& circle, float deltaTime)
@@ -62,7 +63,7 @@ void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float de
 	}
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, std::list<sf::CircleShape>& enemies, sf::FloatRect boundingBoxes[4], float deltaTime)
+void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
 	CheckWallCollision(player, boundingBoxes, deltaTime);
@@ -70,8 +71,8 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<sf::CircleShape>& 
 	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur
 	for(auto it = enemies.begin(); it != enemies.end(); ++it)
 	{
-		CheckCollision(player, *it, deltaTime);
-		CheckWallCollision(*it, boundingBoxes, deltaTime);
+		CheckCollision(player, it->shape, deltaTime);
+		CheckWallCollision(it->shape, boundingBoxes, deltaTime);
 	}
 }
 
@@ -82,8 +83,8 @@ sf::Vector2f RandomDirection()
 	return direction;
 }
 
-void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float deltaTime)
+void MoveEnemies(sf::CircleShape& enemy, float deltaTime)
 {
 	float speed = 20.f;
-	enemy.move(direction * speed * deltaTime);
+	enemy.move(RandomDirection() * speed * deltaTime);
 }

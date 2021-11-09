@@ -43,7 +43,7 @@ int main()
 
 	sf::CircleShape player;
 
-	std::list<sf::CircleShape> enemies;
+	std::list<Enemy> enemies;
 	std::list<sf::RectangleShape> bullets;
 	bool canFire = true;
 	float fireRate = 4.0f;
@@ -81,9 +81,6 @@ int main()
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
 		sf::Time time = clock2.getElapsedTime(); // Calcul du temps depuis le début le lancement du programme
 
-		std::cout << time.asSeconds() << std::endl;
-
-
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
 		PlayerMovement(player, elapsedTime.asSeconds());
@@ -100,17 +97,13 @@ int main()
 
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
-		for (auto it = enemies.begin(); it != enemies.end(); ++it)
-		{
-			//MoveEnemies(*it, enemiesDirections[*it], elapsedTime.asSeconds());
-		}
-
 		// Rendu
 		window.clear();
 
 		for(auto it = enemies.begin(); it != enemies.end(); ++it)
 		{
-			window.draw(*it);
+			//std::cout << it->name << ": " << it->shape.getPosition().x << ", " << it->shape.getPosition().y << std::endl;
+			window.draw(it->shape);
 		}
 
 		for (auto it = bullets.begin(); it != bullets.end(); ++it)

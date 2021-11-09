@@ -1,25 +1,22 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "enemy.h"
+#include "maths.h"
 
-/*sf::RectangleShape RandomEnemySpawn()
+void SpawnEnemies(std::list<Enemy>& enemies, int numberOfEnemies, int thickness)
 {
-	sf::RectangleShape rect((sf::Vector2f(50, 50)));
-	rect.setPosition(sf::Vector2f(rand() % 400 + 300, rand() % 300 + 200));
-	rect.setFillColor(sf::Color::Red);
-	return rect;
-}*/
+	enemies.resize(numberOfEnemies);
+	int i = 0;
 
-void SpawnEnemies(std::list<sf::CircleShape>& enemies, int numberOfEnemies, int thickness)
-{
-	for(int i = 0; i < numberOfEnemies; i++)
+	for(auto& enemy : enemies)
 	{
-		sf::CircleShape enemy;
-		enemy.setRadius(25);
-		enemy.setFillColor(sf::Color::Transparent);
-		enemy.setOutlineThickness(2);
-		enemy.setOutlineColor(sf::Color::Magenta);
-		enemy.setPosition(rand() % (1200 - thickness * 2) + thickness, rand() % (900 - thickness * 2) + thickness);
-		enemies.push_back(enemy);
+		enemy.name = "enemy" + std::to_string(i);
+		enemy.direction = RandomDirection();
+		enemy.shape.setPosition(rand() % (1200 - thickness * 2) + thickness, rand() % (900 - thickness * 2) + thickness);
+		enemy.shape.setRadius(25.f);
+		enemy.shape.setFillColor(sf::Color::Transparent);
+		enemy.shape.setOutlineThickness(2.f);
+		enemy.shape.setOutlineColor(sf::Color::Magenta);
+		++i;
 	}
 }
