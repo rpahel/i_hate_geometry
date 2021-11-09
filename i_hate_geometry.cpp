@@ -69,7 +69,7 @@ int main()
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
 
 		PlayerMovement(player, elapsedTime.asSeconds());
-		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // Faire un CheckCollision pour chaque enemy de la liste enemies
+		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();
