@@ -3,6 +3,7 @@
 #include <list>
 #include <unordered_map>
 #include <time.h>
+#include <cmath>
 #include "windows.h"
 #include "maths.h"
 #include "player.h"
@@ -95,7 +96,7 @@ int main()
 
 		for (auto it = bullets.begin(); it != bullets.end(); ++it)
 		{
-			MoveBullets(it->shape, it->direction, elapsedTime.asSeconds());
+			MoveBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
 
 		//FireBullets
@@ -103,8 +104,9 @@ int main()
 		{
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
+				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-				SpawnBullet(bullets, player, mousePos, thickness);
+				SpawnBullet(bullets, player, mousePos, thickness, radians);
 				nextFireTime = time.asSeconds() + 1.0f / fireRate;
 			}
 		}

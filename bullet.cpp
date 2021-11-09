@@ -2,10 +2,11 @@
 #include <SFML/Graphics.hpp>
 #include "bullet.h"
 
-void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, sf::Vector2f mousePos, int thickness)
+void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, sf::Vector2f mousePos, int thickness, float radians)
 {
 	Bullet bullet;
 	bullet.name = "bullet" + std::to_string(bullets.size());
+	bullet.rotation = radians;
 	bullet.direction = mousePos - player.getPosition();
 	bullet.shape.setPosition(player.getPosition().x, player.getPosition().y);
 	bullet.shape.setSize(sf::Vector2f(3, 20));

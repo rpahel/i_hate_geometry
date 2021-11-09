@@ -89,8 +89,9 @@ void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float de
 	enemy.move(direction * speed * deltaTime);
 }
 
-void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
+void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
 {
 	float speed = 2.0f;
+	bullet.rotate(rotation);
 	bullet.move(direction * speed * deltaTime);
 }
