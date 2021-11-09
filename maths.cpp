@@ -88,7 +88,7 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 	{
 		CheckCollision(player, it->shape, deltaTime);
 		CheckEnemyWallCollision(*it, boundingBoxes);
-		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime);
+		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
 	}
 }
 

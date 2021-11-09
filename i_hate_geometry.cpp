@@ -51,7 +51,7 @@ int main()
 	float fireRate = 4.0f;
 	float nextFireTime = 0.0f;
 	
-	int numberOfEnemies = 10; //Nombre d'ennemis à la première salle
+	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 
 	while (window.isOpen())
