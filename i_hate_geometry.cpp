@@ -102,7 +102,6 @@ int main()
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
 		PlayerMovement(player, elapsedTime.asSeconds());
-		GetEnemyPosition(enemies);
 
 		if(moveDuration > 1.f) //Cooldown changement de direction des enemy
 		{
@@ -167,8 +166,6 @@ int main()
 		{
 			window.draw(it->shape);
 		}
-
-		std::cout << enemyBullet.size() << std::endl;
 
 		if (isLoadingRoom == false)
 		{

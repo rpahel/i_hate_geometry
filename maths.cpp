@@ -113,14 +113,6 @@ void ChangeEnemyDirection(sf::Vector2f& direction)
 	}
 }
 
-void GetEnemyPosition(std::list<Enemy>& enemies)
-{
-	for (auto it = enemies.begin(); it != enemies.end(); ++it)
-	{
-		it->position = it->shape.getPosition();
-	}
-}
-
 void MoveEnemyBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
 {
 	if ((rand() % 3) + 1 == 1) // Chaque ennemi a une chance sur 3 de tirer quand la fonction est appelée

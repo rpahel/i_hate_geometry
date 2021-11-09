@@ -5,7 +5,6 @@ struct Enemy {
 	std::string name;
 	sf::CircleShape shape;
 	sf::Vector2f direction;
-	sf::Vector2f position;
 };
 
 struct Bullet {

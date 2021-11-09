@@ -10,4 +10,3 @@ void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float de
 void ChangeEnemyDirection(sf::Vector2f& direction);
 void MoveEnemyBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime);
 void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime);
-void GetEnemyPosition(std::list<Enemy>& enemies);
