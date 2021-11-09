@@ -84,7 +84,14 @@ int main()
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 
-
+		if(moveDuration > 3.f)
+		{
+			for (auto it = enemies.begin(); it != enemies.end(); ++it)
+			{
+				ChangeEnemyDirection(it->direction);
+			}
+			moveDuration = 0.f;
+		}
 
 		for (auto it = enemies.begin(); it != enemies.end(); ++it)
 		{

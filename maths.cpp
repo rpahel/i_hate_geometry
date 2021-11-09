@@ -79,12 +79,17 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 sf::Vector2f RandomDirection()
 {
 	int tab[2]{ -1, 1 };
-	sf::Vector2f direction((tab[rand() % 2]) * (rand() % 2), (tab[rand() % 2]) * (rand() % 2)); // Vecteur de direction qui peut valoir (0,0) (-1,0) (1,0) (1,1) etc..
+	sf::Vector2f direction((tab[rand() % 2]), (tab[rand() % 2])); // Vecteur de direction qui peut valoir (0,0) (-1,0) (1,0) (1,1) etc..
 	return direction;
 }
 
 void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float deltaTime)
 {
-	float speed = 60.f;
+	float speed = 120.f;
 	enemy.move(direction * speed * deltaTime);
+}
+
+void ChangeEnemyDirection(sf::Vector2f& direction)
+{
+	direction = RandomDirection();
 }
