@@ -125,7 +125,6 @@ int main()
 
 		for(auto it = enemies.begin(); it != enemies.end(); ++it)
 		{
-			//std::cout << it->name << ": " << it->shape.getPosition().x << ", " << it->shape.getPosition().y << std::endl;
 			window.draw(it->shape);
 		}
 

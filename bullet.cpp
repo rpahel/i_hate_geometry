@@ -13,7 +13,7 @@ void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, sf::Vector
 
 	bullet.rotation = std::atan2(bullet.direction.x, bullet.direction.y);
 	bullet.shape.setRotation(bullet.rotation);
-	bullet.shape.setPosition(player.getPosition().x, player.getPosition().y);
+	bullet.shape.setPosition(player.getPosition().x + player.getRadius(), player.getPosition().y + player.getRadius()); // La balle sort du centre du cercle
 	bullet.shape.setSize(sf::Vector2f(3, 20));
 	bullet.shape.setFillColor(sf::Color::Transparent);
 	bullet.shape.setOutlineThickness(2.f);
