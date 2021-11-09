@@ -12,7 +12,7 @@ void SpawnBullet(std::list<Bullet>& bullets, sf::CircleShape& player, sf::Vector
 	float amplitude = sqrtf(bullet.direction.x * bullet.direction.x + bullet.direction.y * bullet.direction.y); // longueur du vecteur
 	bullet.direction = bullet.direction / amplitude; // Normalisation du vecteur
 	bullet.rotation = std::atan2(bullet.direction.x, bullet.direction.y); // en radian
-	bullet.rotation = bullet.rotation * (180.f / 3.1415f) + 90.f; // Conversion en deg
+	bullet.rotation = - bullet.rotation * (180.f / 3.1415f); // Conversion en deg
 	bullet.shape.setRotation(bullet.rotation);
 	bullet.shape.setPosition(player.getPosition().x, player.getPosition().y); // La balle sort du centre du cercle
 	bullet.shape.setFillColor(sf::Color::Transparent);
