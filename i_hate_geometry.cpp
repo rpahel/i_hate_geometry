@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
+#include <unordered_map>
 #include "maths.h"
 #include "player.h"
 #include "enemy.h"
@@ -32,6 +33,7 @@ int main()
 	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()};
 
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
+	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
 
 	sf::Clock clock;
 
@@ -39,6 +41,8 @@ int main()
 
 	std::list<sf::CircleShape> enemies;
 	int numberOfEnemies = 10; //Nombre d'ennemis à la première salle
+	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
+	//std::unordered_map<sf::CircleShape, sf::Vector2f> enemiesDirections;
 
 	while (window.isOpen())
 	{
@@ -67,14 +71,43 @@ int main()
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
+		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
+		//if(firstFrame)
+		//{
+		//	for(auto it = enemies.begin(); it != enemies.end(); ++it)
+		//	{
+		//		enemiesDirections[*it] = RandomDirection();
+		//		std::cout << enemiesDirections[*it].x << ", " << enemiesDirections[*it].y << std::endl;
+		//	}
+		//
+		//	firstFrame = false;
+		//}
+		//else
+		//{
+		//	if(moveDuration > 3.f)
+		//	{
+		//		for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		//		{
+		//			MoveEnemies(*it, enemiesDirections[*it], elapsedTime.asSeconds());
+		//		}
+		//
+		//		moveDuration = 0.f;
+		//	}
+		//}
+
+		for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		{
+			//MoveEnemies(*it, enemiesDirections[*it], elapsedTime.asSeconds());
+		}
+
 		// Rendu
 		window.clear();
 
-		for(auto it = enemies.begin(); it != enemies.end(); it++)
+		for(auto it = enemies.begin(); it != enemies.end(); ++it)
 		{
 			window.draw(*it);
 		}
