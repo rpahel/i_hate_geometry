@@ -83,8 +83,8 @@ sf::Vector2f RandomDirection()
 	return direction;
 }
 
-void MoveEnemies(sf::CircleShape& enemy, float deltaTime)
+void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float deltaTime)
 {
-	float speed = 20.f;
-	enemy.move(RandomDirection() * speed * deltaTime);
+	float speed = 60.f;
+	enemy.move(direction * speed * deltaTime);
 }

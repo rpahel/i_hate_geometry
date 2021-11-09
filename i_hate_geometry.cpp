@@ -85,6 +85,13 @@ int main()
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 
+
+
+		for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		{
+			MoveEnemies(it->shape, it->direction, elapsedTime.asSeconds());
+		}
+
 		//FireBullets
 		if(time.asSeconds() >= nextFireTime)
 		{
