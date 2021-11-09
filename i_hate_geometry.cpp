@@ -42,7 +42,6 @@ int main()
 	std::list<sf::CircleShape> enemies;
 	int numberOfEnemies = 10; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
-	//std::unordered_map<sf::CircleShape, sf::Vector2f> enemiesDirections;
 
 	while (window.isOpen())
 	{
@@ -75,29 +74,6 @@ int main()
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
-
-		//if(firstFrame)
-		//{
-		//	for(auto it = enemies.begin(); it != enemies.end(); ++it)
-		//	{
-		//		enemiesDirections[*it] = RandomDirection();
-		//		std::cout << enemiesDirections[*it].x << ", " << enemiesDirections[*it].y << std::endl;
-		//	}
-		//
-		//	firstFrame = false;
-		//}
-		//else
-		//{
-		//	if(moveDuration > 3.f)
-		//	{
-		//		for (auto it = enemies.begin(); it != enemies.end(); ++it)
-		//		{
-		//			MoveEnemies(*it, enemiesDirections[*it], elapsedTime.asSeconds());
-		//		}
-		//
-		//		moveDuration = 0.f;
-		//	}
-		//}
 
 		for (auto it = enemies.begin(); it != enemies.end(); ++it)
 		{
