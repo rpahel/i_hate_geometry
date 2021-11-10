@@ -4,10 +4,8 @@
 #include "struct.h"
 
 // Gestion des d�placement d'un player
-void PlayerMovement(sf::CircleShape& circle, float deltaTime)
+void PlayerMovement(sf::CircleShape& circle, float& speed, float deltaTime) //300 speed = 600pixels par seconde
 {
-	float speed = 300.f; // 600 pixels par seconde
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 		circle.move(sf::Vector2f(0.f, -speed * deltaTime));
 

@@ -72,6 +72,8 @@ int main()
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 	float shootDuration = 0;
 
+	float playerSpeed = 300.f;
+
 	while (window.isOpen())
 	{
 		// Inputs
@@ -121,7 +123,7 @@ int main()
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
 		shootDuration += elapsedTime.asSeconds();
 
-		PlayerMovement(player, elapsedTime.asSeconds());
+		PlayerMovement(player, playerSpeed, elapsedTime.asSeconds());
 
 		if(moveDuration > 1.f) //Cooldown changement de direction des enemy
 		{
