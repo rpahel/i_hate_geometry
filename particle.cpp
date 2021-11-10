@@ -5,13 +5,13 @@
 
 void SpawnParticles(sf::Vector2f spawnPos, Game &game)
 {
-	int lifeTime = rand() % 2 + 1;
 	int numberOfParticles = 20;
 	int thickness = 20;
 	int i = 0;
 	
 	for (int i = 0; i < numberOfParticles; i++)
 	{
+		float lifeTime = ((rand() % 300) / 1000.f) + 0.2f;
 		float rot = (i * 2.f)* 3.14f / numberOfParticles;
 		sf::Vector2f angle (cos(rot), sin(rot));
 		Particles particle;

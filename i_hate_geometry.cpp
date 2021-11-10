@@ -154,13 +154,21 @@ int main()
 			MoveEnemyBullets(it->shape, it->direction, elapsedTime.asSeconds());
 		}
 
-		for (auto it = game.particles.begin(); it != game.particles.end(); ++it)
+		for (auto it = game.particles.begin(); it != game.particles.end();)
 		{
 			MoveParticles(it->shape, it->direction, elapsedTime.asSeconds());
-			/*sf::Color color = sf::Color::White;
-			color.a = 255.f - elapsedTime.asSeconds();
-			it->shape.setOutlineColor(color);*/
+			it->lifeTime -= elapsedTime.asSeconds();
+
+			if (it->lifeTime <= 0)
+			{
+				it = game.particles.erase(it);
+			}
+			else
+			{
+				++it;
+			}
 		}
+
 
 		//FireBullets
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isDead)
