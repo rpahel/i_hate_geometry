@@ -50,8 +50,6 @@ int main()
 	std::list<Bullet> bullets;
 	std::list<EnemyBullet> enemyBullet;
 
-	bool isBulletEnemySpawn = false;
-
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
 	float nextFireTime = 0.2f; // Durée avant de pouvoir tirer;
@@ -72,6 +70,19 @@ int main()
 				window.close();
 				break;
 
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::A)
+				{
+					isLoadingRoom = true;
+					enemies.clear();
+					bullets.clear();
+					enemyBullet.clear();
+					player.setPosition(600, 450);
+					isNewRoom = true;
+					isLoadingRoom = false;
+				}
+				break;
+
 			default:
 				break;
 			}
@@ -88,7 +99,7 @@ int main()
 
 
 		//Change de salle lorsque tout les ennemies sont dead
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			isLoadingRoom = true;
 			enemies.clear();
@@ -96,7 +107,7 @@ int main()
 			player.setPosition(600, 450);
 			isNewRoom = true;
 			isLoadingRoom = false;
-		}
+		}*/
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
@@ -145,14 +156,9 @@ int main()
 			
 		if (shootDuration > 3.f)
 		{
-			if (isBulletEnemySpawn == false)
+			for (auto it = enemies.begin(); it != enemies.end(); ++it)
 			{
-				isBulletEnemySpawn = true;
-				for (auto it = enemies.begin(); it != enemies.end(); ++it)
-				{
-					SpawnEnemiesBullet(enemyBullet, enemies, player, thickness);
-				}
-				isBulletEnemySpawn = false;		
+				SpawnEnemiesBullet(enemyBullet, *it, player, thickness);
 			}
 			shootDuration = 0.f;
 		}

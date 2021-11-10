@@ -5,4 +5,4 @@
 
 void SpawnEnemies(std::list<Enemy>& enemies, int numberOfEnemies, int thickness);
 
-void SpawnEnemiesBullet(std::list<EnemyBullet>& bullets, std::list<Enemy>& enemies, sf::CircleShape& player, int thickness);
+void SpawnEnemiesBullet(std::list<EnemyBullet>& bullets, Enemy &enemy, sf::CircleShape& player, int thickness);
