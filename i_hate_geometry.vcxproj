@@ -156,6 +156,7 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="i_hate_geometry.cpp" />
     <ClCompile Include="maths.cpp" />
+    <ClCompile Include="particle.cpp" />
     <ClCompile Include="player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="enemy.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="maths.h" />
+    <ClInclude Include="particle.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="struct.h" />
   </ItemGroup>

@@ -62,6 +62,7 @@ int main()
 	std::list<Bullet> bullets;
 	std::list<EnemyBullet> enemyBullet;
 	std::list<Item> items;
+	std::list<Particles> particles;
 
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
@@ -169,8 +170,6 @@ int main()
 			}
 			shootDuration = 0.f;
 		}
-		
-		
 
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 

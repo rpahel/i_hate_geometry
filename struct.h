@@ -26,3 +26,10 @@ struct EnemyBullet {
 	sf::Vector2f direction;
 	float rotation;
 };
+
+struct Particles {
+	std::string name;
+	sf::RectangleShape shape;
+	sf::Vector2f direction;
+	float rotation;
+};
