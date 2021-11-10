@@ -62,6 +62,19 @@ void CheckEnemyWallCollision(Enemy& enemy, sf::FloatRect boundingBoxes[4])
 	}
 }
 
+bool CheckBulletWallCollision(sf::RectangleShape bullet, sf::FloatRect boundingBoxes[4])
+{
+	sf::FloatRect bulletBox = bullet.getGlobalBounds();
+
+	if (bulletBox.intersects(boundingBoxes[0]) || bulletBox.intersects(boundingBoxes[1]) || bulletBox.intersects(boundingBoxes[2]) || bulletBox.intersects(boundingBoxes[3]))
+	{
+		//std::cout << "Bullet has hit a wall !" << std::endl;
+		return true;
+	}
+
+	return false;
+}
+
 // Gestion des collisions
 void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float deltaTime)
 {
@@ -78,7 +91,7 @@ void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float de
 	}
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], float deltaTime)
+void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], std::list<Bullet> bullets, std::list<EnemyBullet> enemyBullets, float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
 	CheckPlayerWallCollision(player, boundingBoxes, deltaTime);
@@ -89,6 +102,31 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 		CheckCollision(player, it->shape, deltaTime);
 		CheckEnemyWallCollision(*it, boundingBoxes);
 		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
+	}
+
+	for(auto it = bullets.begin(); it != bullets.end();)
+	{
+		if (CheckBulletWallCollision(it->shape, boundingBoxes))
+		{
+			std::cout << "Je disparais!" << std::endl;
+			it = bullets.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = enemyBullets.begin(); it != enemyBullets.end();)
+	{
+		if (CheckBulletWallCollision(it->shape, boundingBoxes))
+		{
+			it = enemyBullets.erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 
