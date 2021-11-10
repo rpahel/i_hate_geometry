@@ -191,7 +191,7 @@ void CheckAllTheCollisions(sf::CircleShape& player, Game& game, sf::FloatRect bo
 		CheckPlayerWallCollision(it->shape, boundingBoxes, playerSpeed); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
 		if(CheckEnemyBulletCollision(it->shape, game))
 		{
-			SpawnParticles(it->shape.getPosition());
+			SpawnParticles(it->shape.getPosition(), game);
 			it = game.enemies.erase(it);
 		}
 		else
@@ -259,14 +259,20 @@ void ChangeEnemyDirection(sf::Vector2f& direction)
 	}
 }
 
-void MoveEnemyBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
+void MoveEnemyBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
 {
 	float speed = 400.0f;
 	bullet.move(direction * speed * deltaTime);
 }
 
-void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
+void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
 {
 	float speed = 800.0f;
+	bullet.move(direction * speed * deltaTime);
+}
+
+void MoveParticles(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
+{
+	float speed = 500.0f;
 	bullet.move(direction * speed * deltaTime);
 }

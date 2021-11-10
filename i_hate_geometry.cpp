@@ -112,6 +112,7 @@ int main()
 			game.bullets.clear();
 			game.enemyBullet.clear();
 			game.items.clear();
+			game.particles.clear();
 			moveDuration = 0;
 			shootDuration = 0;
 			playerSpeed = 300.f;
@@ -145,12 +146,17 @@ int main()
 
 		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
 		{
-			MoveBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
+			MoveBullets(it->shape, it->direction, elapsedTime.asSeconds());
 		}
 
 		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
 		{
-			MoveEnemyBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
+			MoveEnemyBullets(it->shape, it->direction, elapsedTime.asSeconds());
+		}
+
+		for (auto it = game.particles.begin(); it != game.particles.end(); ++it)
+		{
+			MoveParticles(it->shape, it->direction, elapsedTime.asSeconds());
 		}
 
 		//FireBullets
@@ -198,6 +204,13 @@ int main()
 		{
 			window.draw(it->shape);
 		}
+
+		for (auto it = game.particles.begin(); it != game.particles.end(); ++it)
+		{
+			window.draw(it->shape);
+		}
+
+		std::cout << game.particles.size() << std::endl;
 
 		if (isLoadingRoom == false)
 		{

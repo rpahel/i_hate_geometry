@@ -3,4 +3,4 @@
 #include <list>
 #include "struct.h"
 
-void SpawnParticles(sf::Vector2f pos);
+void SpawnParticles(sf::Vector2f pos, Game &game);
