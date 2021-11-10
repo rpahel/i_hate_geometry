@@ -177,10 +177,10 @@ bool CheckEnemyBulletCollision(sf::CircleShape& enemy, Game &game)
 	return false;
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, Game& game, sf::FloatRect boundingBoxes[4], float playerSpeed, bool& isDead, float deltaTime)
+void CheckAllTheCollisions(sf::CircleShape& player, Game& game, sf::FloatRect boundingBoxes[4], float& playerSpeed, bool& isDead, float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
-	CheckPlayerWallCollision(player, boundingBoxes, deltaTime);
+	CheckPlayerWallCollision(player, boundingBoxes, playerSpeed);
 	CheckPlayerBulletCollision(player, game, isDead);
 
 	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur

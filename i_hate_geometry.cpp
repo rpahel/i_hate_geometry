@@ -171,7 +171,7 @@ int main()
 			}
 		}
 			
-		if (shootDuration > 3.f)
+		if (shootDuration > 1.f)
 		{
 			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 			{
