@@ -10,8 +10,13 @@
 #include "enemy.h"
 #include "bullet.h"
 
+std::string getAppPath();
+std::string getAssetsPath(std::string appPath);
+void levelTextUpdater(int& currentlevel, sf::Text &text);
+
 int main()
 {
+	std::cout << getAssetsPath(getAppPath()) << std::endl;
 	srand(time(NULL)); //On laisse ça là pour les random
 
 	sf::RenderWindow window(sf::VideoMode(1200, 900), "I hate geometry");
@@ -40,6 +45,13 @@ int main()
 	bool isLoadingRoom = false;
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
 	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
+
+	sf::Font font;
+	font.loadFromFile(getAssetsPath(getAppPath()) + "arial.ttf");
+	sf::Text text;
+	text.setFont(font);
+	text.setPosition(1080,50);
+	text.setCharacterSize(24);
 
 	sf::Clock clock;
 	sf::Clock clock2;
@@ -96,6 +108,8 @@ int main()
 			currentlevel++;
 			isNewRoom = false;
 		}
+
+		levelTextUpdater(currentlevel, text);
 
 
 		//Change de salle lorsque tout les ennemies sont dead
@@ -193,7 +207,31 @@ int main()
 			window.draw(wallSouth);
 			window.draw(wallWest);
 		}
+		window.draw(text);
 
 		window.display();
 	}
+}
+
+
+
+std::string getAppPath()
+{
+	char cExeFilePath[256];
+	GetModuleFileNameA(NULL, cExeFilePath, 256);
+	std::string exeFilePath = cExeFilePath;
+	int exeNamePos = exeFilePath.find_last_of("\\/");
+	std::string appPath = exeFilePath.substr(0, exeNamePos + 1);
+	return appPath;
+}
+
+std::string getAssetsPath(std::string appPath)
+{
+	std::string assetsPath = appPath + "Assets\\";
+	return assetsPath;
+}
+
+void levelTextUpdater(int& currentlevel, sf::Text& text)
+{
+	text.setString("level " + std::to_string(currentlevel - 1));
 }
