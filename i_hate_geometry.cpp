@@ -56,7 +56,8 @@ int main()
 	sf::Clock clock;
 	sf::Clock clock2;
 
-	sf::CircleShape player;	
+	sf::CircleShape player;
+	bool isDead = false;
 
 	std::list<Enemy> enemies;	  //Listes des enemies et des différentes bullet
 	std::list<Bullet> bullets;
@@ -66,7 +67,7 @@ int main()
 
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
-	float nextFireTime = 0.2f; // Durée avant de pouvoir tirer;
+	float nextFireTime = .2f; // Durée avant de pouvoir tirer;
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	int numberOfItem = 2;
@@ -145,20 +146,20 @@ int main()
 			MoveBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
 
-		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		for (auto it = enemyBullets.begin(); it != enemyBullets.end(); ++it)
 		{
 			MoveEnemyBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
 
 		//FireBullets
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isDead)
 		{
 			if (timeSinceLastFire >= nextFireTime)
 			{
+				timeSinceLastFire = 0;
 				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				SpawnBullet(bullets, player, mousePos, thickness, radians);
-				timeSinceLastFire = 0;
 			}
 		}
 			
@@ -171,7 +172,7 @@ int main()
 			shootDuration = 0.f;
 		}
 
-		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullets, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();
@@ -186,7 +187,7 @@ int main()
 			window.draw(it->shape);
 		}
 
-		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		for (auto it = enemyBullets.begin(); it != enemyBullets.end(); ++it)
 		{
 			window.draw(it->shape);
 		}
@@ -198,7 +199,10 @@ int main()
 
 		if (isLoadingRoom == false)
 		{
-			window.draw(player);
+			if(!isDead)
+			{
+				window.draw(player);
+			}
 			window.draw(wallNorth);
 			window.draw(wallEast);
 			window.draw(wallSouth);

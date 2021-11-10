@@ -2,6 +2,19 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include "struct.h"
+#include <math.h>
+
+float car(float a)
+{
+	float b = a * a;
+	return b;
+}
+
+float distance(float A, float B)
+{
+	float D = sqrt(car(A) + car(B));
+	return D;
+}
 
 // Gestion des d�placement d'un player
 void PlayerMovement(sf::CircleShape& circle, float& speed, float deltaTime) //300 speed = 600pixels par seconde
@@ -60,14 +73,24 @@ void CheckEnemyWallCollision(Enemy& enemy, sf::FloatRect boundingBoxes[4])
 	}
 }
 
+bool CheckBulletWallCollision(sf::RectangleShape bullet, sf::FloatRect boundingBoxes[4])
+{
+	sf::FloatRect bulletBox = bullet.getGlobalBounds();
+
+	if (bulletBox.intersects(boundingBoxes[0]) || bulletBox.intersects(boundingBoxes[1]) || bulletBox.intersects(boundingBoxes[2]) || bulletBox.intersects(boundingBoxes[3]))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 // Gestion des collisions
 void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float deltaTime)
 {
 	float speed = 12.f;
 	// Check si les deux cercles se superposent
-	if((objectA.getPosition().x - objectB.getPosition().x) * (objectA.getPosition().x - objectB.getPosition().x) + 
-		(objectA.getPosition().y - objectB.getPosition().y) * (objectA.getPosition().y - objectB.getPosition().y) <= 
-		(objectA.getRadius() + objectB.getRadius()) * (objectA.getRadius() + objectB.getRadius())) // dX^2 + dY^2 <= (R1 - R2)^2
+	if(distance(objectA.getPosition().x - objectB.getPosition().x, objectA.getPosition().y - objectB.getPosition().y) <= objectA.getRadius() + objectB.getRadius()) // dX^2 + dY^2 <= (R1 - R2)^2
 	{
 		// S'ils se superposent, les d�placer pour qu'ils ne se superposent plus
 		sf::Vector2f playerToObject = objectB.getPosition() - objectA.getPosition();
@@ -76,17 +99,84 @@ void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float de
 	}
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], float deltaTime)
+void CheckPlayerBulletCollision(sf::CircleShape& player, std::list<EnemyBullet>& enemyBullets, bool& isDead)
+{
+	for(auto pew = enemyBullets.begin(); pew != enemyBullets.end();)
+	{
+		float D = distance(player.getPosition().x - pew->shape.getPosition().x, player.getPosition().y - pew->shape.getPosition().y);
+		if(D <= player.getRadius())
+		{
+			isDead = true;
+			pew = enemyBullets.erase(pew);
+		}
+		else
+		{
+			++pew;
+		}
+	}
+}
+
+bool CheckEnemyBulletCollision(sf::CircleShape& enemy, std::list<Bullet>& bullets)
+{
+	for(auto pew = bullets.begin(); pew != bullets.end();)
+	{
+		float D = distance(enemy.getPosition().x - pew->shape.getPosition().x, enemy.getPosition().y - pew->shape.getPosition().y);
+		if(D <= enemy.getRadius())
+		{
+			pew = bullets.erase(pew);
+			return true;
+		}
+
+		++pew;
+	}
+
+	return false;
+}
+
+void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], std::list<Bullet>& bullets, std::list<EnemyBullet>& enemyBullets, bool& isDead, float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
 	CheckPlayerWallCollision(player, boundingBoxes, deltaTime);
+	CheckPlayerBulletCollision(player, enemyBullets, isDead);
 
 	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur
-	for(auto it = enemies.begin(); it != enemies.end(); ++it)
+	for(auto it = enemies.begin(); it != enemies.end();)
 	{
 		CheckCollision(player, it->shape, deltaTime);
 		CheckEnemyWallCollision(*it, boundingBoxes);
 		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
+		if(CheckEnemyBulletCollision(it->shape, bullets))
+		{
+			it = enemies.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for(auto it = bullets.begin(); it != bullets.end();)
+	{
+		if (CheckBulletWallCollision(it->shape, boundingBoxes))
+		{
+			it = bullets.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = enemyBullets.begin(); it != enemyBullets.end();)
+	{
+		if (CheckBulletWallCollision(it->shape, boundingBoxes))
+		{
+			it = enemyBullets.erase(it);
+		}
+		else
+		{
+			++it;
+		}
 	}
 }
 
