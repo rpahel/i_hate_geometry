@@ -3,6 +3,6 @@
 #include <list>
 #include "struct.h"
 
-void SpawnEnemies(std::list<Enemy>& enemies, int numberOfEnemies, int thickness);
+void SpawnEnemies(Game &game, int numberOfEnemies, int thickness);
 
-void SpawnEnemiesBullet(std::list<EnemyBullet>& bullets, Enemy &enemy, sf::CircleShape& player, int thickness);
+void SpawnEnemiesBullet(Game &game, Enemy &enemy, sf::CircleShape& player, int thickness);

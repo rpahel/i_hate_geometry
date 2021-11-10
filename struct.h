@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <list>
 
 struct Enemy {
 	std::string name;
@@ -33,4 +34,12 @@ struct Particles {
 	sf::Vector2f direction;
 	float rotation;
 	float lifeTime;
+};
+
+struct Game {
+	std::list<Enemy> enemies;	
+	std::list<Bullet> bullets;
+	std::list<EnemyBullet> enemyBullet;
+	std::list<Item> items;
+	std::list<Particles> particles;
 };

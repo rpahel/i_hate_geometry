@@ -3,12 +3,12 @@
 #include "item.h"
 #include "maths.h"
 
-void SpawnItems(std::list<Item>& items, int numberOfItem, int thickness)
+void SpawnItems(Game &game, int numberOfItem, int thickness)
 {
-	items.resize(numberOfItem);
+	game.items.resize(numberOfItem);
 	int i = 0;
 
-	for (auto& item : items)
+	for (auto& item : game.items)
 	{
 		item.name = "item" + std::to_string(i);
 		item.shape.setSize(sf::Vector2f(25.f, 25.f));
