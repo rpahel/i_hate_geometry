@@ -7,6 +7,12 @@ struct Enemy {
 	sf::Vector2f direction;
 };
 
+struct Item {
+	std::string name;
+	sf::RectangleShape shape;
+	//sf::Vector2f direction;
+};
+
 struct Bullet {
 	std::string name;
 	sf::RectangleShape shape;

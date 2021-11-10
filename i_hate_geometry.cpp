@@ -9,6 +9,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "bullet.h"
+#include "item.h"
 
 std::string getAppPath();
 std::string getAssetsPath(std::string appPath);
@@ -60,12 +61,14 @@ int main()
 	std::list<Enemy> enemies;	  //Listes des enemies et des différentes bullet
 	std::list<Bullet> bullets;
 	std::list<EnemyBullet> enemyBullet;
+	std::list<Item> items;
 
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
 	float nextFireTime = 0.2f; // Durée avant de pouvoir tirer;
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
+	int numberOfItem = 2;
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 	float shootDuration = 0;
 
@@ -88,6 +91,7 @@ int main()
 					enemies.clear();
 					bullets.clear();
 					enemyBullet.clear();
+					items.clear();
 					player.setPosition(600, 450);
 					isNewRoom = true;
 					isLoadingRoom = false;
@@ -104,6 +108,7 @@ int main()
 		{
 			player = SpawnPlayer();
 			SpawnEnemies(enemies, (numberOfEnemies + currentlevel) - 1, thickness);
+			SpawnItems(items, numberOfItem, thickness);
 			currentlevel++;
 			isNewRoom = false;
 		}
@@ -181,6 +186,11 @@ int main()
 		}
 
 		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		{
+			window.draw(it->shape);
+		}
+
+		for (auto it = items.begin(); it != items.end(); ++it)
 		{
 			window.draw(it->shape);
 		}

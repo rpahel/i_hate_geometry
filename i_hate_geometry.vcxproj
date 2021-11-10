@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="item.cpp" />
     <ClCompile Include="i_hate_geometry.cpp" />
     <ClCompile Include="maths.cpp" />
     <ClCompile Include="player.cpp" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="bullet.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="item.h" />
     <ClInclude Include="maths.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="struct.h" />
