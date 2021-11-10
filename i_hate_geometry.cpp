@@ -44,7 +44,8 @@ int main()
 	sf::Clock clock;
 	sf::Clock clock2;
 
-	sf::CircleShape player;	
+	sf::CircleShape player;
+	bool isDead = false;
 
 	std::list<Enemy> enemies;	  //Listes des enemies et des différentes bullet
 	std::list<Bullet> bullets;
@@ -54,7 +55,7 @@ int main()
 
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
-	float nextFireTime = .5f; // Durée avant de pouvoir tirer;
+	float nextFireTime = .2f; // Durée avant de pouvoir tirer;
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
@@ -132,7 +133,7 @@ int main()
 		}
 
 		//FireBullets
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isDead)
 		{
 			if (timeSinceLastFire >= nextFireTime)
 			{
@@ -140,28 +141,24 @@ int main()
 				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				SpawnBullet(bullets, player, mousePos, thickness, radians);
-				for(auto bullet : bullets)
-				{
-					std::cout << bullet.name << std::endl;
-				}
 			}
 		}
 			
-		//if (shootDuration > 3.f)
-		//{
-		//	if (isBulletEnemySpawn == false)
-		//	{
-		//		isBulletEnemySpawn = true;
-		//		for (auto it = enemies.begin(); it != enemies.end(); ++it)
-		//		{
-		//			SpawnEnemiesBullet(enemyBullets, enemies, player, thickness);
-		//		}
-		//		isBulletEnemySpawn = false;		
-		//	}
-		//	shootDuration = 0.f;
-		//}
+		if (shootDuration > 3.f)
+		{
+			if (isBulletEnemySpawn == false)
+			{
+				isBulletEnemySpawn = true;
+				for (auto it = enemies.begin(); it != enemies.end(); ++it)
+				{
+					SpawnEnemiesBullet(enemyBullets, enemies, player, thickness);
+				}
+				isBulletEnemySpawn = false;		
+			}
+			shootDuration = 0.f;
+		}
 
-		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullets, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullets, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();
@@ -183,7 +180,10 @@ int main()
 
 		if (isLoadingRoom == false)
 		{
-			window.draw(player);
+			if(!isDead)
+			{
+				window.draw(player);
+			}
 			window.draw(wallNorth);
 			window.draw(wallEast);
 			window.draw(wallSouth);
