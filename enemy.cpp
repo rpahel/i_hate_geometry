@@ -26,20 +26,23 @@ void SpawnEnemiesBullet(std::list<EnemyBullet>& bullets, std::list<Enemy>& enemi
 {
 	for (auto& enemy : enemies)
 	{
-		EnemyBullet enemyBullet;
-		enemyBullet.shape.setSize(sf::Vector2f(3, 20));
-		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // change l'origine du rectangle pour être au centre
-		enemyBullet.name = "enemyBullet" + std::to_string(bullets.size());
-		enemyBullet.direction = player.getPosition() - enemy.shape.getPosition();
-		float amplitude = sqrtf(enemyBullet.direction.x * enemyBullet.direction.x + enemyBullet.direction.y * enemyBullet.direction.y); // longueur du vecteur
-		enemyBullet.direction = enemyBullet.direction / amplitude; // Normalisation du vecteur
-		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
-		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg
-		enemyBullet.shape.setRotation(enemyBullet.rotation);
-		enemyBullet.shape.setPosition(enemy.shape.getPosition()); // La balle sort du centre du cercle
-		enemyBullet.shape.setFillColor(sf::Color::Transparent);
-		enemyBullet.shape.setOutlineThickness(2.f);
-		enemyBullet.shape.setOutlineColor(sf::Color::Yellow);
-		bullets.push_back(enemyBullet);
+		if ((rand() % 3) + 1 == 1) // Chaque ennemi a une chance sur 3 de tirer quand la fonction est appelée
+		{
+			EnemyBullet enemyBullet;
+			enemyBullet.shape.setSize(sf::Vector2f(3, 20));
+			enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // change l'origine du rectangle pour être au centre
+			enemyBullet.name = "enemyBullet" + std::to_string(bullets.size());
+			enemyBullet.direction = player.getPosition() - enemy.shape.getPosition();
+			float amplitude = sqrtf(enemyBullet.direction.x * enemyBullet.direction.x + enemyBullet.direction.y * enemyBullet.direction.y); // longueur du vecteur
+			enemyBullet.direction = enemyBullet.direction / amplitude; // Normalisation du vecteur
+			enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
+			enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg
+			enemyBullet.shape.setRotation(enemyBullet.rotation);
+			enemyBullet.shape.setPosition(enemy.shape.getPosition()); // La balle sort du centre du cercle
+			enemyBullet.shape.setFillColor(sf::Color::Transparent);
+			enemyBullet.shape.setOutlineThickness(2.f);
+			enemyBullet.shape.setOutlineColor(sf::Color::Yellow);
+			bullets.push_back(enemyBullet);
+		}
 	}
 }

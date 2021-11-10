@@ -36,7 +36,7 @@ int main()
 	// On prend les hitbox des murs
 	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()};
 
-	int level = 0;
+	int currentlevel = 1;
 	bool isLoadingRoom = false;
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
 	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
@@ -50,12 +50,15 @@ int main()
 	std::list<Bullet> bullets;
 	std::list<EnemyBullet> enemyBullet;
 
+	bool isBulletEnemySpawn = false;
+
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
 	float nextFireTime = 0.2f; // Durée avant de pouvoir tirer;
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
+	float shootDuration = 0;
 
 	while (window.isOpen())
 	{
@@ -78,8 +81,8 @@ int main()
 		if(isNewRoom)
 		{
 			player = SpawnPlayer();
-			SpawnEnemies(enemies, numberOfEnemies + level, thickness);
-			level++;
+			SpawnEnemies(enemies, (numberOfEnemies + currentlevel) - 1, thickness);
+			currentlevel++;
 			isNewRoom = false;
 		}
 
@@ -100,6 +103,7 @@ int main()
 		timeSinceLastFire += elapsedTime.asSeconds(); // Calcul du temps depuis le début le lancement du programme
 
 		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
+		shootDuration += elapsedTime.asSeconds();
 
 		PlayerMovement(player, elapsedTime.asSeconds());
 
@@ -138,14 +142,22 @@ int main()
 				timeSinceLastFire = 0;
 			}
 		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			
+		if (shootDuration > 3.f)
 		{
-			for (auto it = enemies.begin(); it != enemies.end(); ++it)
+			if (isBulletEnemySpawn == false)
 			{
-				SpawnEnemiesBullet(enemyBullet, enemies, player, thickness);
+				isBulletEnemySpawn = true;
+				for (auto it = enemies.begin(); it != enemies.end(); ++it)
+				{
+					SpawnEnemiesBullet(enemyBullet, enemies, player, thickness);
+				}
+				isBulletEnemySpawn = false;		
 			}
+			shootDuration = 0.f;
 		}
+		
+		
 
 		CheckAllTheCollisions(player, enemies, boundingBoxes, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
