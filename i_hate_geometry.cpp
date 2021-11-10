@@ -98,8 +98,8 @@ int main()
 		if(isNewRoom)
 		{
 			player = SpawnPlayer();
-			SpawnEnemies(game.enemies, (numberOfEnemies + currentlevel) - 1, thickness);
-			SpawnItems(game.items, numberOfItem, thickness);
+			SpawnEnemies(game, (numberOfEnemies + currentlevel) - 1, thickness);
+			SpawnItems(game, numberOfItem, thickness);
 			currentlevel++;
 			isNewRoom = false;
 		}
@@ -161,7 +161,7 @@ int main()
 				timeSinceLastFire = 0;
 				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-				SpawnBullet(game.bullets, player, mousePos, thickness, radians);
+				SpawnBullet(game, player, mousePos, thickness, radians);
 			}
 		}
 			
@@ -169,12 +169,12 @@ int main()
 		{
 			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 			{
-				SpawnEnemiesBullet(game.enemyBullet, *it, player, thickness);
+				SpawnEnemiesBullet(game, *it, player, thickness);
 			}
 			shootDuration = 0.f;
 		}
 
-		CheckAllTheCollisions(player, game.enemies, boundingBoxes, game.bullets, game.enemyBullet, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, game, boundingBoxes, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();

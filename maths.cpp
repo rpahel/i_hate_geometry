@@ -100,15 +100,15 @@ void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float de
 	}
 }
 
-void CheckPlayerBulletCollision(sf::CircleShape& player, std::list<EnemyBullet>& enemyBullets, bool& isDead)
+void CheckPlayerBulletCollision(sf::CircleShape& player, Game &game, bool& isDead)
 {
-	for(auto pew = enemyBullets.begin(); pew != enemyBullets.end();)
+	for(auto pew = game.enemyBullet.begin(); pew != game.enemyBullet.end();)
 	{
 		float D = distance(player.getPosition().x - pew->shape.getPosition().x, player.getPosition().y - pew->shape.getPosition().y);
 		if(D <= player.getRadius())
 		{
 			isDead = true;
-			pew = enemyBullets.erase(pew);
+			pew = game.enemyBullet.erase(pew);
 		}
 		else
 		{
@@ -117,14 +117,14 @@ void CheckPlayerBulletCollision(sf::CircleShape& player, std::list<EnemyBullet>&
 	}
 }
 
-bool CheckEnemyBulletCollision(sf::CircleShape& enemy, std::list<Bullet>& bullets)
+bool CheckEnemyBulletCollision(sf::CircleShape& enemy, Game &game)
 {
-	for(auto pew = bullets.begin(); pew != bullets.end();)
+	for(auto pew = game.bullets.begin(); pew != game.bullets.end();)
 	{
 		float D = distance(enemy.getPosition().x - pew->shape.getPosition().x, enemy.getPosition().y - pew->shape.getPosition().y);
 		if(D <= enemy.getRadius())
 		{
-			pew = bullets.erase(pew);
+			pew = game.bullets.erase(pew);
 			return true;
 		}
 
@@ -134,22 +134,22 @@ bool CheckEnemyBulletCollision(sf::CircleShape& enemy, std::list<Bullet>& bullet
 	return false;
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], std::list<Bullet>& bullets, std::list<EnemyBullet>& enemyBullets, bool& isDead, float deltaTime)
+void CheckAllTheCollisions(sf::CircleShape& player, Game& game, sf::FloatRect boundingBoxes[4], bool& isDead, float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
 	CheckPlayerWallCollision(player, boundingBoxes, deltaTime);
-	CheckPlayerBulletCollision(player, enemyBullets, isDead);
+	CheckPlayerBulletCollision(player, game, isDead);
 
 	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur
-	for(auto it = enemies.begin(); it != enemies.end();)
+	for(auto it = game.enemies.begin(); it != game.enemies.end();)
 	{
 		CheckCollision(player, it->shape, deltaTime);
 		CheckEnemyWallCollision(*it, boundingBoxes);
 		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
-		if(CheckEnemyBulletCollision(it->shape, bullets))
+		if(CheckEnemyBulletCollision(it->shape, game))
 		{
 			SpawnParticles(it->shape.getPosition());
-			it = enemies.erase(it);
+			it = game.enemies.erase(it);
 		}
 		else
 		{
@@ -157,11 +157,11 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 		}
 	}
 
-	for(auto it = bullets.begin(); it != bullets.end();)
+	for(auto it = game.bullets.begin(); it != game.bullets.end();)
 	{
 		if (CheckBulletWallCollision(it->shape, boundingBoxes))
 		{
-			it = bullets.erase(it);
+			it = game.bullets.erase(it);
 		}
 		else
 		{
@@ -169,11 +169,11 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 		}
 	}
 
-	for (auto it = enemyBullets.begin(); it != enemyBullets.end();)
+	for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end();)
 	{
 		if (CheckBulletWallCollision(it->shape, boundingBoxes))
 		{
-			it = enemyBullets.erase(it);
+			it = game.enemyBullet.erase(it);
 		}
 		else
 		{

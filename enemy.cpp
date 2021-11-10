@@ -3,12 +3,12 @@
 #include "enemy.h"
 #include "maths.h"
 
-void SpawnEnemies(std::list<Enemy>& enemies, int numberOfEnemies, int thickness)
+void SpawnEnemies(Game &game, int numberOfEnemies, int thickness)
 {
-	enemies.resize(numberOfEnemies);
+	game.enemies.resize(numberOfEnemies);
 	int i = 0;
 
-	for(auto& enemy : enemies)
+	for(auto& enemy : game.enemies)
 	{
 		enemy.name = "enemy" + std::to_string(i);
 		enemy.shape.setRadius(25.f);
@@ -22,14 +22,14 @@ void SpawnEnemies(std::list<Enemy>& enemies, int numberOfEnemies, int thickness)
 	}
 }
 
-void SpawnEnemiesBullet(std::list<EnemyBullet>& bullets, Enemy &enemy, sf::CircleShape& player, int thickness)
+void SpawnEnemiesBullet(Game &game, Enemy &enemy, sf::CircleShape& player, int thickness)
 {
 	if ((rand() % 2) + 1 == 1) // Chaque ennemi a une chance sur 3 de tirer quand la fonction est appelée
 	{
 		EnemyBullet enemyBullet;
 		enemyBullet.shape.setSize(sf::Vector2f(3, 20));
 		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // change l'origine du rectangle pour être au centre
-		enemyBullet.name = "enemyBullet" + std::to_string(bullets.size());
+		enemyBullet.name = "enemyBullet" + std::to_string(game.enemyBullet.size());
 		enemyBullet.direction = player.getPosition() - enemy.shape.getPosition();
 		float amplitude = sqrtf(enemyBullet.direction.x * enemyBullet.direction.x + enemyBullet.direction.y * enemyBullet.direction.y); // longueur du vecteur
 		enemyBullet.direction = enemyBullet.direction / amplitude; // Normalisation du vecteur
@@ -40,6 +40,6 @@ void SpawnEnemiesBullet(std::list<EnemyBullet>& bullets, Enemy &enemy, sf::Circl
 		enemyBullet.shape.setFillColor(sf::Color::Transparent);
 		enemyBullet.shape.setOutlineThickness(2.f);
 		enemyBullet.shape.setOutlineColor(sf::Color::Yellow);
-		bullets.push_back(enemyBullet);
+		game.enemyBullet.push_back(enemyBullet);
 	}
 }

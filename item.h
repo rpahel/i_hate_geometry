@@ -3,4 +3,4 @@
 #include <list>
 #include "struct.h"
 
-void SpawnItems(std::list<Item>& items, int numberOfItem, int thickness);
+void SpawnItems(Game& game, int numberOfItem, int thickness);
