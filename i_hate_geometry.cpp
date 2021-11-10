@@ -180,7 +180,7 @@ int main()
 			shootDuration = 0.f;
 		}
 
-		CheckAllTheCollisions(player, game, boundingBoxes, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, game, boundingBoxes, playerSpeed, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();
@@ -209,8 +209,6 @@ int main()
 		{
 			window.draw(it->shape);
 		}
-
-		std::cout << game.particles.size() << std::endl;
 
 		if (isLoadingRoom == false)
 		{
