@@ -273,6 +273,6 @@ void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, floa
 
 void MoveParticles(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
 {
-	float speed = 500.0f;
+	float speed = 200.0f;
 	bullet.move(direction * speed * deltaTime);
 }

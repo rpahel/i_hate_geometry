@@ -157,6 +157,9 @@ int main()
 		for (auto it = game.particles.begin(); it != game.particles.end(); ++it)
 		{
 			MoveParticles(it->shape, it->direction, elapsedTime.asSeconds());
+			/*sf::Color color = sf::Color::White;
+			color.a = 255.f - elapsedTime.asSeconds();
+			it->shape.setOutlineColor(color);*/
 		}
 
 		//FireBullets
@@ -181,6 +184,7 @@ int main()
 		}
 
 		CheckAllTheCollisions(player, game, boundingBoxes, playerSpeed, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+
 
 		// Rendu
 		window.clear();
