@@ -2,10 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include "particle.h"
 #include "maths.h"
-#include "queue"
-
-
-//sstd::queue<Particles>& particles;
 
 void SpawnParticles(sf::Vector2f spawnPos)
 {

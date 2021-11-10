@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "bullet.h"
 #include "item.h"
+#include "struct.h"
 
 std::string getAppPath();
 std::string getAssetsPath(std::string appPath);
@@ -41,6 +42,7 @@ int main()
 	// On prend les hitbox des murs
 	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()};
 
+	Game game;
 	int currentlevel = 1;
 	bool isLoadingRoom = false;
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
@@ -59,11 +61,6 @@ int main()
 	sf::CircleShape player;
 	bool isDead = false;
 
-	std::list<Enemy> enemies;	  //Listes des enemies et des différentes bullet
-	std::list<Bullet> bullets;
-	std::list<EnemyBullet> enemyBullet;
-	std::list<Item> items;
-
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
 	float nextFireTime = .2f; // Durée avant de pouvoir tirer;
@@ -74,7 +71,7 @@ int main()
 	float shootDuration = 0;
 
 	float playerSpeed = 300.f;
-
+	
 	while (window.isOpen())
 	{
 		// Inputs
@@ -101,20 +98,20 @@ int main()
 		if(isNewRoom)
 		{
 			player = SpawnPlayer();
-			SpawnEnemies(enemies, (numberOfEnemies + currentlevel) - 1, thickness);
-			SpawnItems(items, numberOfItem, thickness);
+			SpawnEnemies(game.enemies, (numberOfEnemies + currentlevel) - 1, thickness);
+			SpawnItems(game.items, numberOfItem, thickness);
 			currentlevel++;
 			isNewRoom = false;
 		}
 		levelTextUpdater(currentlevel, text); //Update le text du level
 
-		if (enemies.size() == 0 && isLoadingRoom == false) //Si on a tué tout les ennemis, charge une nouvelle room
+		if (game.enemies.size() == 0 && isLoadingRoom == false) //Si on a tué tout les ennemis, charge une nouvelle room
 		{
 			isLoadingRoom = true;
-			enemies.clear();
-			bullets.clear();
-			enemyBullet.clear();
-			items.clear();
+			game.enemies.clear();
+			game.bullets.clear();
+			game.enemyBullet.clear();
+			game.items.clear();
 			moveDuration = 0;
 			shootDuration = 0;
 			playerSpeed = 300.f;
@@ -134,24 +131,24 @@ int main()
 
 		if(moveDuration > 1.f) //Cooldown changement de direction des enemy
 		{
-			for (auto it = enemies.begin(); it != enemies.end(); ++it)
+			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 			{
 				ChangeEnemyDirection(it->direction);
 			}
 			moveDuration = 0.f;
 		}
 
-		for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 		{
 			MoveEnemies(it->shape, it->direction, elapsedTime.asSeconds());
 		}
 
-		for (auto it = bullets.begin(); it != bullets.end(); ++it)
+		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
 		{
 			MoveBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
 
-		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
 		{
 			MoveEnemyBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
@@ -164,40 +161,40 @@ int main()
 				timeSinceLastFire = 0;
 				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
 				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-				SpawnBullet(bullets, player, mousePos, thickness, radians);
+				SpawnBullet(game.bullets, player, mousePos, thickness, radians);
 			}
 		}
 			
 		if (shootDuration > 3.f)
 		{
-			for (auto it = enemies.begin(); it != enemies.end(); ++it)
+			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 			{
-				SpawnEnemiesBullet(enemyBullet, *it, player, thickness);
+				SpawnEnemiesBullet(game.enemyBullet, *it, player, thickness);
 			}
 			shootDuration = 0.f;
 		}
 
-		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullet, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, game.enemies, boundingBoxes, game.bullets, game.enemyBullet, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();
 
-		for(auto it = enemies.begin(); it != enemies.end(); ++it)
+		for(auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 		{
 			window.draw(it->shape);
 		}
 
-		for (auto it = bullets.begin(); it != bullets.end(); ++it)
+		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
 		{
 			window.draw(it->shape);
 		}
 
-		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
+		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
 		{
 			window.draw(it->shape);
 		}
 
-		for (auto it = items.begin(); it != items.end(); ++it)
+		for (auto it = game.items.begin(); it != game.items.end(); ++it)
 		{
 			window.draw(it->shape);
 		}
