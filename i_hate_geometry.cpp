@@ -139,36 +139,48 @@ int main()
 			moveDuration = 0.f;
 		}
 
-		for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
+		if (isDead == false)
 		{
-			MoveEnemies(it->shape, it->direction, elapsedTime.asSeconds());
-		}
-
-		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
-		{
-			MoveBullets(it->shape, it->direction, elapsedTime.asSeconds());
-		}
-
-		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
-		{
-			MoveEnemyBullets(it->shape, it->direction, elapsedTime.asSeconds());
-		}
-
-		for (auto it = game.particles.begin(); it != game.particles.end();)
-		{
-			MoveParticles(it->shape, it->direction, elapsedTime.asSeconds());
-			it->lifeTime -= elapsedTime.asSeconds();
-
-			if (it->lifeTime <= 0)
+			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
 			{
-				it = game.particles.erase(it);
+				MoveEnemies(it->shape, it->direction, elapsedTime.asSeconds());
 			}
-			else
-			{
-				++it;
-			}
-		}
 
+			for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
+			{
+				MoveBullets(it->shape, it->direction, elapsedTime.asSeconds());
+			}
+
+			for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
+			{
+				MoveEnemyBullets(it->shape, it->direction, elapsedTime.asSeconds());
+			}
+
+			for (auto it = game.particles.begin(); it != game.particles.end();)
+			{
+				MoveParticles(it->shape, it->direction, elapsedTime.asSeconds());
+				it->lifeTime -= elapsedTime.asSeconds();
+
+				if (it->lifeTime <= 0)
+				{
+					it = game.particles.erase(it);
+				}
+				else
+				{
+					++it;
+				}
+			}
+
+			if (shootDuration > 1.f)
+			{
+				for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
+				{
+					SpawnEnemiesBullet(game, *it, player, thickness);
+				}
+				shootDuration = 0.f;
+			}
+
+		}
 
 		//FireBullets
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isDead)
@@ -182,17 +194,7 @@ int main()
 			}
 		}
 			
-		if (shootDuration > 1.f)
-		{
-			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
-			{
-				SpawnEnemiesBullet(game, *it, player, thickness);
-			}
-			shootDuration = 0.f;
-		}
-
 		CheckAllTheCollisions(player, game, boundingBoxes, playerSpeed, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
-
 
 		// Rendu
 		window.clear();
