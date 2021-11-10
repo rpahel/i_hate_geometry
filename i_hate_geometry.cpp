@@ -71,6 +71,7 @@ int main()
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	int numberOfItem = 2;
+	int numberOfParticles = 20;
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 	float shootDuration = 0;
 
@@ -146,7 +147,7 @@ int main()
 			MoveBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
 
-		for (auto it = enemyBullets.begin(); it != enemyBullets.end(); ++it)
+		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
 		{
 			MoveEnemyBullets(it->shape, it->direction, it->rotation, elapsedTime.asSeconds());
 		}
@@ -172,7 +173,7 @@ int main()
 			shootDuration = 0.f;
 		}
 
-		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullets, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullet, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();
@@ -187,7 +188,7 @@ int main()
 			window.draw(it->shape);
 		}
 
-		for (auto it = enemyBullets.begin(); it != enemyBullets.end(); ++it)
+		for (auto it = enemyBullet.begin(); it != enemyBullet.end(); ++it)
 		{
 			window.draw(it->shape);
 		}
