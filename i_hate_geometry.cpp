@@ -68,8 +68,8 @@ int main()
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
 	float nextFireTime = .2f; // Durée avant de pouvoir tirer;
 	
-	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
-	int numberOfItem = 2;
+	int numberOfEnemies = 1; //Nombre d'ennemis à la première salle
+	int numberOfItem = 3;
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 	float shootDuration = 0;
 
@@ -177,7 +177,7 @@ int main()
 			shootDuration = 0.f;
 		}
 
-		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullet, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
+		CheckAllTheCollisions(player, enemies, boundingBoxes, bullets, enemyBullet, items, playerSpeed, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
 		// Rendu
 		window.clear();

@@ -9,8 +9,8 @@ struct Enemy {
 
 struct Item {
 	std::string name;
+	std::string effect;
 	sf::RectangleShape shape;
-	//sf::Vector2f direction;
 };
 
 struct Bullet {

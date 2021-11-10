@@ -12,11 +12,21 @@ void SpawnItems(std::list<Item>& items, int numberOfItem, int thickness)
 	{
 		item.name = "item" + std::to_string(i);
 		item.shape.setSize(sf::Vector2f(25.f, 25.f));
-		item.shape.setOrigin(item.shape.getSize());
+		item.shape.setOrigin(item.shape.getSize().x / 2, item.shape.getSize().y / 2);
 		item.shape.setPosition(rand() % (1200 - thickness * 2) + thickness, rand() % (900 - thickness * 2) + thickness);
 		item.shape.setFillColor(sf::Color::Transparent);
 		item.shape.setOutlineThickness(2.f);
-		item.shape.setOutlineColor(sf::Color::White);
+		if(rand()%2)
+		{
+			item.shape.setOutlineColor(sf::Color::White);
+			item.effect = "speedUp";
+		}
+		else
+		{
+			item.shape.setOutlineColor(sf::Color::Red);
+			item.effect = "speedDown";
+		}
+
 		++i;
 	}
 }

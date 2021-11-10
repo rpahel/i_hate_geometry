@@ -33,9 +33,9 @@ void PlayerMovement(sf::CircleShape& circle, float& speed, float deltaTime) //30
 		circle.move(sf::Vector2f(speed * deltaTime, 0.f));
 }
 
-void CheckPlayerWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4], float deltaTime)
+void CheckPlayerWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4], float& speed)
 {
-	float force = 5.0f;
+	float force = 0.009f * speed;
 	sf::FloatRect playerBox = object.getGlobalBounds();
 
 	if (playerBox.intersects(boundingBoxes[0])) //Sud
@@ -71,6 +71,31 @@ void CheckEnemyWallCollision(Enemy& enemy, sf::FloatRect boundingBoxes[4])
 	if (enemyBox.intersects(boundingBoxes[2]) || enemyBox.intersects(boundingBoxes[3])) // Est || West
 	{
 		enemy.direction = sf::Vector2f(-enemy.direction.x, enemy.direction.y);
+	}
+}
+
+void CheckItemWallCollision(sf::RectangleShape& item, sf::FloatRect boundingBoxes[4])
+{
+	sf::FloatRect itemBox = item.getGlobalBounds();
+
+	if (itemBox.intersects(boundingBoxes[0])) //Sud
+	{
+		item.move(sf::Vector2f(0, -1));
+	}
+
+	if (itemBox.intersects(boundingBoxes[1])) //Nord
+	{
+		item.move(sf::Vector2f(0, 1));
+	}
+
+	if (itemBox.intersects(boundingBoxes[2])) //Est
+	{
+		item.move(sf::Vector2f(-1, 0));
+	}
+
+	if (itemBox.intersects(boundingBoxes[3])) //West
+	{
+		item.move(sf::Vector2f(1, 0));
 	}
 }
 
@@ -117,6 +142,24 @@ void CheckPlayerBulletCollision(sf::CircleShape& player, std::list<EnemyBullet>&
 	}
 }
 
+bool CheckPlayerItemCollision(sf::CircleShape& player, Item& item, float& speed)
+{
+	if (distance(player.getPosition().x - item.shape.getPosition().x, player.getPosition().y - item.shape.getPosition().y) <= player.getRadius())
+	{
+		if(item.effect == "speedUp")
+		{
+			speed *= 1.5f;
+		}
+		if(item.effect == "speedDown")
+		{
+			speed *= .75f;
+		}
+		return true;
+	}
+
+	return false;
+}
+
 bool CheckEnemyBulletCollision(sf::CircleShape& enemy, std::list<Bullet>& bullets)
 {
 	for(auto pew = bullets.begin(); pew != bullets.end();)
@@ -134,10 +177,10 @@ bool CheckEnemyBulletCollision(sf::CircleShape& enemy, std::list<Bullet>& bullet
 	return false;
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], std::list<Bullet>& bullets, std::list<EnemyBullet>& enemyBullets, bool& isDead, float deltaTime)
+void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, sf::FloatRect boundingBoxes[4], std::list<Bullet>& bullets, std::list<EnemyBullet>& enemyBullets, std::list<Item>& items, float& playerSpeed, bool& isDead, float deltaTime)
 {
 	// On check les collisions entre le joueur et les murs
-	CheckPlayerWallCollision(player, boundingBoxes, deltaTime);
+	CheckPlayerWallCollision(player, boundingBoxes, playerSpeed);
 	CheckPlayerBulletCollision(player, enemyBullets, isDead);
 
 	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur
@@ -145,7 +188,7 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 	{
 		CheckCollision(player, it->shape, deltaTime);
 		CheckEnemyWallCollision(*it, boundingBoxes);
-		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
+		CheckPlayerWallCollision(it->shape, boundingBoxes, playerSpeed); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
 		if(CheckEnemyBulletCollision(it->shape, bullets))
 		{
 			SpawnParticles(it->shape.getPosition());
@@ -174,6 +217,19 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 		if (CheckBulletWallCollision(it->shape, boundingBoxes))
 		{
 			it = enemyBullets.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+
+	for (auto it = items.begin(); it != items.end();)
+	{
+		CheckItemWallCollision(it->shape, boundingBoxes);
+		if(CheckPlayerItemCollision(player, *it, playerSpeed))
+		{
+			it = items.erase(it);
 		}
 		else
 		{
