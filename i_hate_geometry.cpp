@@ -117,6 +117,7 @@ int main()
 			items.clear();
 			moveDuration = 0;
 			shootDuration = 0;
+			playerSpeed = 300.f;
 			player.setPosition(600, 450);
 			isNewRoom = true;
 			isLoadingRoom = false;
