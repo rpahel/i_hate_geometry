@@ -16,7 +16,6 @@ void levelTextUpdater(int& currentlevel, sf::Text &text);
 
 int main()
 {
-	std::cout << getAssetsPath(getAppPath()) << std::endl;
 	srand(time(NULL)); //On laisse ça là pour les random
 
 	sf::RenderWindow window(sf::VideoMode(1200, 900), "I hate geometry");
@@ -46,7 +45,7 @@ int main()
 	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
 	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
 
-	sf::Font font;
+	sf::Font font;		//Setup de la font et des différents textes
 	font.loadFromFile(getAssetsPath(getAppPath()) + "arial.ttf");
 	sf::Text text;
 	text.setFont(font);
@@ -83,7 +82,7 @@ int main()
 				break;
 
 			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::A)
+				if (event.key.code == sf::Keyboard::A) //Si on appuie sur A, load une nouvelle room
 				{
 					isLoadingRoom = true;
 					enemies.clear();
@@ -108,20 +107,7 @@ int main()
 			currentlevel++;
 			isNewRoom = false;
 		}
-
-		levelTextUpdater(currentlevel, text);
-
-
-		//Change de salle lorsque tout les ennemies sont dead
-		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		{
-			isLoadingRoom = true;
-			enemies.clear();
-			bullets.clear();
-			player.setPosition(600, 450);
-			isNewRoom = true;
-			isLoadingRoom = false;
-		}*/
+		levelTextUpdater(currentlevel, text); //Update le text du level
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
