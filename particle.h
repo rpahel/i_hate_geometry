@@ -3,4 +3,4 @@
 #include <list>
 #include "struct.h"
 
-void SpawnParticles(std::list<Item>& items, int numberOfParticles, int thickness);
+void SpawnParticles(sf::Vector2f pos);

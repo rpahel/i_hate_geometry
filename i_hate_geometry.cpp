@@ -63,7 +63,6 @@ int main()
 	std::list<Bullet> bullets;
 	std::list<EnemyBullet> enemyBullet;
 	std::list<Item> items;
-	std::list<Particles> particles;
 
 	sf::Vector2f mousePos;
 	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
@@ -71,7 +70,6 @@ int main()
 	
 	int numberOfEnemies = 5; //Nombre d'ennemis à la première salle
 	int numberOfItem = 2;
-	int numberOfParticles = 20;
 	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
 	float shootDuration = 0;
 
@@ -89,18 +87,9 @@ int main()
 				window.close();
 				break;
 
-			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::A) //Si on appuie sur A, load une nouvelle room
-				{
-					isLoadingRoom = true;
-					enemies.clear();
-					bullets.clear();
-					enemyBullet.clear();
-					items.clear();
-					player.setPosition(600, 450);
-					isNewRoom = true;
-					isLoadingRoom = false;
-				}
+			/*case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::A)         //Si on appuie sur A, load une nouvelle room
+				{ }*/
 				break;
 
 			default:
@@ -118,6 +107,20 @@ int main()
 			isNewRoom = false;
 		}
 		levelTextUpdater(currentlevel, text); //Update le text du level
+
+		if (enemies.size() == 0 && isLoadingRoom == false) //Si on a tué tout les ennemis, charge une nouvelle room
+		{
+			isLoadingRoom = true;
+			enemies.clear();
+			bullets.clear();
+			enemyBullet.clear();
+			items.clear();
+			moveDuration = 0;
+			shootDuration = 0;
+			player.setPosition(600, 450);
+			isNewRoom = true;
+			isLoadingRoom = false;
+		}
 
 		// Logique
 		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle

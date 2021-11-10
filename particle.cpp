@@ -2,13 +2,18 @@
 #include <SFML/Graphics.hpp>
 #include "particle.h"
 #include "maths.h"
+#include "queue"
 
-void SpawnParticles(std::list<Particles>& particles, int numberOfParticles, int thickness)
+
+//sstd::queue<Particles>& particles;
+
+void SpawnParticles(sf::Vector2f spawnPos)
 {
-	particles.resize(numberOfParticles);
+	int numberOfParticles = 20;
+	int thickness = 20;
 	int i = 0;
 
-	for (auto& particle : particles)
+	/*for (auto& particle : particles)
 	{
 		particle.shape.setSize(sf::Vector2f(3, 20));
 		particle.shape.setOrigin(particle.shape.getSize().x / 2, particle.shape.getSize().y / 2); // change l'origine du rectangle pour être au centre
@@ -24,5 +29,5 @@ void SpawnParticles(std::list<Particles>& particles, int numberOfParticles, int 
 		particle.shape.setOutlineThickness(2.f);
 		particle.shape.setOutlineColor(sf::Color::Green);
 		particles.push_back(particle);
-	}
+	}*/
 }

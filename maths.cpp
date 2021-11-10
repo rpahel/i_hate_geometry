@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include "struct.h"
+#include "particle.h"
 #include <math.h>
 
 float car(float a)
@@ -147,6 +148,7 @@ void CheckAllTheCollisions(sf::CircleShape& player, std::list<Enemy>& enemies, s
 		CheckPlayerWallCollision(it->shape, boundingBoxes, deltaTime); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
 		if(CheckEnemyBulletCollision(it->shape, bullets))
 		{
+			SpawnParticles(it->shape.getPosition());
 			it = enemies.erase(it);
 		}
 		else
@@ -203,11 +205,8 @@ void ChangeEnemyDirection(sf::Vector2f& direction)
 
 void MoveEnemyBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)
 {
-	if ((rand() % 3) + 1 == 1) // Chaque ennemi a une chance sur 3 de tirer quand la fonction est appelée
-	{
-		float speed = 800.0f;
-		bullet.move(direction * speed * deltaTime);
-	}
+	float speed = 400.0f;
+	bullet.move(direction * speed * deltaTime);
 }
 
 void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float rotation, float deltaTime)

@@ -32,4 +32,5 @@ struct Particles {
 	sf::RectangleShape shape;
 	sf::Vector2f direction;
 	float rotation;
+	float lifeTime;
 };
