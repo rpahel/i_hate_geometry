@@ -3,74 +3,55 @@
 #include <list>
 #include <unordered_map>
 #include <time.h>
-#include <cmath>
 #include "windows.h"
 #include "maths.h"
-#include "player.h"
-#include "enemy.h"
-#include "bullet.h"
-#include "item.h"
 #include "struct.h"
+#include "updates.h"
+#include "spawns.h"
 
 std::string getAppPath();
 std::string getAssetsPath(std::string appPath);
-void levelTextUpdater(int& currentlevel, sf::Text &text);
 
 int main()
 {
-	srand(time(NULL)); //On laisse ça là pour les random
+	srand(time(NULL)); // Génère la seed pour les rand()
 
-	sf::RenderWindow window(sf::VideoMode(1200, 900), "I hate geometry");
-	window.setVerticalSyncEnabled(true);
+	sf::RenderWindow window(sf::VideoMode(1200, 900),"I hate geometry"); // Taille et nom de la fenêtre
+	window.setVerticalSyncEnabled(true); // Bloque les fps à 60
 
-	int thickness = 20; // Largeur des murs;
+	int wallThickness = 20; // Largeur des murs
 
-	sf::RectangleShape wallSouth(sf::Vector2f(1200, thickness));
+	// Début génération et placement des murs
+	sf::RectangleShape wallSouth(sf::Vector2f(1200, wallThickness));
 	wallSouth.setFillColor(sf::Color(100,100,100));
-	wallSouth.setPosition(0, 900 - thickness);
+	wallSouth.setPosition(0, 900 - wallThickness);
 
-	sf::RectangleShape wallNorth(sf::Vector2f(1200, thickness));
+	sf::RectangleShape wallNorth(sf::Vector2f(1200, wallThickness));
 	wallNorth.setFillColor(sf::Color(100, 100, 100));
 
-	sf::RectangleShape wallEast(sf::Vector2f(thickness, 900));
+	sf::RectangleShape wallEast(sf::Vector2f(wallThickness, 900));
 	wallEast.setFillColor(sf::Color(100, 100, 100));
-	wallEast.setPosition(1200 - thickness, 0);
+	wallEast.setPosition(1200 - wallThickness, 0);
 
-	sf::RectangleShape wallWest(sf::Vector2f(thickness, 900));
+	sf::RectangleShape wallWest(sf::Vector2f(wallThickness, 900));
 	wallWest.setFillColor(sf::Color(100, 100, 100));
+	// Fin génération et placement des murs
 
-	// On prend les hitbox des murs
-	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()};
+	sf::FloatRect boundingBoxes[4] {wallSouth.getGlobalBounds(), wallNorth.getGlobalBounds(), wallEast.getGlobalBounds(), wallWest.getGlobalBounds()}; // On prend les hitbox des murs
 
-	Game game;
-	int currentlevel = 1;
-	bool isLoadingRoom = false;
-	bool isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
-	bool firstFrame = true; //Est-ce que c'est la première frame de la salle ? Début = oui
+	Game game; // On créer la struct game contenant toutes les listes et autres paramètres de la partie.
+	Player player; // On créer la struct player
+	Mouse mouse; // On créer la struct mouse
 
-	sf::Font font;		//Setup de la font et des différents textes
-	font.loadFromFile(getAssetsPath(getAppPath()) + "arial.ttf");
-	sf::Text text;
-	text.setFont(font);
-	text.setPosition(1080,50);
-	text.setCharacterSize(24);
+	game.currentLevel = 1; // Niveau actuel. Début = 1
+	game.numberOfEnemies = 1; // Nombre d'ennemis au premier niveau
+	game.numberOfItems = 2; // Nombre d'items
+	game.isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
 
-	sf::Clock clock;
-	sf::Clock clock2;
-
-	sf::CircleShape player;
-	bool isDead = false;
-
-	sf::Vector2f mousePos;
-	float timeSinceLastFire = 0; // Calculer la durée depuis le dernier tir
-	float nextFireTime = .2f; // Durée avant de pouvoir tirer;
-	
-	int numberOfEnemies = 1; //Nombre d'ennemis à la première salle
-	int numberOfItem = 3;
-	float moveDuration = 0; // Calculer la durée de déplacement des ennemis
-	float shootDuration = 0;
-
-	float playerSpeed = 300.f;
+	game.font.loadFromFile(getAssetsPath(getAppPath()) + "arial.ttf"); // On charge le style de font voulu
+	game.levelText.setFont(game.font); // On assigne le font au texte
+	game.levelText.setPosition(1080,50); // On assigne une position au texte
+	game.levelText.setCharacterSize(24); // On assigne une taille de police
 	
 	while (window.isOpen())
 	{
@@ -84,164 +65,173 @@ int main()
 				window.close();
 				break;
 
-			/*case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::A)         //Si on appuie sur A, load une nouvelle room
-				{ }*/
-				break;
+			//case sf::Event::KeyPressed:
+			//	if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+			//	{ }
+			//	break;
 
 			default:
 				break;
 			}
 		}
 
-		// Quand c'est une nouvelle salle, on initialise le joueur et les ennemis.
-		if(isNewRoom)
+		// Début setup
+		if(game.isNewRoom) // Quand c'est une nouvelle salle, on initialise le joueur et les ennemis.
 		{
 			player = SpawnPlayer();
-			SpawnEnemies(game, (numberOfEnemies + currentlevel) - 1, thickness);
-			SpawnItems(game, numberOfItem, thickness);
-			currentlevel++;
-			isNewRoom = false;
+			SpawnEnemies(game, wallThickness);
+			SpawnItems(game, wallThickness);
+			game.isNewRoom = false;
 		}
-		levelTextUpdater(currentlevel, text); //Update le text du level
 
-		if (game.enemies.size() == 0 && isLoadingRoom == false) //Si on a tué tout les ennemis, charge une nouvelle room
+		if (game.enemies.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
 		{
-			isLoadingRoom = true;
 			game.enemies.clear();
 			game.bullets.clear();
 			game.enemyBullet.clear();
 			game.items.clear();
 			game.particles.clear();
-			moveDuration = 0;
-			shootDuration = 0;
-			playerSpeed = 300.f;
-			player.setPosition(600, 450);
-			isNewRoom = true;
-			isLoadingRoom = false;
+			player.playerSpeed = 300.f;
+			player.shape.setPosition(600, 450);
+			game.currentLevel++;
+			game.levelText.setString("level " + std::to_string(game.currentLevel));
+			game.timeSinceStartLevel = 0;
+			game.isNewRoom = true;
 		}
+		// Fin setup
 
-		// Logique
-		sf::Time elapsedTime = clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
-		timeSinceLastFire += elapsedTime.asSeconds(); // Calcul du temps depuis le début le lancement du programme
+		// Début logique
+		game.deltaTime = game.clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
+		game.timeSinceStartLevel += game.deltaTime.asSeconds(); // Calcul du temps depuis le début du level
 
-		moveDuration += elapsedTime.asSeconds(); // On rajoute le deltaTime à moveDuration
-		shootDuration += elapsedTime.asSeconds();
+		PlayerMovement(player, game.deltaTime.asSeconds()); // On update la position du joueur en fonction des inputs
 
-		PlayerMovement(player, playerSpeed, elapsedTime.asSeconds());
-
-		if(moveDuration > 1.f) //Cooldown changement de direction des enemy
+		if (!player.isDead)
 		{
-			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
+			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque ennemi...
 			{
-				ChangeEnemyDirection(it->direction);
-			}
-			moveDuration = 0.f;
-		}
+				UpdateEnemyState(*it, game.deltaTime.asSeconds()); // On l'update
 
-		if (isDead == false)
-		{
-			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
-			{
-				MoveEnemies(it->shape, it->direction, elapsedTime.asSeconds());
-			}
-
-			for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
-			{
-				MoveBullets(it->shape, it->direction, elapsedTime.asSeconds());
-			}
-
-			for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
-			{
-				MoveEnemyBullets(it->shape, it->direction, elapsedTime.asSeconds());
-			}
-
-			for (auto it = game.particles.begin(); it != game.particles.end();)
-			{
-				MoveParticles(it->shape, it->direction, elapsedTime.asSeconds());
-				it->lifeTime -= elapsedTime.asSeconds();
-
-				if (it->lifeTime <= 0)
+				if (it->moveCD <= 0) // Si moveCD est inférieur ou égal à 0...
 				{
-					it = game.particles.erase(it);
+					it->direction = RandomDirection(); // On change la direction de l'ennemi
+					it->moveCD = it->fireRate;
+				}
+
+				MoveEnemies(*it, game.deltaTime.asSeconds()); // On déplace l'ennemi
+
+				if (it->fireCD <= 0) // Si fireCD est inférieur ou égal à 0...
+				{
+					switch (it->type) // En fonction du type de l'ennemi...
+					{
+						case 0:
+							SpawnEnemiesBullet(game, *it, player.shape, 0); // On fait apparaitre une balle ennemie
+							break;
+						case 1:
+							for(int i=0; i < 2; ++i)
+							{
+								SpawnEnemiesBullet(game, *it, player.shape, i); // i représente le numéro de la balle, utile pour determiner sa direction
+							}
+							break;
+						default:
+							SpawnEnemiesBullet(game, *it, player.shape, 0);
+							break;
+					}
+
+					it->fireCD = it->fireRate;
+				}
+			}
+
+			for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it) // Pour chaque balle...
+			{
+				MoveBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+			}
+
+			for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
+			{
+				MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+			}
+
+			for (auto it = game.particles.begin(); it != game.particles.end();) // Pour chaque particule...
+			{
+				MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
+
+				it->lifeTime -= game.deltaTime.asSeconds(); // On réduit deltaTime de lifeTime
+
+				if (it->lifeTime <= 0) // Quand lifeTime atteint 0...
+				{
+					it = game.particles.erase(it); // On efface la particule de la liste et on se met sur la nouvelle particule
 				}
 				else
 				{
-					++it;
+					++it; // On passe à la prochaine particule
 				}
 			}
 
-			if (shootDuration > 1.f)
-			{
-				for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
-				{
-					SpawnEnemiesBullet(game, *it, player, thickness);
-				}
-				shootDuration = 0.f;
-			}
+			UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
-			//FireBullets
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // Si on clique sur LMB...
 			{
-				if (timeSinceLastFire >= nextFireTime)
+				UpdateMousePos(mouse, window); // On update les coordonnées de la souris
+
+				if (player.fireCD <= 0.f) // Si fireCD est inférieur ou égal à 0...
 				{
-					timeSinceLastFire = 0;
-					float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-					mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-					SpawnBullet(game, player, mousePos, thickness, radians);
+					SpawnBullet(game, player, mouse); // On spawn une balle
+					player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
 				}
 			}
 		}
-
 			
-		CheckAllTheCollisions(player, game, boundingBoxes, playerSpeed, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
-
+		CheckAllTheCollisions(player, game, boundingBoxes); // On check toutes les collisions (sauf entre les ennemis)
+		// Fin logique
+		
 		// Rendu
-		window.clear();
+		window.clear(); // On nettoie la fenêtre
 
-		for(auto it = game.enemies.begin(); it != game.enemies.end(); ++it)
+		for(auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque enemy...
 		{
-			window.draw(it->shape);
+			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it)
+		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it) // Pour chaque bullet...
 		{
-			window.draw(it->shape);
+			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it)
+		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque enemyBullet...
 		{
-			window.draw(it->shape);
+			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.items.begin(); it != game.items.end(); ++it)
+		for (auto it = game.items.begin(); it != game.items.end(); ++it) // Pour chaque item...
 		{
-			window.draw(it->shape);
+			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.particles.begin(); it != game.particles.end(); ++it)
+		for (auto it = game.particles.begin(); it != game.particles.end(); ++it) // Pour chaque particle...
 		{
-			window.draw(it->shape);
+			window.draw(it->shape); // On l'affiche
 		}
 
-		if (isLoadingRoom == false)
+		if(!player.isDead) // Si le joueur n'est pas mort...
 		{
-			if(!isDead)
-			{
-				window.draw(player);
-			}
-			window.draw(wallNorth);
-			window.draw(wallEast);
-			window.draw(wallSouth);
-			window.draw(wallWest);
+			window.draw(player.shape); // On le dessine
 		}
-		window.draw(text);
 
-		window.display();
+		// Début affichage des murs
+		window.draw(wallNorth);
+		window.draw(wallEast);
+		window.draw(wallSouth);
+		window.draw(wallWest);
+		// Fin affichage des murs
+
+		window.draw(game.levelText); // On affiche le texte
+
+		window.display(); // On affiche à l'écran tous les draw
 	}
 }
 
-std::string getAppPath()
+std::string getAppPath() // On va chercher l'endroit où se trouve l'appli
 {
 	char cExeFilePath[256];
 	GetModuleFileNameA(NULL, cExeFilePath, 256);
@@ -251,13 +241,8 @@ std::string getAppPath()
 	return appPath;
 }
 
-std::string getAssetsPath(std::string appPath)
+std::string getAssetsPath(std::string appPath) // On va chercher l'endroit où se trouve les assets
 {
 	std::string assetsPath = appPath + "Assets\\";
 	return assetsPath;
-}
-
-void levelTextUpdater(int& currentlevel, sf::Text& text)
-{
-	text.setString("level " + std::to_string(currentlevel - 1));
 }

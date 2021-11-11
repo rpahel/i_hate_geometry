@@ -1,278 +1,278 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
+#include "spawns.h"
 #include "struct.h"
-#include "particle.h"
-#include <math.h>
 
-float car(float a)
+float car(float a) // fonction carré
 {
 	float b = a * a;
 	return b;
 }
 
-float distance(float A, float B)
+float pyth(float A, float B) // fonction theoreme de Pythagore
 {
 	float D = sqrt(car(A) + car(B));
 	return D;
 }
 
-// Gestion des d�placement d'un player
-void PlayerMovement(sf::CircleShape& circle, float& speed, float deltaTime) //300 speed = 600pixels par seconde
+// Gestion des deplacement du Player
+void PlayerMovement(Player& player, float deltaTime)
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-		circle.move(sf::Vector2f(0.f, -speed * deltaTime));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) // Si le joueur appuie sur Up ou Z...
+		player.shape.move(sf::Vector2f(0.f, -player.playerSpeed * deltaTime)); // Le joueur va vers le haut
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		circle.move(sf::Vector2f(0.f, speed * deltaTime));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) // Si le joueur appuie sur Down ou S...
+		player.shape.move(sf::Vector2f(0.f, player.playerSpeed * deltaTime)); // Le joueur va vers le bas
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		circle.move(sf::Vector2f(-speed * deltaTime, 0.f));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) // Si le joueur appuie sur Gauche ou Q...
+		player.shape.move(sf::Vector2f(-player.playerSpeed * deltaTime, 0.f)); // Le joueur va vers la gauche
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		circle.move(sf::Vector2f(speed * deltaTime, 0.f));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) // Si le joueur appuie sur Droite ou D...
+		player.shape.move(sf::Vector2f(player.playerSpeed * deltaTime, 0.f)); // Le joueur va vers la droite
 }
 
+// Gestion des collisions Joueur - Murs
 void CheckPlayerWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4], float& speed)
 {
-	float force = 0.009f * speed;
-	sf::FloatRect playerBox = object.getGlobalBounds();
+	float force = 0.025f * speed; // Force de répulsion du mur (je sais pas pourquoi mais cette valeur est celle qui faut)
+	sf::FloatRect playerBox = object.getGlobalBounds(); // On prend la hitBox du joueur
 
-	if (playerBox.intersects(boundingBoxes[0])) //Sud
+	if (playerBox.intersects(boundingBoxes[0])) //Si le joueur percute le mur Sud...
 	{
-		object.move(sf::Vector2f(0, -1) * force);
+		object.move(sf::Vector2f(0, -1) * force); // On le déplace vers le haut
 	}
 
-	if (playerBox.intersects(boundingBoxes[1])) //Nord
+	if (playerBox.intersects(boundingBoxes[1])) //Si le joueur percute le mur Nord...
 	{
-		object.move(sf::Vector2f(0, 1) * force);
+		object.move(sf::Vector2f(0, 1) * force); // On le déplace vers le bas
 	}
 
-	if (playerBox.intersects(boundingBoxes[2])) //Est
+	if (playerBox.intersects(boundingBoxes[2])) //Si le joueur percute le mur Est...
 	{
-		object.move(sf::Vector2f(-1, 0) * force);
+		object.move(sf::Vector2f(-1, 0) * force); // On le déplace vers la gauche
 	}
 
-	if (playerBox.intersects(boundingBoxes[3])) //West
+	if (playerBox.intersects(boundingBoxes[3])) //Si le joueur percute le mur West...
 	{
-		object.move(sf::Vector2f(1, 0) * force);
+		object.move(sf::Vector2f(1, 0) * force); // On le déplace vers la droite
 	}
 }
 
+// Gestion des collisions Ennemi - Murs
 void CheckEnemyWallCollision(Enemy& enemy, sf::FloatRect boundingBoxes[4])
 {
-	sf::FloatRect enemyBox = enemy.shape.getGlobalBounds();
+	sf::FloatRect enemyBox = enemy.shape.getGlobalBounds(); // On prend la hitbox de l'ennemi
 
 	if (enemyBox.intersects(boundingBoxes[0]) || enemyBox.intersects(boundingBoxes[1])) // Sud || Nord
 	{
-		enemy.direction = sf::Vector2f(enemy.direction.x, -enemy.direction.y);
+		enemy.direction = sf::Vector2f(enemy.direction.x, -enemy.direction.y); // On inverse la composante verticale de la direction
 	}
 
 	if (enemyBox.intersects(boundingBoxes[2]) || enemyBox.intersects(boundingBoxes[3])) // Est || West
 	{
-		enemy.direction = sf::Vector2f(-enemy.direction.x, enemy.direction.y);
+		enemy.direction = sf::Vector2f(-enemy.direction.x, enemy.direction.y); // On inverse la composante horizontale de la direction
 	}
 }
 
+// Gestion des collisions Item - Murs
 void CheckItemWallCollision(sf::RectangleShape& item, sf::FloatRect boundingBoxes[4])
 {
-	sf::FloatRect itemBox = item.getGlobalBounds();
+	sf::FloatRect itemBox = item.getGlobalBounds(); // On prend la hitbox de l'item
 
-	if (itemBox.intersects(boundingBoxes[0])) //Sud
+	if (itemBox.intersects(boundingBoxes[0])) //Pareil que pour le joueur
 	{
 		item.move(sf::Vector2f(0, -1));
 	}
 
-	if (itemBox.intersects(boundingBoxes[1])) //Nord
+	if (itemBox.intersects(boundingBoxes[1]))
 	{
 		item.move(sf::Vector2f(0, 1));
 	}
 
-	if (itemBox.intersects(boundingBoxes[2])) //Est
+	if (itemBox.intersects(boundingBoxes[2]))
 	{
 		item.move(sf::Vector2f(-1, 0));
 	}
 
-	if (itemBox.intersects(boundingBoxes[3])) //West
+	if (itemBox.intersects(boundingBoxes[3]))
 	{
 		item.move(sf::Vector2f(1, 0));
 	}
 }
 
+// Check des collisions Balle - Murs
 bool CheckBulletWallCollision(sf::RectangleShape bullet, sf::FloatRect boundingBoxes[4])
 {
-	sf::FloatRect bulletBox = bullet.getGlobalBounds();
+	sf::FloatRect bulletBox = bullet.getGlobalBounds(); // On prend la hitbox de la balle
 
-	if (bulletBox.intersects(boundingBoxes[0]) || bulletBox.intersects(boundingBoxes[1]) || bulletBox.intersects(boundingBoxes[2]) || bulletBox.intersects(boundingBoxes[3]))
+	if (bulletBox.intersects(boundingBoxes[0]) || bulletBox.intersects(boundingBoxes[1]) || bulletBox.intersects(boundingBoxes[2]) || bulletBox.intersects(boundingBoxes[3])) // Si la balle touche n'importe quel mur...
 	{
-		return true;
+		return true; // On renvoit true
 	}
 
-	return false;
+	return false; // On renvoit false
 }
 
-// Gestion des collisions
+// Gestion des collisions Joueur - Ennemis
 void CheckCollision(sf::CircleShape& objectA, sf::CircleShape& objectB, float deltaTime)
 {
 	float speed = 12.f;
 	// Check si les deux cercles se superposent
-	if(distance(objectA.getPosition().x - objectB.getPosition().x, objectA.getPosition().y - objectB.getPosition().y) <= objectA.getRadius() + objectB.getRadius()) // dX^2 + dY^2 <= (R1 - R2)^2
+	if(pyth(objectA.getPosition().x - objectB.getPosition().x, objectA.getPosition().y - objectB.getPosition().y) <= objectA.getRadius() + objectB.getRadius()) // Si les deux objets se superposent...
 	{
-		// S'ils se superposent, les d�placer pour qu'ils ne se superposent plus
-		sf::Vector2f playerToObject = objectB.getPosition() - objectA.getPosition();
-		objectA.move(playerToObject * -0.5f * deltaTime * speed);
+		sf::Vector2f playerToObject = objectB.getPosition() - objectA.getPosition(); // On trace une direction entre les deux objets
+		objectA.move(playerToObject * -0.5f * deltaTime * speed); // On pousse les objets dans des sens opposés
 		objectB.move(playerToObject * 0.5f * deltaTime * speed);
 	}
 }
 
-void CheckPlayerBulletCollision(sf::CircleShape& player, Game &game, bool& isDead)
+// Gestion des collisions Joueur - Balles
+void CheckPlayerBulletCollision(Player& player, Game &game)
 {
-	for(auto pew = game.enemyBullet.begin(); pew != game.enemyBullet.end();)
+	for(auto pew = game.enemyBullet.begin(); pew != game.enemyBullet.end();) // Pour chaque balle de la liste...
 	{
-		float D = distance(player.getPosition().x - pew->shape.getPosition().x, player.getPosition().y - pew->shape.getPosition().y);
-		if(D <= player.getRadius())
+		float D = pyth(player.shape.getPosition().x - pew->shape.getPosition().x, player.shape.getPosition().y - pew->shape.getPosition().y); // On prend la distance entre le joueur et la balle
+
+		if(D <= player.shape.getRadius()) // Si la distance est inférieur au rayon du joueur (donc si la balle est superposée au joueur) ...
 		{
-			isDead = true;
-			pew = game.enemyBullet.erase(pew);
+			player.isDead = true; // On dit que le joueur est mort
+			pew = game.enemyBullet.erase(pew); // On supprime la balle de la liste et on passe à la prochaine
 		}
 		else
 		{
-			++pew;
+			++pew; // On passe à la prochaine balle de la liste
 		}
 	}
 }
 
-bool CheckPlayerItemCollision(sf::CircleShape& player, Item& item, float& speed)
+// Check des collisions Joueur - Item
+bool CheckPlayerItemCollision(Player& player, Item& item)
 {
-	if (distance(player.getPosition().x - item.shape.getPosition().x, player.getPosition().y - item.shape.getPosition().y) <= player.getRadius())
+	float D = pyth(player.shape.getPosition().x - item.shape.getPosition().x, player.shape.getPosition().y - item.shape.getPosition().y); // Distance entre le joueur et l'item
+
+	if (D <= player.shape.getRadius()) // Si le joueur et l'item se superposent...
 	{
-		if(item.effect == "speedUp")
+		if(item.effect == "speedUp") // Si l'effet de l'item est X...
 		{
-			speed *= 1.5f;
+			player.playerSpeed *= 2.f; // On double la vitesse du joueur
 		}
-		if(item.effect == "speedDown")
+		if(item.effect == "speedDown") // Si l'effet de l'item est X...
 		{
-			speed *= .75f;
+			player.playerSpeed *= .5f; // On diminue sa vitesse de moitié
 		}
+
 		return true;
 	}
 
 	return false;
 }
 
+// Check des collisions Ennemi - Balles
 bool CheckEnemyBulletCollision(sf::CircleShape& enemy, Game &game)
 {
-	for(auto pew = game.bullets.begin(); pew != game.bullets.end();)
+	for(auto pew = game.bullets.begin(); pew != game.bullets.end();) // Pour chaque balle de la liste...
 	{
-		float D = distance(enemy.getPosition().x - pew->shape.getPosition().x, enemy.getPosition().y - pew->shape.getPosition().y);
-		if(D <= enemy.getRadius())
+		float D = pyth(enemy.getPosition().x - pew->shape.getPosition().x, enemy.getPosition().y - pew->shape.getPosition().y); // Distance entre la balle et l'ennemi
+
+		if(D <= enemy.getRadius()) // Si la balle et l'ennemi se superposent...
 		{
-			pew = game.bullets.erase(pew);
+			pew = game.bullets.erase(pew); // On supprime la balle et on répond true
 			return true;
 		}
 
-		++pew;
+		++pew; // On passe à la prochaine balle
 	}
 
 	return false;
 }
 
-void CheckAllTheCollisions(sf::CircleShape& player, Game& game, sf::FloatRect boundingBoxes[4], float& playerSpeed, bool& isDead, float deltaTime)
+// Gestion de toutes les collisions
+void CheckAllTheCollisions(Player& player, Game& game, sf::FloatRect boundingBoxes[4])
 {
-	// On check les collisions entre le joueur et les murs
-	CheckPlayerWallCollision(player, boundingBoxes, playerSpeed);
-	CheckPlayerBulletCollision(player, game, isDead);
+	CheckPlayerWallCollision(player.shape, boundingBoxes, player.playerSpeed);
+	CheckPlayerBulletCollision(player, game);
 
-	// Pour chaque enemy, on check la collision avec le joueur + on check la collision avec un mur
-	for(auto it = game.enemies.begin(); it != game.enemies.end();)
+	for(auto it = game.enemies.begin(); it != game.enemies.end();) // Pour chaque ennemi...
 	{
-		CheckCollision(player, it->shape, deltaTime);
+		CheckCollision(player.shape, it->shape, game.deltaTime.asSeconds());
 		CheckEnemyWallCollision(*it, boundingBoxes);
-		CheckPlayerWallCollision(it->shape, boundingBoxes, playerSpeed); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
-		if(CheckEnemyBulletCollision(it->shape, game))
+		CheckPlayerWallCollision(it->shape, boundingBoxes, it->enemySpeed); // Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
+
+		if(CheckEnemyBulletCollision(it->shape, game)) // Si l'ennemi se fait toucher par une balle...
 		{
-			SpawnParticles(*it, game);
-			it = game.enemies.erase(it);
+			SpawnParticles(*it, game); // On fait apparaitre des particules
+			it = game.enemies.erase(it); // On supprime l'ennemi de la liste et on passe au prochain
 		}
 		else
 		{
-			++it;
+			++it; // On passe au prochain ennemi
 		}
 	}
 
-	for(auto it = game.bullets.begin(); it != game.bullets.end();)
+	for(auto it = game.bullets.begin(); it != game.bullets.end();) // Pour chaque balle...
 	{
-		if (CheckBulletWallCollision(it->shape, boundingBoxes))
+		if (CheckBulletWallCollision(it->shape, boundingBoxes)) // Si la balle touche un mur...
 		{
-			it = game.bullets.erase(it);
+			it = game.bullets.erase(it); // Supprime la balle et pas à la prochaine
 		}
 		else
 		{
-			++it;
+			++it; // Passe à la prochaine balle
 		}
 	}
 
-	for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end();)
+	for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end();) // Pour chaque balle ennemie...
 	{
-		if (CheckBulletWallCollision(it->shape, boundingBoxes))
+		if (CheckBulletWallCollision(it->shape, boundingBoxes)) // Si la balle touche un mur...
 		{
-			it = game.enemyBullet.erase(it);
+			it = game.enemyBullet.erase(it); // Supprime la balle et pas à la prochaine
 		}
 		else
 		{
-			++it;
+			++it; // Passe à la prochaine balle
 		}
 	}
 
-	for (auto it = game.items.begin(); it != game.items.end();)
+	for (auto it = game.items.begin(); it != game.items.end();) // Pour chaque item...
 	{
 		CheckItemWallCollision(it->shape, boundingBoxes);
-		if(CheckPlayerItemCollision(player, *it, playerSpeed))
+
+		if(CheckPlayerItemCollision(player, *it)) // Si le joueur touche un item...
 		{
-			it = game.items.erase(it);
+			it = game.items.erase(it); // Supprime l'item et passe au prochain
 		}
 		else
 		{
-			++it;
+			++it; // Passe au prochain item
 		}
 	}
 }
 
+// Generation d'une direction aleatoire
 sf::Vector2f RandomDirection()
 {
-	int tab[2]{ -1, 1 };
-	sf::Vector2f direction((tab[rand() % 2]), (tab[rand() % 2])); // Vecteur de direction qui peut valoir (0,0) (-1,0) (1,0) (1,1) etc..
-	return direction;
+	int tab[2]{ -1, 1 }; // Petit tableau comportant un négatif et un positif
+	sf::Vector2f direction((tab[rand() % 2]), (tab[rand() % 2])); // Vecteur de direction qui peut valoir (1,1), (-1,1), (1,-1), (-1,-1)
+	return direction; // Répond la direction
 }
 
-void MoveEnemies(sf::CircleShape& enemy, const sf::Vector2f& direction, float deltaTime)
+// Fonctions de mouvement
+void MoveEnemies(Enemy& enemy, float deltaTime)
 {
-	float speed = 120.f;
-	enemy.move(direction * speed * deltaTime);
+	enemy.shape.move(enemy.direction * enemy.enemySpeed * deltaTime);
 }
 
-void ChangeEnemyDirection(sf::Vector2f& direction)
+void MoveEnemyBullets(EnemyBullet& enemyBullet, float deltaTime)
 {
-	if((rand() % 3) + 1 == 1) // Chaque ennemi a une chance sur 3 de changer de direction quand la fonction est appelée
-	{
-		direction = RandomDirection();
-	}
+	enemyBullet.shape.move(enemyBullet.direction * enemyBullet.bulletSpeed * deltaTime);
 }
 
-void MoveEnemyBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
+void MoveBullets(Bullet& bullet, float deltaTime)
 {
-	float speed = 400.0f;
-	bullet.move(direction * speed * deltaTime);
+	bullet.shape.move(bullet.direction * bullet.bulletSpeed * deltaTime);
 }
 
-void MoveBullets(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
+void MoveParticles(Particles& particle, float deltaTime)
 {
-	float speed = 800.0f;
-	bullet.move(direction * speed * deltaTime);
-}
-
-void MoveParticles(sf::RectangleShape& bullet, const sf::Vector2f& direction, float deltaTime)
-{
-	float speed = 200.0f;
-	bullet.move(direction * speed * deltaTime);
+	particle.shape.move(particle.direction * particle.particleSpeed * deltaTime);
 }

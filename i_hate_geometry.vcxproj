@@ -151,22 +151,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bullet.cpp" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="item.cpp" />
     <ClCompile Include="i_hate_geometry.cpp" />
     <ClCompile Include="maths.cpp" />
-    <ClCompile Include="particle.cpp" />
-    <ClCompile Include="player.cpp" />
+    <ClCompile Include="spawns.cpp" />
+    <ClCompile Include="updates.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bullet.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="item.h" />
     <ClInclude Include="maths.h" />
-    <ClInclude Include="particle.h" />
-    <ClInclude Include="player.h" />
+    <ClInclude Include="spawns.h" />
     <ClInclude Include="struct.h" />
+    <ClInclude Include="updates.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
