@@ -191,7 +191,7 @@ void CheckAllTheCollisions(sf::CircleShape& player, Game& game, sf::FloatRect bo
 		CheckPlayerWallCollision(it->shape, boundingBoxes, playerSpeed); //Cette fonction evite que les ennemis qui spawnent dans le mur restent coincés dedans
 		if(CheckEnemyBulletCollision(it->shape, game))
 		{
-			SpawnParticles(it->shape.getPosition(), game);
+			SpawnParticles(*it, game);
 			it = game.enemies.erase(it);
 		}
 		else

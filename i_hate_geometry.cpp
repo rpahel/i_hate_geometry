@@ -180,19 +180,19 @@ int main()
 				shootDuration = 0.f;
 			}
 
-		}
-
-		//FireBullets
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isDead)
-		{
-			if (timeSinceLastFire >= nextFireTime)
+			//FireBullets
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				timeSinceLastFire = 0;
-				float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-				mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
-				SpawnBullet(game, player, mousePos, thickness, radians);
+				if (timeSinceLastFire >= nextFireTime)
+				{
+					timeSinceLastFire = 0;
+					float radians = std::atan2(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+					mousePos = sf::Vector2f(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y);
+					SpawnBullet(game, player, mousePos, thickness, radians);
+				}
 			}
 		}
+
 			
 		CheckAllTheCollisions(player, game, boundingBoxes, playerSpeed, isDead, elapsedTime.asSeconds()); // On check toutes les collisions (sauf entre les enemies)
 
@@ -240,8 +240,6 @@ int main()
 		window.display();
 	}
 }
-
-
 
 std::string getAppPath()
 {
