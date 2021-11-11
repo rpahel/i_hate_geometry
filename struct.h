@@ -2,6 +2,14 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 
+struct Player {
+	sf::CircleShape shape;
+	float fireRate;
+	float playerSpeed;
+	float radius;
+	int numberOfBullets;
+};
+
 struct Enemy {
 	std::string name;
 	sf::CircleShape shape;
