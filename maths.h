@@ -9,3 +9,4 @@ void MoveEnemies(Enemy& enemy, float deltaTime);
 void MoveEnemyBullets(EnemyBullet& enemyBullet, float deltaTime);
 void MoveBullets(Bullet& bullet, float deltaTime);
 void MoveParticles(Particles& particle, float deltaTime);
+void MoveBoss(Boss& boss, float deltaTime);

@@ -8,7 +8,7 @@ Player SpawnPlayer()
 {
 	Player player;
 
-	player.radius = 15.f; // Rayon du cercle
+	player.radius = 20.f; // Rayon du cercle
 
 	// Début propriétés de la forme du joueur
 	player.shape.setRadius(player.radius);
@@ -45,7 +45,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 		switch (enemyType) // On génère un type d'ennemi en fonction de enemyType
 		{
 			case 0:
-				enemy.shape.setRadius(15.f);
+				enemy.shape.setRadius(20.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(255, 0, 255)); // Magenta
 				enemy.type = enemyType;
@@ -54,7 +54,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 				break;
 
 			case 1:
-				enemy.shape.setRadius(20.f);
+				enemy.shape.setRadius(25.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(255, 165, 0)); // Orange
 				enemy.type = enemyType;
@@ -63,7 +63,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 				break;
 
 			default:
-				enemy.shape.setRadius(15.f);
+				enemy.shape.setRadius(20.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(255, 0, 255)); // Magenta
 				enemy.type = 0;
@@ -163,7 +163,7 @@ void SpawnItems(Game& game, int wallThickness)
 	{
 		item.name = "item" + std::to_string(i); // Nom de l'item
 
-		item.shape.setSize(sf::Vector2f(10.f, 10.f)); // Taille de l'item
+		item.shape.setSize(sf::Vector2f(20.f, 20.f)); // Taille de l'item
 		item.shape.setOrigin(item.shape.getSize().x / 2, item.shape.getSize().y / 2); // On met son origine au centre de la forme
 		item.shape.setPosition(rand() % (1200 - wallThickness * 2) + wallThickness, rand() % (900 - wallThickness * 2) + wallThickness); // On le mets aléatoirement à l'intérieur des murs
 		item.shape.setFillColor(sf::Color::Transparent); // Couleur de la forme
@@ -226,4 +226,58 @@ void SpawnParticles(const Enemy& enemy, Game& game)
 
 		game.particles.push_back(particle); // On rajoute la particule à la liste
 	}
+}
+
+void SpawnBoss(Game& game, int wallThickness)
+{
+	Boss boss;
+	boss.shape.setRadius(50.f);
+	boss.shape.setOutlineThickness(2.f);
+	boss.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
+	boss.bossSpeed = 300.f;
+	boss.fireRate = 1.f;
+	boss.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
+	boss.shape.setOrigin(boss.shape.getRadius(), boss.shape.getRadius()); // On mets son point d'origine au centre de la forme
+	boss.shape.setPosition(600, 300); // On le fait apparaître au milieu, et légèrement au-dessus du joueur
+	boss.name = "boss_" + std::to_string(game.boss.size());
+	game.boss.push_back(boss);
+}
+
+void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)
+{
+	BossBullet bossBullet;
+
+	bossBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On définit la taille de la balle
+	bossBullet.shape.setOrigin(bossBullet.shape.getSize().x / 2, bossBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
+
+	bossBullet.name = "bossBullet" + std::to_string(game.boss.size());
+
+	bossBullet.direction = player.getPosition() - boss.shape.getPosition();
+	float amplitude = sqrtf(bossBullet.direction.x * bossBullet.direction.x + bossBullet.direction.y * bossBullet.direction.y); // longueur du vecteur
+	bossBullet.direction = bossBullet.direction / amplitude; // Normalisation du vecteur
+
+	switch (bulletNumber)
+	{
+		case 0:
+			break;
+
+		case 1:
+			bossBullet.direction = -bossBullet.direction;
+			break;
+
+		default:
+			break;
+	}
+
+	bossBullet.rotation = std::atan2(bossBullet.direction.x, bossBullet.direction.y); // en radian
+	bossBullet.rotation = -bossBullet.rotation * (180.f / 3.1415f); // Conversion en deg
+	bossBullet.shape.setRotation(bossBullet.rotation); // La balle est tournée en direction de.. sa direction
+	bossBullet.shape.setPosition(boss.shape.getPosition()); // La balle sort du centre du cercle
+	bossBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
+	bossBullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
+	bossBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
+
+	bossBullet.bulletSpeed = 600.f;
+
+	game.bossBullet.push_back(bossBullet); // On rajoute la balle à la liste
 }

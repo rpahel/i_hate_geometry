@@ -55,12 +55,41 @@ struct Particles {
 	float particleSpeed;
 };
 
+struct Boss {
+	std::string name;
+	int type;
+	sf::CircleShape shape;
+	float bossSpeed;
+	float fireRate;
+	float fireCD;
+	float moveDuration;
+	float moveCD;
+
+	enum bossState
+	{
+		Idle = true,
+		Moving = false, 
+		Shooting = false,
+		Blocking = false,
+	};
+};
+
+struct BossBullet {
+	std::string name;
+	sf::RectangleShape shape;
+	sf::Vector2f direction;
+	float rotation;
+	float bulletSpeed;
+};
+
 struct Game {
 	std::list<Enemy> enemies;	
 	std::list<Bullet> bullets;
 	std::list<EnemyBullet> enemyBullet;
 	std::list<Item> items;
 	std::list<Particles> particles;
+	std::list<Boss> boss;
+	std::list<BossBullet> bossBullet;
 	int currentLevel;
 	bool isNewRoom;
 	sf::Font font;

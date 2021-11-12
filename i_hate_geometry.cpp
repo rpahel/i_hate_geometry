@@ -52,6 +52,7 @@ int main()
 	game.levelText.setFont(game.font); // On assigne le font au texte
 	game.levelText.setPosition(1080,50); // On assigne une position au texte
 	game.levelText.setCharacterSize(24); // On assigne une taille de police
+	game.levelText.setString("level " + std::to_string(game.currentLevel)); //On affiche le niveau actuel
 	
 	while (window.isOpen())
 	{
@@ -66,9 +67,11 @@ int main()
 				break;
 
 			//case sf::Event::KeyPressed:
-			//	if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
-			//	{ }
-			//	break;
+				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+				{ 
+					
+				}
+				break;
 
 			default:
 				break;
@@ -81,6 +84,7 @@ int main()
 			player = SpawnPlayer();
 			SpawnEnemies(game, wallThickness);
 			SpawnItems(game, wallThickness);
+			//SpawnBoss(game, wallThickness);
 			game.isNewRoom = false;
 		}
 
@@ -168,9 +172,14 @@ int main()
 				}
 			}
 
+			for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
+			{
+				MoveBoss(*it, game.deltaTime.asSeconds()); // On déplace le(s) boss
+			}
+
 			UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // Si on clique sur LMB...
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // Si on clique sur LMB...ss
 			{
 				UpdateMousePos(mouse, window); // On update les coordonnées de la souris
 
@@ -213,10 +222,17 @@ int main()
 			window.draw(it->shape); // On l'affiche
 		}
 
+		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
+		{
+			window.draw(it->shape); // On l'affiche
+		}
+
 		if(!player.isDead) // Si le joueur n'est pas mort...
 		{
 			window.draw(player.shape); // On le dessine
 		}
+
+		std::cout << game.boss.size() << std::endl;
 
 		// Début affichage des murs
 		window.draw(wallNorth);
