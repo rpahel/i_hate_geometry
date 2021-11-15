@@ -39,22 +39,22 @@ void CheckPlayerWallCollision(sf::CircleShape& object, sf::FloatRect boundingBox
 
 	if (playerBox.intersects(boundingBoxes[0])) //Si le joueur percute le mur Sud...
 	{
-		object.move(sf::Vector2f(0, -1) * force); // On le déplace vers le haut
+		object.setPosition(object.getPosition().x, 900 - boundingBoxes[0].height - object.getRadius() - 1); // On le place juste avant le mur
 	}
 
 	if (playerBox.intersects(boundingBoxes[1])) //Si le joueur percute le mur Nord...
 	{
-		object.move(sf::Vector2f(0, 1) * force); // On le déplace vers le bas
+		object.setPosition(object.getPosition().x, boundingBoxes[1].height + object.getRadius() + 1); // On le place juste avant le mur
 	}
 
 	if (playerBox.intersects(boundingBoxes[2])) //Si le joueur percute le mur Est...
 	{
-		object.move(sf::Vector2f(-1, 0) * force); // On le déplace vers la gauche
+		object.setPosition(1200 - boundingBoxes[2].width - object.getRadius() - 1, object.getPosition().y); // On le place juste avant le mur
 	}
 
 	if (playerBox.intersects(boundingBoxes[3])) //Si le joueur percute le mur West...
 	{
-		object.move(sf::Vector2f(1, 0) * force); // On le déplace vers la droite
+		object.setPosition(boundingBoxes[3].width + object.getRadius() + 1, object.getPosition().y); // On le place juste avant le mur
 	}
 }
 
