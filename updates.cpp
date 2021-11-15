@@ -16,3 +16,7 @@ void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window)
 	mouse.x = sf::Mouse::getPosition(window).x;
 	mouse.y = sf::Mouse::getPosition(window).y;
 }
+
+void UpdateBossState(Player& player, float deltaTime)
+{
+}

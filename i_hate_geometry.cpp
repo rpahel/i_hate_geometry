@@ -66,10 +66,11 @@ int main()
 				window.close();
 				break;
 
-			//case sf::Event::KeyPressed:
+			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
 				{ 
-					
+					std::cout << "A" << std::endl;
+					SpawnBoss(game, wallThickness);
 				}
 				break;
 
@@ -84,7 +85,6 @@ int main()
 			player = SpawnPlayer();
 			SpawnEnemies(game, wallThickness);
 			SpawnItems(game, wallThickness);
-			//SpawnBoss(game, wallThickness);
 			game.isNewRoom = false;
 		}
 
@@ -151,11 +151,6 @@ int main()
 				MoveBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
 			}
 
-			for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
-			{
-				MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
-			}
-
 			for (auto it = game.particles.begin(); it != game.particles.end();) // Pour chaque particule...
 			{
 				MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
@@ -172,9 +167,29 @@ int main()
 				}
 			}
 
+
 			for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
 			{
-				MoveBoss(*it, game.deltaTime.asSeconds()); // On déplace le(s) boss
+				UpdateBossState(player, game.deltaTime.asSeconds());
+
+				if (it->isMoving)
+				{
+					MoveBoss(*it, game.deltaTime.asSeconds()); // On déplace le(s) boss
+				}
+
+				else if (it->isShooting)
+				{
+					for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
+					{
+						MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+					}
+				}
+
+				else if (it->isShooting)
+				{
+					//Fais apparaître le shield du boss
+				}
+
 			}
 
 			UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
@@ -232,7 +247,6 @@ int main()
 			window.draw(player.shape); // On le dessine
 		}
 
-		std::cout << game.boss.size() << std::endl;
 
 		// Début affichage des murs
 		window.draw(wallNorth);

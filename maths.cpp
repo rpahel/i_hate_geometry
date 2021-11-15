@@ -279,8 +279,5 @@ void MoveParticles(Particles& particle, float deltaTime)
 
 void MoveBoss(Boss& boss, float deltaTime)
 {
-	if (boss.Shooting)
-	{
-		//boss.shape.move(boss.direction * boss.bulletSpeed * deltaTime);
-	}
+	//boss.shape.move(boss.direction * boss.bulletSpeed * deltaTime);
 }

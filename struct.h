@@ -64,13 +64,14 @@ struct Boss {
 	float fireCD;
 	float moveDuration;
 	float moveCD;
+	float timeBeforeUpdate;
 
 	enum bossState
 	{
 		Idle = true,
-		Moving = false, 
-		Shooting = false,
-		Blocking = false,
+		isMoving = false, 
+		isShooting = false,
+		isBlocking = false,
 	};
 };
 
