@@ -59,20 +59,20 @@ struct Boss {
 	std::string name;
 	int type;
 	sf::CircleShape shape;
+	sf::Vector2f direction;
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
-	float moveDuration;
-	float moveCD;
-	float timeBeforeUpdate;
+	float timeBeforeUpdate = 2.f;
 
 	enum bossState
 	{
-		Idle = true,
-		isMoving = false, 
-		isShooting = false,
-		isBlocking = false,
+		isMoving,
+		isShooting,
+		isBlocking,
 	};
+
+	bossState myState = bossState::isBlocking;
 };
 
 struct BossBullet {

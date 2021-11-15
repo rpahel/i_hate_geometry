@@ -268,16 +268,17 @@ void SpawnBoss(Game& game, int wallThickness)
 	boss.shape.setRadius(50.f);
 	boss.shape.setOutlineThickness(2.f);
 	boss.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
-	boss.bossSpeed = 300.f;
+	boss.bossSpeed = 250.f;
 	boss.fireRate = 1.f;
 	boss.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
 	boss.shape.setOrigin(boss.shape.getRadius(), boss.shape.getRadius()); // On mets son point d'origine au centre de la forme
 	boss.shape.setPosition(600, 300); // On le fait apparaître au milieu, et légèrement au-dessus du joueur
 	boss.name = "boss_" + std::to_string(game.boss.size());
+	boss.fireCD = boss.fireRate;
 	game.boss.push_back(boss);
 }
 
-void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)
+void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player)
 {
 	BossBullet bossBullet;
 
@@ -289,27 +290,13 @@ void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bullet
 	bossBullet.direction = player.getPosition() - boss.shape.getPosition();
 	float amplitude = sqrtf(bossBullet.direction.x * bossBullet.direction.x + bossBullet.direction.y * bossBullet.direction.y); // longueur du vecteur
 	bossBullet.direction = bossBullet.direction / amplitude; // Normalisation du vecteur
-
-	switch (bulletNumber)
-	{
-		case 0:
-			break;
-
-		case 1:
-			bossBullet.direction = -bossBullet.direction;
-			break;
-
-		default:
-			break;
-	}
-
 	bossBullet.rotation = std::atan2(bossBullet.direction.x, bossBullet.direction.y); // en radian
 	bossBullet.rotation = -bossBullet.rotation * (180.f / 3.1415f); // Conversion en deg
 	bossBullet.shape.setRotation(bossBullet.rotation); // La balle est tournée en direction de.. sa direction
 	bossBullet.shape.setPosition(boss.shape.getPosition()); // La balle sort du centre du cercle
 	bossBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
 	bossBullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
-	bossBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
+	bossBullet.shape.setOutlineColor(sf::Color::Blue); // Couleur des contours de la balle
 
 	bossBullet.bulletSpeed = 600.f;
 

@@ -177,6 +177,14 @@ int main()
 			}
 		}
 
+			for (auto it = game.bossBullet.begin(); it != game.bossBullet.end(); ++it) // Pour chaque balle ennemie...
+			{
+				MoveBossBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle	
+			}
+
+			for (auto it = game.particles.begin(); it != game.particles.end();) // Pour chaque particule...
+				MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
+			{
 
 		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
 		{
@@ -189,16 +197,31 @@ int main()
 
 			else if (it->isShooting)
 			{
+				UpdateBossState(*it, game.deltaTime.asSeconds());
+				std::cout << it->fireCD << std::endl;
 
+				if (it->myState == it->isMoving)
+				{
+					MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
+					std::cout << "moving" << std::endl;
+				}
+
+				else if (it->myState == it->isShooting)
+				{
+					std::cout << "shooting" << std::endl;
+					if (it->fireCD <= 0)
+					{
+						SpawnBossBullet(game, *it, player.shape);
+						it->fireCD = it->fireRate;
+					}
+				}
+
+				else if (it->myState == it->isBlocking)
+				{
+					//Fais apparaître le shield du boss
+					std::cout << "blocking" << std::endl;
+				}
 			}
-
-			else if (it->isShooting)
-			{
-				//Fais apparaître le shield du boss
-			}
-
-		}
-
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !player.isDead) // Si on clique sur LMB...
@@ -229,6 +252,11 @@ int main()
 		}
 
 		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque enemyBullet...
+		{
+			window.draw(it->shape); // On l'affiche
+		}
+
+		for (auto it = game.bossBullet.begin(); it != game.bossBullet.end(); ++it) // Pour chaque boss...
 		{
 			window.draw(it->shape); // On l'affiche
 		}

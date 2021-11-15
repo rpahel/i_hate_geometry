@@ -273,12 +273,20 @@ void MoveBullets(Bullet& bullet, float deltaTime)
 	bullet.shape.move(bullet.direction * bullet.bulletSpeed * deltaTime);
 }
 
+void MoveBossBullets(BossBullet& bossBullet, float deltaTime)
+{
+	bossBullet.shape.move(bossBullet.direction * bossBullet.bulletSpeed * deltaTime);
+}
+
 void MoveParticles(Particles& particle, float deltaTime)
 {
 	particle.shape.move(particle.direction * particle.particleSpeed * deltaTime);
 }
 
-void MoveBoss(Boss& boss, float deltaTime)
+void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
 {
-	//boss.shape.move(boss.direction * boss.bulletSpeed * deltaTime);
+	boss.direction = player.getPosition() - boss.shape.getPosition();
+	float amplitude = sqrtf(boss.direction.x * boss.direction.x + boss.direction.y * boss.direction.y); // longueur du vecteur
+	boss.direction = boss.direction / amplitude; // Normalisation du vecteur
+	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
 }
