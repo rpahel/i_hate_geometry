@@ -9,4 +9,4 @@ void SpawnItems(Game& game, int wallThickness);
 void SpawnParticles(const Enemy& enemy, Game& game);
 void SpawnPlayerParticles(const Player& player, Game& game);
 void SpawnBoss(Game& game, int wallThickness);
-void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player);
+void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber);

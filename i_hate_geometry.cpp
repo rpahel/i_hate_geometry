@@ -177,11 +177,6 @@ int main()
 			}
 		}
 
-		for (auto it = game.bossBullet.begin(); it != game.bossBullet.end(); ++it) // Pour chaque balle ennemie...
-		{
-			MoveBossBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle	
-		}
-
 		for (auto it = game.particles.begin(); it != game.particles.end(); ++it) // Pour chaque particule...
 		{
 			MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
@@ -212,7 +207,7 @@ int main()
 					std::cout << "shooting" << std::endl;
 					if (it->fireCD <= 0)
 					{
-						SpawnBossBullet(game, *it, player.shape);
+						SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
 						it->fireCD = it->fireRate;
 					}
 				}
@@ -259,11 +254,6 @@ int main()
 			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.bossBullet.begin(); it != game.bossBullet.end(); ++it) // Pour chaque boss...
-		{
-			window.draw(it->shape); // On l'affiche
-		}
-
 		for (auto it = game.items.begin(); it != game.items.end(); ++it) // Pour chaque item...
 		{
 			window.draw(it->shape); // On l'affiche
@@ -283,7 +273,6 @@ int main()
 		{
 			window.draw(player.shape); // On le dessine
 		}
-
 
 		// Début affichage des murs
 		window.draw(wallNorth);

@@ -273,11 +273,6 @@ void MoveBullets(Bullet& bullet, float deltaTime)
 	bullet.shape.move(bullet.direction * bullet.bulletSpeed * deltaTime);
 }
 
-void MoveBossBullets(BossBullet& bossBullet, float deltaTime)
-{
-	bossBullet.shape.move(bossBullet.direction * bossBullet.bulletSpeed * deltaTime);
-}
-
 void MoveParticles(Particles& particle, float deltaTime)
 {
 	particle.shape.move(particle.direction * particle.particleSpeed * deltaTime);

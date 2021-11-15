@@ -8,6 +8,5 @@ void CheckAllTheCollisions(Player& player, Game& game, sf::FloatRect boundingBox
 void MoveEnemies(Enemy& enemy, float deltaTime);
 void MoveEnemyBullets(EnemyBullet& enemyBullet, float deltaTime);
 void MoveBullets(Bullet& bullet, float deltaTime);
-void MoveBossBullets(BossBullet& bossBullet, float deltaTime);
 void MoveParticles(Particles& particle, float deltaTime);
 void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime);
