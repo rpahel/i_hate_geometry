@@ -151,6 +151,11 @@ int main()
 				MoveBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
 			}
 
+			for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
+			{
+				MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+			}
+
 			for (auto it = game.particles.begin(); it != game.particles.end();) // Pour chaque particule...
 			{
 				MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
@@ -179,10 +184,7 @@ int main()
 
 				else if (it->isShooting)
 				{
-					for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
-					{
-						MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
-					}
+
 				}
 
 				else if (it->isShooting)
