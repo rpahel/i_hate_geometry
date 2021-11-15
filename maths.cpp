@@ -34,7 +34,7 @@ void PlayerMovement(Player& player, float deltaTime)
 // Gestion des collisions Joueur - Murs
 void CheckPlayerWallCollision(sf::CircleShape& object, sf::FloatRect boundingBoxes[4], float& speed)
 {
-	float force = 0.025f * speed; // Force de répulsion du mur (je sais pas pourquoi mais cette valeur est celle qui faut)
+	float force = 0.015f * speed; // Force de répulsion du mur (je sais pas pourquoi mais cette valeur est celle qui faut)
 	sf::FloatRect playerBox = object.getGlobalBounds(); // On prend la hitBox du joueur
 
 	if (playerBox.intersects(boundingBoxes[0])) //Si le joueur percute le mur Sud...
@@ -136,6 +136,7 @@ void CheckPlayerBulletCollision(Player& player, Game &game)
 		if(D <= player.shape.getRadius()) // Si la distance est inférieur au rayon du joueur (donc si la balle est superposée au joueur) ...
 		{
 			player.isDead = true; // On dit que le joueur est mort
+			SpawnPlayerParticles(player, game); // On fait apparaitre des particules
 			pew = game.enemyBullet.erase(pew); // On supprime la balle de la liste et on passe à la prochaine
 		}
 		else

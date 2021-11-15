@@ -108,103 +108,107 @@ int main()
 		game.deltaTime = game.clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
 		game.timeSinceStartLevel += game.deltaTime.asSeconds(); // Calcul du temps depuis le début du level
 
-		PlayerMovement(player, game.deltaTime.asSeconds()); // On update la position du joueur en fonction des inputs
-
-		if (!player.isDead)
+		if(!player.isDead)
 		{
-			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque ennemi...
+			PlayerMovement(player, game.deltaTime.asSeconds()); // On update la position du joueur en fonction des inputs
+		}
+		else
+		{
+			player.shape.setRadius(0);
+		}
+
+		for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque ennemi...
+		{
+			UpdateEnemyState(*it, game.deltaTime.asSeconds()); // On l'update
+
+			if (it->moveCD <= 0) // Si moveCD est inférieur ou égal à 0...
 			{
-				UpdateEnemyState(*it, game.deltaTime.asSeconds()); // On l'update
-
-				if (it->moveCD <= 0) // Si moveCD est inférieur ou égal à 0...
-				{
-					it->direction = RandomDirection(); // On change la direction de l'ennemi
-					it->moveCD = it->fireRate;
-				}
-
-				MoveEnemies(*it, game.deltaTime.asSeconds()); // On déplace l'ennemi
-
-				if (it->fireCD <= 0) // Si fireCD est inférieur ou égal à 0...
-				{
-					switch (it->type) // En fonction du type de l'ennemi...
-					{
-						case 0:
-							SpawnEnemiesBullet(game, *it, player.shape, 0); // On fait apparaitre une balle ennemie
-							break;
-						case 1:
-							for(int i=0; i < 2; ++i)
-							{
-								SpawnEnemiesBullet(game, *it, player.shape, i); // i représente le numéro de la balle, utile pour determiner sa direction
-							}
-							break;
-						default:
-							SpawnEnemiesBullet(game, *it, player.shape, 0);
-							break;
-					}
-
-					it->fireCD = it->fireRate;
-				}
+				it->direction = RandomDirection(); // On change la direction de l'ennemi
+				it->moveCD = it->moveDuration;
 			}
 
-			for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it) // Pour chaque balle...
+			MoveEnemies(*it, game.deltaTime.asSeconds()); // On déplace l'ennemi
+
+			if (it->fireCD <= 0 && !player.isDead) // Si fireCD est inférieur ou égal à 0...
 			{
-				MoveBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+				switch (it->type) // En fonction du type de l'ennemi...
+				{
+					case 0:
+						SpawnEnemiesBullet(game, *it, player.shape, 0); // On fait apparaitre une balle ennemie
+						break;
+					case 1:
+						for(int i=0; i < 2; ++i)
+						{
+							SpawnEnemiesBullet(game, *it, player.shape, i); // i représente le numéro de la balle, utile pour determiner sa direction
+						}
+						break;
+					default:
+						SpawnEnemiesBullet(game, *it, player.shape, 0);
+						break;
+				}
+
+				it->fireCD = it->fireRate;
+			}
+		}
+
+		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it) // Pour chaque balle...
+		{
+			MoveBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+		}
+
+		for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
+		{
+			MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
+		}
+
+		for (auto it = game.particles.begin(); it != game.particles.end();) // Pour chaque particule...
+		{
+			MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
+
+			it->lifeTime -= game.deltaTime.asSeconds(); // On réduit deltaTime de lifeTime
+
+			if (it->lifeTime <= 0) // Quand lifeTime atteint 0...
+			{
+				it = game.particles.erase(it); // On efface la particule de la liste et on se met sur la nouvelle particule
+			}
+			else
+			{
+				++it; // On passe à la prochaine particule
+			}
+		}
+
+
+		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
+		{
+			UpdateBossState(player, game.deltaTime.asSeconds());
+
+			if (it->isMoving)
+			{
+				MoveBoss(*it, game.deltaTime.asSeconds()); // On déplace le(s) boss
 			}
 
-			for (auto it = game.enemyBullet.begin(); it != game.enemyBullet.end(); ++it) // Pour chaque balle ennemie...
+			else if (it->isShooting)
 			{
-				MoveEnemyBullets(*it, game.deltaTime.asSeconds()); // On déplace la balle
-			}
-
-			for (auto it = game.particles.begin(); it != game.particles.end();) // Pour chaque particule...
-			{
-				MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
-
-				it->lifeTime -= game.deltaTime.asSeconds(); // On réduit deltaTime de lifeTime
-
-				if (it->lifeTime <= 0) // Quand lifeTime atteint 0...
-				{
-					it = game.particles.erase(it); // On efface la particule de la liste et on se met sur la nouvelle particule
-				}
-				else
-				{
-					++it; // On passe à la prochaine particule
-				}
-			}
-
-
-			for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
-			{
-				UpdateBossState(player, game.deltaTime.asSeconds());
-
-				if (it->isMoving)
-				{
-					MoveBoss(*it, game.deltaTime.asSeconds()); // On déplace le(s) boss
-				}
-
-				else if (it->isShooting)
-				{
-
-				}
-
-				else if (it->isShooting)
-				{
-					//Fais apparaître le shield du boss
-				}
 
 			}
 
-			UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
-
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // Si on clique sur LMB...ss
+			else if (it->isShooting)
 			{
-				UpdateMousePos(mouse, window); // On update les coordonnées de la souris
+				//Fais apparaître le shield du boss
+			}
 
-				if (player.fireCD <= 0.f) // Si fireCD est inférieur ou égal à 0...
-				{
-					SpawnBullet(game, player, mouse); // On spawn une balle
-					player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
-				}
+		}
+
+		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !player.isDead) // Si on clique sur LMB...
+		{
+			UpdateMousePos(mouse, window); // On update les coordonnées de la souris
+
+			if (player.fireCD <= 0.f) // Si fireCD est inférieur ou égal à 0...
+			{
+				SpawnBullet(game, player, mouse); // On spawn une balle
+				player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
 			}
 		}
 			

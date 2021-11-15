@@ -9,6 +9,7 @@ void UpdatePlayerState(Player& player, float deltaTime)
 void UpdateEnemyState(Enemy& enemy, float deltaTime)
 {
 	enemy.fireCD -= deltaTime;
+	enemy.moveCD -= deltaTime;
 }
 
 void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window)

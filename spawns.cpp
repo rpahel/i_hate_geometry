@@ -222,7 +222,41 @@ void SpawnParticles(const Enemy& enemy, Game& game)
 		particle.lifeTime = lifeTime; // On assigne la durée de vie
 
 		particle.particleSpeed = rand() % 200 + 400;
-		std::cout << particle.particleSpeed << std::endl;
+
+		game.particles.push_back(particle); // On rajoute la particule à la liste
+	}
+}
+
+void SpawnPlayerParticles(const Player& player, Game& game)
+{
+	int numberOfParticles = 20; // Nombre de particules que lache un ennemi a sa mort
+
+	for (int i = 0; i < numberOfParticles; i++)
+	{
+		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durée de vie à la particule (entre 0.2f et 0.5f secondes)
+		float rot = (i * 2.f) * 3.14f / numberOfParticles; // angle de la direction dans laquelle la particule se dirigera
+		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
+
+		Particles particle;
+
+		particle.name = "particle" + std::to_string(game.particles.size()); // On nomme la particule
+
+		particle.direction = direction; // On assigne la direction à la particule
+
+		particle.rotation = std::atan2(particle.direction.x, particle.direction.y); // en radian
+		particle.rotation = -particle.rotation * (180.f / 3.1415f); // Conversion en deg
+
+		particle.shape.setSize(sf::Vector2f(1.f, 5.f)); // Taille de la particule
+		particle.shape.setOrigin(particle.shape.getSize().x / 2, particle.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre
+		particle.shape.setRotation(particle.rotation); // On dirige la particule en direction de sa direction
+		particle.shape.setPosition(player.shape.getPosition()); // La balle sort du centre du cercle
+		particle.shape.setFillColor(sf::Color::Transparent); // Couleur de la particule
+		particle.shape.setOutlineThickness(1.f); // Epaisseur des contours de la forme
+		particle.shape.setOutlineColor(player.shape.getOutlineColor()); // Couleur des contours de la forme
+
+		particle.lifeTime = lifeTime; // On assigne la durée de vie
+
+		particle.particleSpeed = rand() % 200 + 400;
 
 		game.particles.push_back(particle); // On rajoute la particule à la liste
 	}
