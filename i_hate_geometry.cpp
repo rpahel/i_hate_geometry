@@ -271,11 +271,16 @@ int main()
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !player.isDead) // Si on clique sur LMB...
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // Si on clique sur LMB...
 		{
 			UpdateMousePos(mouse, window); // On update les coordonnées de la souris
 
-			if (player.fireCD <= 0.f) // Si fireCD est inférieur ou égal à 0...
+			if(game.isPaused || player.isDead)
+			{
+				// Trouver un moyen de check si la souris est dans l'aire d'un bouton
+			}
+
+			if (player.fireCD <= 0.f && !player.isDead && !game.isPaused) // Si fireCD est inférieur ou égal à 0 et que le joueur n'est pas mort et que le jeu n'est pas en pause...
 			{
 				SpawnBullet(game, player, mouse); // On spawn une balle
 				player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
