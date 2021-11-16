@@ -86,11 +86,17 @@ struct Game {
 	bool isNewRoom;
 	sf::Font font;
 	sf::Text levelText;
+	sf::Text pauseText;
 	sf::Clock clock;
 	int numberOfEnemies;
 	int numberOfItems;
 	sf::Time deltaTime;
 	float timeSinceStartLevel;
+	sf::RectangleShape button1;
+	sf::Text restartText;
+	sf::RectangleShape button2;
+	sf::Text quitText;
+	bool isPaused;
 };
 
 struct Mouse
