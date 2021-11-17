@@ -85,6 +85,8 @@ int main()
 	game.quitText.setOrigin(game.quitText.getLocalBounds().width / 2, game.quitText.getLocalBounds().height - 2); // On met l'origine du texte en son centre
 	game.quitText.setPosition(game.button2.getPosition()); // On assigne une position au texte
 
+	player = SpawnPlayer();
+
 	while (window.isOpen())
 	{
 		// Inputs
@@ -98,11 +100,9 @@ int main()
 				break;
 
 			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
-				{
-					std::cout << "A" << std::endl;
-					SpawnBoss(game, wallThickness);
-				}
+				//if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+				//{				
+				//}
 
 				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
 				{
@@ -126,13 +126,20 @@ int main()
 		// Début setup
 		if(game.isNewRoom) // Quand c'est une nouvelle salle, on initialise le joueur et les ennemis.
 		{
-			player = SpawnPlayer();
-			SpawnEnemies(game, wallThickness);
-			SpawnItems(game, wallThickness);
-			game.isNewRoom = false;
+			if (game.currentLevel % 5 == 0)
+			{
+				SpawnBoss(game, wallThickness);
+				game.isNewRoom = false;
+			}
+			else
+			{
+				SpawnEnemies(game, wallThickness);
+				SpawnItems(game, wallThickness);
+				game.isNewRoom = false;
+			}
 		}
 
-		if (game.enemies.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
+		if (game.enemies.empty() && game.boss.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
 		{
 			game.enemies.clear();
 			game.bullets.clear();
@@ -273,6 +280,7 @@ int main()
 					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
 					RestartGame(game, player); // On appelle la fonction RestartGame
+					player = SpawnPlayer();
 					game.isPaused = false; // On dépause le jeu
 					player.fireCD = player.fireRate; // Sert juste à pas tirer quand on clique sur le bouton
 				}

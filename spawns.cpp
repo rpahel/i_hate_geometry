@@ -284,7 +284,7 @@ void SpawnBossShield(Game& game, Boss& boss)
 	BossShield bossShield;
 	bossShield.shape.setRadius(20.5f);
 	bossShield.shape.setOutlineThickness(2.f);
-	bossShield.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
+	bossShield.shape.setOutlineColor(sf::Color::Cyan); // 
 	bossShield.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
 	bossShield.shape.setOrigin(boss.shape.getOrigin()); // On mets son point d'origine au centre de la forme
 	float posX = boss.shape.getPosition().x;
@@ -333,6 +333,8 @@ void RestartGame(Game& game, Player& player)
 	game.enemyBullet.clear();
 	game.items.clear();
 	game.particles.clear();
+	game.boss.clear();
+	game.bossShield.clear();
 	player.playerSpeed = 300.f;
 	player.shape.setPosition(600, 450);
 	game.currentLevel = 1;

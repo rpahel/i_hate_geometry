@@ -288,5 +288,5 @@ void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
 
 void RotateShield(sf::CircleShape& shield, float deltaTime)
 {
-	shield.rotate(90.f * deltaTime);
+	shield.rotate(400.f * deltaTime);
 }
