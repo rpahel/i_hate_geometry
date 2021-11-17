@@ -284,6 +284,8 @@ void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
 	float amplitude = sqrtf(boss.direction.x * boss.direction.x + boss.direction.y * boss.direction.y); // longueur du vecteur
 	boss.direction = boss.direction / amplitude; // Normalisation du vecteur
 	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
+	boss.shapeContenerHealthBar.move(boss.direction * boss.bossSpeed * deltaTime);
+	boss.shapeHealthBar.move(boss.direction * boss.bossSpeed * deltaTime);
 }
 
 void RotateShield(sf::CircleShape& shield, float deltaTime)

@@ -73,6 +73,9 @@ struct Boss {
 	};
 
 	bossState myState = bossState::isBlocking;
+
+	sf::RectangleShape shapeContenerHealthBar;   //barre de vie du boss
+	sf::RectangleShape shapeHealthBar;
 };
 
 struct BossShield {

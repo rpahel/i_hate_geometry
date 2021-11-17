@@ -100,9 +100,17 @@ int main()
 				break;
 
 			case sf::Event::KeyPressed:
-				//if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
-				//{				
-				//}
+				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+				{	
+					LoadLevel(game, player, 5);
+				}
+				if (event.key.code == sf::Keyboard::W)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+				{
+					for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
+					{
+						UpdateBossHealth(*it);
+					}	
+				}
 
 				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
 				{
@@ -141,17 +149,7 @@ int main()
 
 		if (game.enemies.empty() && game.boss.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
 		{
-			game.enemies.clear();
-			game.bullets.clear();
-			game.enemyBullet.clear();
-			game.items.clear();
-			game.particles.clear();
-			player.playerSpeed = 300.f;
-			player.shape.setPosition(600, 450);
-			game.currentLevel++;
-			game.levelText.setString("level " + std::to_string(game.currentLevel));
-			game.timeSinceStartLevel = 0;
-			game.isNewRoom = true;
+			LoadLevel(game, player, game.currentLevel + 1);
 		}
 		// Fin setup
 
@@ -279,7 +277,7 @@ int main()
 				if(mouse.x >= game.button1.getPosition().x - (game.button1.getSize().x/2) && mouse.x <= game.button1.getPosition().x + (game.button1.getSize().x / 2)
 					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
-					RestartGame(game, player); // On appelle la fonction RestartGame
+					LoadLevel(game, player, 1); // On appelle la fonction RestartGame
 					player = SpawnPlayer();
 					game.isPaused = false; // On dépause le jeu
 					player.fireCD = player.fireRate; // Sert juste à pas tirer quand on clique sur le bouton
@@ -333,6 +331,8 @@ int main()
 		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
 		{
 			window.draw(it->shape); // On l'affiche
+			window.draw(it->shapeContenerHealthBar);
+			window.draw(it->shapeHealthBar);
 		}
 
 		for (auto it = game.bossShield.begin(); it != game.bossShield.end(); ++it) // Pour chaque boss...

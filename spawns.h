@@ -10,5 +10,5 @@ void SpawnParticles(const Enemy& enemy, Game& game);
 void SpawnPlayerParticles(const Player& player, Game& game);
 void SpawnBoss(Game& game, int wallThickness);
 void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber);
-void RestartGame(Game& game, Player& player);
+void LoadLevel(Game& game, Player& player, int level);
 void SpawnBossShield(Game& game, Boss& boss);

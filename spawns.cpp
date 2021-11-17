@@ -275,8 +275,19 @@ void SpawnBoss(Game& game, int wallThickness)
 	boss.shape.setPosition(600, 300); // On le fait apparaître au milieu, et légèrement au-dessus du joueur
 	boss.name = "boss_" + std::to_string(game.boss.size());
 	boss.fireCD = boss.fireRate;
-	game.boss.push_back(boss);
 
+	boss.shapeContenerHealthBar.setSize(sf::Vector2f(180.f, 16.f));
+	boss.shapeContenerHealthBar.setOutlineThickness(2.f);
+	boss.shapeContenerHealthBar.setOutlineColor(sf::Color::White);
+	boss.shapeContenerHealthBar.setFillColor(sf::Color::Transparent);
+	boss.shapeContenerHealthBar.setOrigin(boss.shape.getOrigin());
+	boss.shapeContenerHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
+
+	boss.shapeHealthBar.setSize(sf::Vector2f(180.f, 16.f));
+	boss.shapeHealthBar.setFillColor(sf::Color::Red);
+	boss.shapeHealthBar.setOrigin(boss.shape.getOrigin());
+	boss.shapeHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
+	game.boss.push_back(boss);
 }
 
 void SpawnBossShield(Game& game, Boss& boss)
@@ -326,7 +337,7 @@ void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bullet
 	}
 }
 
-void RestartGame(Game& game, Player& player)
+void LoadLevel(Game& game, Player& player, int level)
 {
 	game.enemies.clear();
 	game.bullets.clear();
@@ -337,7 +348,7 @@ void RestartGame(Game& game, Player& player)
 	game.bossShield.clear();
 	player.playerSpeed = 300.f;
 	player.shape.setPosition(600, 450);
-	game.currentLevel = 1;
+	game.currentLevel = level;
 	game.levelText.setString("level " + std::to_string(game.currentLevel));
 	game.timeSinceStartLevel = 0;
 	game.isNewRoom = true;

@@ -48,3 +48,8 @@ void UpdateBossState(Boss& boss, float deltaTime)
 		boss.timeBeforeUpdate = 2.0f;
 	}
 }
+
+void UpdateBossHealth(Boss& boss)
+{
+	boss.shapeHealthBar.setSize(boss.shapeHealthBar.getSize() - sf::Vector2f(20.f, 0.f));
+}
