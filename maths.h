@@ -10,4 +10,5 @@ void MoveEnemyBullets(EnemyBullet& enemyBullet, float deltaTime);
 void MoveBullets(Bullet& bullet, float deltaTime);
 void MoveParticles(Particles& particle, float deltaTime);
 void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime);
-void RotateShield(Boss& boss, float deltaTime);
+void RotateShield(Boss& boss, BossShield& shield, float deltaTime);
+float pyth(float A, float B);

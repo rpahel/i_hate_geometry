@@ -55,13 +55,6 @@ struct Particles {
 	float particleSpeed;
 };
 
-enum bossState
-{
-	isMoving,
-	isShooting,
-	isBlocking,
-};
-
 struct Boss {
 	std::string name;
 	sf::CircleShape shape;
@@ -70,10 +63,16 @@ struct Boss {
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
-	float timeBeforeUpdate = 20.f;
-	bossState state;
+	float changeStateTime;
+	bool shieldsUp;
 };
 
+struct BossShield {
+	std::string name;
+	sf::CircleShape shape;
+	float speed;
+	sf::Vector2f direction;
+};
 
 struct Game {
 	std::list<Enemy> enemies;	
@@ -82,6 +81,7 @@ struct Game {
 	std::list<Item> items;
 	std::list<Particles> particles;
 	std::list<Boss> bosses;
+	std::list<BossShield> bossShields;
 	int currentLevel;
 	bool isNewRoom;
 	sf::Font font;

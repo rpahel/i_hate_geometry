@@ -3,7 +3,6 @@
 #include "struct.h"
 #include "maths.h"
 
-
 Player SpawnPlayer()
 {
 	Player player;
@@ -276,8 +275,66 @@ void SpawnBoss(Game& game)
 	boss.bossSpeed = 250.f;
 	boss.fireRate = 1.f;
 	boss.fireCD = boss.fireRate;
-	boss.state = bossState::isBlocking;
+	boss.changeStateTime = 5.f;
+	boss.shieldsUp = false;
 	game.bosses.push_back(boss);
+}
+
+void SpawnBossShield(Boss& boss, Game& game)
+{
+	for(int i = 0; i < 8; i++)
+	{
+		BossShield shield;
+
+		shield.name = "bossShield_" + std::to_string(i);
+
+		shield.shape.setRadius(15);
+		shield.shape.setOutlineThickness(2);
+		shield.shape.setOrigin(shield.shape.getRadius(), shield.shape.getRadius());
+		shield.shape.setFillColor(sf::Color::Transparent);
+		shield.shape.setOutlineColor(sf::Color::White);
+
+		shield.speed = 100.f;
+
+		sf::Vector2f bossToShield;
+		float quotient;
+		switch (i)
+		{
+		case 0:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y);
+			break;
+		case 1:
+			shield.shape.setPosition(boss.shape.getPosition().x - boss.shape.getRadius() - shield.shape.getRadius() - 5, boss.shape.getPosition().y);
+			break;
+		case 2:
+			shield.shape.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y + boss.shape.getRadius() + shield.shape.getRadius() + 5);
+			break;
+		case 3:
+			shield.shape.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y - boss.shape.getRadius() - shield.shape.getRadius() - 5);
+			break;
+		case 4:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y - boss.shape.getRadius() - shield.shape.getRadius() - 5);
+			break;
+		case 5:
+			shield.shape.setPosition(boss.shape.getPosition().x - boss.shape.getRadius() - shield.shape.getRadius() - 5, boss.shape.getPosition().y + boss.shape.getRadius() + shield.shape.getRadius() + 5);
+			break;
+		case 6:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y + boss.shape.getRadius() + shield.shape.getRadius() + 5);
+			break;
+		case 7:
+			shield.shape.setPosition(boss.shape.getPosition().x - boss.shape.getRadius() - shield.shape.getRadius() - 5, boss.shape.getPosition().y - boss.shape.getRadius() - shield.shape.getRadius() - 5);
+			break;
+		default:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y);
+			break;
+		}
+
+		bossToShield = shield.shape.getPosition() - boss.shape.getPosition();
+		shield.direction = sf::Vector2f(-bossToShield.y, bossToShield.x);
+		shield.direction = shield.direction / pyth(shield.direction.x, shield.direction.y);
+
+		game.bossShields.push_back(shield);
+	}
 }
 
 void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)
@@ -313,6 +370,7 @@ void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bullet
 void RestartGame(Game& game, Player& player)
 {
 	game.enemies.clear();
+	game.bosses.clear();
 	game.bullets.clear();
 	game.enemyBullet.clear();
 	game.items.clear();

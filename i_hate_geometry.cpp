@@ -138,7 +138,7 @@ int main()
 			else
 			{
 				SpawnBoss(game);
-				SpawnBoss(game);
+				SpawnItems(game, wallThickness);
 			}
 
 			game.isNewRoom = false;
@@ -244,9 +244,9 @@ int main()
 			MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
 		}
 
-		//for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
-		//{
-		//	UpdateBossState(*it, game.deltaTime.asSeconds());
+		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it)
+		{
+			UpdateBossState(*it, game.deltaTime.asSeconds(), game);
 		//
 		//	if (it->isMoving)
 		//	{
@@ -286,7 +286,7 @@ int main()
 		//			}
 		//		}
 		//	}
-		//}
+		}
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
@@ -351,6 +351,11 @@ int main()
 		}
 
 		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it) // Pour chaque boss...
+		{
+			window.draw(it->shape);
+		}
+
+		for (auto it = game.bossShields.begin(); it != game.bossShields.end(); ++it) // Pour chaque shield du boss;
 		{
 			window.draw(it->shape);
 		}

@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "struct.h"
+#include "spawns.h"
+#include "maths.h"
 #include <iostream>
 
 void UpdatePlayerState(Player& player, float deltaTime)
@@ -19,32 +21,45 @@ void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window)
 	mouse.y = sf::Mouse::getPosition(window).y;
 }
 
-//void UpdateBossState(Boss& boss, float deltaTime)
-//{
-//	boss.timeBeforeUpdate -= deltaTime;
-//	boss.fireCD -= deltaTime;
-//	int state = rand()% 3;
-//
-//	if (boss.timeBeforeUpdate <= 0)
-//	{
-//		if (state == 0)
-//		{
-//			std::cout << "0" << std::endl;
-//			boss.myState = boss.isMoving;
-//		}
-//
-//		if (state == 1)
-//		{
-//			std::cout << "1" << std::endl;
-//			boss.myState = boss.isShooting;
-//		}
-//
-//		if (state == 2)
-//		{
-//			std::cout << "2" << std::endl;
-//			boss.myState = boss.isBlocking;
-//		}
-//
-//		boss.timeBeforeUpdate = 2.0f;
-//	}
-//}
+void UpdateBossState(Boss& boss, float deltaTime, Game& game)
+{
+	boss.changeStateTime -= deltaTime;
+	boss.fireCD -= deltaTime;
+
+	if (boss.changeStateTime <= 0)
+	{
+		int state = 2;
+
+		if (state == 0)
+		{
+			boss.shieldsUp = false;
+		}
+
+		if (state == 1)
+		{
+			boss.shieldsUp = false;
+		}
+
+		if (state == 2) // Shields
+		{
+			if(!boss.shieldsUp)
+			{
+				SpawnBossShield(boss, game);
+			}
+
+			boss.shieldsUp = true;
+		}
+
+		if (!boss.shieldsUp)
+		{
+			game.bossShields.clear();
+		}
+
+		boss.changeStateTime = 5.f;
+	}
+
+	for(auto& shield : game.bossShields)
+	{
+		RotateShield(boss, shield, deltaTime);
+	}
+}

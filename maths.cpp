@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <list>
+#include <iostream>
 #include "spawns.h"
 #include "struct.h"
 
@@ -278,15 +279,18 @@ void MoveParticles(Particles& particle, float deltaTime)
 	particle.shape.move(particle.direction * particle.particleSpeed * deltaTime);
 }
 
-void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
-{
-	boss.direction = player.getPosition() - boss.shape.getPosition();
-	float amplitude = sqrtf(boss.direction.x * boss.direction.x + boss.direction.y * boss.direction.y); // longueur du vecteur
-	boss.direction = boss.direction / amplitude; // Normalisation du vecteur
-	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
-}
+//void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
+//{
+//	boss.direction = player.getPosition() - boss.shape.getPosition();
+//	float amplitude = sqrtf(boss.direction.x * boss.direction.x + boss.direction.y * boss.direction.y); // longueur du vecteur
+//	boss.direction = boss.direction / amplitude; // Normalisation du vecteur
+//	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
+//}
 
-void RotateShield(Boss& boss, float deltaTime)
+void RotateShield(Boss& boss, BossShield& shield, float deltaTime)
 {
-	boss.shape.rotate(45.f * deltaTime);
+	shield.shape.move(shield.direction * shield.speed * deltaTime);
+	sf::Vector2f bossToShield = shield.shape.getPosition() - boss.shape.getPosition();
+	shield.direction = sf::Vector2f(-bossToShield.y, bossToShield.x);
+	shield.direction = -shield.direction / pyth(shield.direction.x, shield.direction.y);
 }
