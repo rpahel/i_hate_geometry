@@ -280,13 +280,15 @@ int main()
 				if(mouse.x >= game.button1.getPosition().x - (game.button1.getSize().x/2) && mouse.x <= game.button1.getPosition().x + (game.button1.getSize().x / 2)
 					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
-					std::cout << "restart" << std::endl;
+					RestartGame(game, player); // On appelle la fonction RestartGame
+					game.isPaused = false; // On dépause le jeu
+					player.fireCD = player.fireRate; // Sert juste à pas tirer quand on clique sur le bouton
 				}
 
 				if (mouse.x >= game.button2.getPosition().x - (game.button2.getSize().x / 2) && mouse.x <= game.button2.getPosition().x + (game.button2.getSize().x / 2)
 					&& mouse.y >= game.button2.getPosition().y - (game.button2.getSize().y / 2) && mouse.y <= game.button2.getPosition().y + (game.button2.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
-					std::cout << "quit" << std::endl;
+					window.close();
 				}
 			}
 
