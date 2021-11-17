@@ -276,6 +276,17 @@ void SpawnBoss(Game& game, int wallThickness)
 	boss.name = "boss_" + std::to_string(game.boss.size());
 	boss.fireCD = boss.fireRate;
 	game.boss.push_back(boss);
+	Boss boss2;
+	boss2.shape.setRadius(20.5f);
+	boss2.shape.setOutlineThickness(2.f);
+	boss2.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
+	boss2.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
+	boss2.shape.setOrigin(boss.shape.getOrigin()); // On mets son point d'origine au centre de la forme
+	float posX = boss.shape.getPosition().x;
+	float posY = boss.shape.getPosition().y;
+	boss2.shape.setPosition(posX, posY);
+	boss2.name = "shield_";
+	game.boss.push_back(boss2);
 }
 
 void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)

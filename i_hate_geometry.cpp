@@ -216,6 +216,12 @@ int main()
 				{
 					//Fais apparaître le shield du boss
 					std::cout << "blocking" << std::endl;
+
+					if (it->name == "shield_")
+					{
+						window.draw(it->shape);
+						RotateShield(*it, game.deltaTime.asSeconds());
+					}
 				}
 			}
 		}
@@ -266,7 +272,10 @@ int main()
 
 		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
 		{
-			window.draw(it->shape); // On l'affiche
+			if (it->name != "shield_")
+			{
+				window.draw(it->shape); // On l'affiche
+			}
 		}
 
 		if(!player.isDead) // Si le joueur n'est pas mort...

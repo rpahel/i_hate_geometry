@@ -63,7 +63,7 @@ struct Boss {
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
-	float timeBeforeUpdate = 2.f;
+	float timeBeforeUpdate = 20.f;
 
 	enum bossState
 	{
