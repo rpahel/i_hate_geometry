@@ -140,12 +140,15 @@ int main()
 			if (game.currentLevel % 5 == 0)
 			{
 				SpawnBoss(game, wallThickness);
+				SpawnItems(game, wallThickness);
+				SpawnItemText(game.font, game);
 				game.isNewRoom = false;
 			}
 			else
 			{
 				SpawnEnemies(game, wallThickness);
 				SpawnItems(game, wallThickness);
+				SpawnItemText(game.font, game);
 				game.isNewRoom = false;
 			}
 		}

@@ -203,6 +203,14 @@ void SpawnItems(Game& game, int wallThickness)
 	}
 }
 
+void SpawnItemText(sf::Font font, Game& game)
+{
+	game.itemText.setFont(game.font); // On assigne le font au texte
+	game.itemText.setPosition(1080, 50); // On assigne une position au texte
+	game.itemText.setCharacterSize(24); // On assigne une taille de police
+	game.itemText.setString("level " + std::to_string(game.currentLevel)); //On affecte un texte au text
+}
+
 void SpawnParticles(const Enemy& enemy, Game& game)
 {
 	int numberOfParticles = 20; // Nombre de particules que lache un ennemi a sa mort

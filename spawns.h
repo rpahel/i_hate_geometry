@@ -12,3 +12,4 @@ void SpawnBoss(Game& game, int wallThickness);
 void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber);
 void LoadLevel(Game& game, Player& player, int level);
 void SpawnBossShield(Game& game, Boss& boss);
+void SpawnItemText(sf::Font font, Game& game);

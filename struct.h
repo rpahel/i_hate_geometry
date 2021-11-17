@@ -107,6 +107,7 @@ struct Game {
 	sf::Text restartText;
 	sf::RectangleShape button2;
 	sf::Text quitText;
+	sf::Text itemText;
 	bool isPaused;
 };
 
