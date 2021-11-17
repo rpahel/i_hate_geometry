@@ -104,7 +104,7 @@ int main()
 					SpawnBoss(game, wallThickness);
 				}
 
-				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
 				{
 					if(!game.isPaused)
 					{
@@ -277,7 +277,17 @@ int main()
 
 			if(game.isPaused || player.isDead)
 			{
-				// Trouver un moyen de check si la souris est dans l'aire d'un bouton
+				if(mouse.x >= game.button1.getPosition().x - (game.button1.getSize().x/2) && mouse.x <= game.button1.getPosition().x + (game.button1.getSize().x / 2)
+					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
+				{
+					std::cout << "restart" << std::endl;
+				}
+
+				if (mouse.x >= game.button2.getPosition().x - (game.button2.getSize().x / 2) && mouse.x <= game.button2.getPosition().x + (game.button2.getSize().x / 2)
+					&& mouse.y >= game.button2.getPosition().y - (game.button2.getSize().y / 2) && mouse.y <= game.button2.getPosition().y + (game.button2.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
+				{
+					std::cout << "quit" << std::endl;
+				}
 			}
 
 			if (player.fireCD <= 0.f && !player.isDead && !game.isPaused) // Si fireCD est inférieur ou égal à 0 et que le joueur n'est pas mort et que le jeu n'est pas en pause...
