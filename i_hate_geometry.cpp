@@ -47,13 +47,44 @@ int main()
 	game.numberOfEnemies = 1; // Nombre d'ennemis au premier niveau
 	game.numberOfItems = 2; // Nombre d'items
 	game.isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
+	game.isPaused = false; // Le jeu démarre pas en pause.
 
 	game.font.loadFromFile(getAssetsPath(getAppPath()) + "arial.ttf"); // On charge le style de font voulu
 	game.levelText.setFont(game.font); // On assigne le font au texte
 	game.levelText.setPosition(1080,50); // On assigne une position au texte
 	game.levelText.setCharacterSize(24); // On assigne une taille de police
-	game.levelText.setString("level " + std::to_string(game.currentLevel)); //On affiche le niveau actuel
-	
+	game.levelText.setString("level " + std::to_string(game.currentLevel)); //On affecte un texte au text
+
+	game.pauseText.setFont(game.font); // On assigne le font au texte
+	game.pauseText.setPosition(600, 350); // On assigne une position au texte
+	game.pauseText.setCharacterSize(50); // On assigne une taille de police
+
+	game.button1.setSize(sf::Vector2f(100, 40)); // On assigne une taille au bouton
+	game.button1.setFillColor(sf::Color::Black); // On le rend transparent
+	game.button1.setOutlineColor(sf::Color::White); // On rend ces contours blancs
+	game.button1.setOutlineThickness(2); // On assigne une épaisseur aux contours
+	game.button1.setOrigin(game.button1.getSize().x / 2, game.button1.getSize().y / 2); // On met son origine au centre de la forme
+	game.button1.setPosition(500, 450); // On le place
+
+	game.button2.setSize(sf::Vector2f(100, 40)); // On assigne une taille au bouton
+	game.button2.setFillColor(sf::Color::Black); // On le rend transparent
+	game.button2.setOutlineColor(sf::Color::White); // On rend ces contours blancs
+	game.button2.setOutlineThickness(2); // On assigne une épaisseur aux contours
+	game.button2.setOrigin(game.button1.getSize().x / 2, game.button1.getSize().y / 2); // On met son origine au centre de la forme
+	game.button2.setPosition(700, 450); // On le place
+
+	game.restartText.setFont(game.font); // On assigne le font au texte
+	game.restartText.setCharacterSize(24); // On assigne une taille de police
+	game.restartText.setString("Restart"); // On affecte un texte au text
+	game.restartText.setOrigin(game.restartText.getLocalBounds().width / 2, game.restartText.getLocalBounds().height - 2); // On met l'origine du texte en son centre
+	game.restartText.setPosition(game.button1.getPosition()); // On assigne une position au texte
+
+	game.quitText.setFont(game.font); // On assigne le font au texte
+	game.quitText.setCharacterSize(24); // On assigne une taille de police
+	game.quitText.setString("Quit"); // On affecte un texte au text
+	game.quitText.setOrigin(game.quitText.getLocalBounds().width / 2, game.quitText.getLocalBounds().height - 2); // On met l'origine du texte en son centre
+	game.quitText.setPosition(game.button2.getPosition()); // On assigne une position au texte
+
 	while (window.isOpen())
 	{
 		// Inputs
@@ -72,6 +103,19 @@ int main()
 					std::cout << "A" << std::endl;
 					SpawnBoss(game, wallThickness);
 				}
+
+				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
+				{
+					if(!game.isPaused)
+					{
+						game.isPaused = true;
+					}
+					else
+					{
+						game.isPaused = false;
+					}
+				}
+
 				break;
 
 			default:
@@ -107,6 +151,11 @@ int main()
 		// Début logique
 		game.deltaTime = game.clock.restart(); // Calcul du temps ecoule depuis la derniere boucle
 		game.timeSinceStartLevel += game.deltaTime.asSeconds(); // Calcul du temps depuis le début du level
+
+		if(game.isPaused)
+		{
+			game.deltaTime = game.deltaTime.Zero;
+		}
 
 		if(!player.isDead)
 		{
@@ -228,11 +277,28 @@ int main()
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !player.isDead) // Si on clique sur LMB...
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) // Si on clique sur LMB...
 		{
 			UpdateMousePos(mouse, window); // On update les coordonnées de la souris
 
-			if (player.fireCD <= 0.f) // Si fireCD est inférieur ou égal à 0...
+			if(game.isPaused || player.isDead)
+			{
+				if(mouse.x >= game.button1.getPosition().x - (game.button1.getSize().x/2) && mouse.x <= game.button1.getPosition().x + (game.button1.getSize().x / 2)
+					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
+				{
+					RestartGame(game, player); // On appelle la fonction RestartGame
+					game.isPaused = false; // On dépause le jeu
+					player.fireCD = player.fireRate; // Sert juste à pas tirer quand on clique sur le bouton
+				}
+
+				if (mouse.x >= game.button2.getPosition().x - (game.button2.getSize().x / 2) && mouse.x <= game.button2.getPosition().x + (game.button2.getSize().x / 2)
+					&& mouse.y >= game.button2.getPosition().y - (game.button2.getSize().y / 2) && mouse.y <= game.button2.getPosition().y + (game.button2.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
+				{
+					window.close();
+				}
+			}
+
+			if (player.fireCD <= 0.f && !player.isDead && !game.isPaused) // Si fireCD est inférieur ou égal à 0 et que le joueur n'est pas mort et que le jeu n'est pas en pause...
 			{
 				SpawnBullet(game, player, mouse); // On spawn une balle
 				player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
@@ -291,6 +357,30 @@ int main()
 		// Fin affichage des murs
 
 		window.draw(game.levelText); // On affiche le texte
+
+		if(player.isDead)
+		{
+			game.pauseText.setString("Game Over."); //On affecte un texte au text
+			game.pauseText.setOrigin(game.pauseText.getLocalBounds().width / 2, game.pauseText.getLocalBounds().height / 2); // On met l'origine du texte en son centre
+			window.draw(game.pauseText); // On affiche le texte
+			window.draw(game.button1); // On affiche le texte
+			window.draw(game.button2); // On affiche le texte
+			window.draw(game.restartText); // On affiche le texte
+			window.draw(game.quitText); // On affiche le texte
+		}
+
+		if (game.isPaused)
+		{
+			game.pauseText.setString("Paused."); //On affecte un texte au text
+			game.pauseText.setOrigin(game.pauseText.getLocalBounds().width / 2, game.pauseText.getLocalBounds().height / 2); // On met l'origine du texte en son centre
+			window.draw(game.pauseText); // On affiche le texte
+			window.draw(game.button1); // On affiche le texte
+			window.draw(game.button2); // On affiche le texte
+			window.draw(game.restartText); // On affiche le texte
+			window.draw(game.quitText); // On affiche le texte
+		}
+
+		// Fin Rendu
 
 		window.display(); // On affiche à l'écran tous les draw
 	}

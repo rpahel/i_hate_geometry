@@ -318,3 +318,18 @@ void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bullet
 		game.enemyBullet.push_back(enemyBullet); // On rajoute la balle à la liste
 	}
 }
+
+void RestartGame(Game& game, Player& player)
+{
+	game.enemies.clear();
+	game.bullets.clear();
+	game.enemyBullet.clear();
+	game.items.clear();
+	game.particles.clear();
+	player.playerSpeed = 300.f;
+	player.shape.setPosition(600, 450);
+	game.currentLevel = 1;
+	game.levelText.setString("level " + std::to_string(game.currentLevel));
+	game.timeSinceStartLevel = 0;
+	game.isNewRoom = true;
+}
