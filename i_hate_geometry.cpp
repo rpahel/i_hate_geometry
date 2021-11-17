@@ -235,44 +235,30 @@ int main()
 		{
 			UpdateBossState(*it, game.deltaTime.asSeconds());
 
-			if (it->isMoving)
+		    if (it->myState == it->isMoving)
 			{
+				game.bossShield.clear();
 				MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
 			}
 
-			else if (it->isShooting)
+			else if (it->myState == it->isShooting)
 			{
-				UpdateBossState(*it, game.deltaTime.asSeconds());
-				std::cout << it->fireCD << std::endl;
-
-				if (it->myState == it->isMoving)
+				game.bossShield.clear();
+				if (it->fireCD <= 0)
 				{
-					MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
-					std::cout << "moving" << std::endl;
-				}
-
-				else if (it->myState == it->isShooting)
-				{
-					std::cout << "shooting" << std::endl;
-					if (it->fireCD <= 0)
-					{
-						SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
-						it->fireCD = it->fireRate;
-					}
-				}
-
-				else if (it->myState == it->isBlocking)
-				{
-					//Fais apparaître le shield du boss
-					std::cout << "blocking" << std::endl;
-
-					if (it->name == "shield_")
-					{
-						window.draw(it->shape);
-						RotateShield(*it, game.deltaTime.asSeconds());
-					}
+					SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
+					it->fireCD = it->fireRate;
 				}
 			}
+
+			else 
+			{
+				//Fais apparaître le shield du boss 
+				if (game.bossShield.size() == 0)
+				{
+					SpawnBossShield(game, *it);
+				}
+			}	
 		}
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
@@ -338,10 +324,14 @@ int main()
 
 		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
 		{
-			if (it->name != "shield_")
-			{
-				window.draw(it->shape); // On l'affiche
-			}
+			window.draw(it->shape); // On l'affiche
+		}
+
+		for (auto it = game.bossShield.begin(); it != game.bossShield.end(); ++it) // Pour chaque boss...
+		{
+			window.draw(it->shape); // On l'affiche
+			RotateShield(it->shape, game.deltaTime.asSeconds());
+
 		}
 
 		if(!player.isDead) // Si le joueur n'est pas mort...

@@ -286,7 +286,7 @@ void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
 	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
 }
 
-void RotateShield(Boss& boss, float deltaTime)
+void RotateShield(sf::CircleShape& shield, float deltaTime)
 {
-	boss.shape.rotate(45.f * deltaTime);
+	shield.rotate(90.f * deltaTime);
 }

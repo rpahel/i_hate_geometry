@@ -63,7 +63,7 @@ struct Boss {
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
-	float timeBeforeUpdate = 20.f;
+	float timeBeforeUpdate = 2.f;
 
 	enum bossState
 	{
@@ -75,6 +75,13 @@ struct Boss {
 	bossState myState = bossState::isBlocking;
 };
 
+struct BossShield {
+	std::string name;
+	int type;
+	sf::CircleShape shape;
+	sf::Vector2f direction;
+};
+
 struct Game {
 	std::list<Enemy> enemies;	
 	std::list<Bullet> bullets;
@@ -82,6 +89,7 @@ struct Game {
 	std::list<Item> items;
 	std::list<Particles> particles;
 	std::list<Boss> boss;
+	std::list<BossShield> bossShield;
 	int currentLevel;
 	bool isNewRoom;
 	sf::Font font;
