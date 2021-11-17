@@ -108,7 +108,10 @@ int main()
 				{
 					for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
 					{
-						UpdateBossHealth(*it);
+						if (it->shapeHealthBar.getSize() != sf::Vector2f(0.f, 16.f))
+						{
+							UpdateBossHealth(*it);
+						}	
 					}	
 				}
 
