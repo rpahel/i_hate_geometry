@@ -186,6 +186,17 @@ void SpawnItems(Game& game, int wallThickness)
 				item.shape.setOutlineColor(sf::Color::White);
 				item.effect = "speedUp";
 				break;
+
+			//case 2: 
+				//item qui fait tirer plus vite (bonus)
+			//case 3:
+				//item qui grossit les ennemis (bonus)
+			//case 4:
+				//item item qui slow les ennemis (bonus)
+			//case 5:
+				//item qui accelere les ennemis (malus)
+			//case 6:
+				//item qui fait tirer moins vite (malus)
 		}
 
 		++i;

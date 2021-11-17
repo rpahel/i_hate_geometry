@@ -104,11 +104,11 @@ int main()
 				{	
 					LoadLevel(game, player, 5);
 				}
-				if (event.key.code == sf::Keyboard::W)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
+				if (event.key.code == sf::Keyboard::W)         // Si on appuie sur W, qqchose se passe (utile pour les tests)
 				{
 					for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
 					{
-						if (it->shapeHealthBar.getSize() != sf::Vector2f(0.f, 16.f))
+						if (it->shapeHealthBar.getSize() != sf::Vector2f(0.f, 16.f)) // Update la barre de vie du boss si elle est pas a 0
 						{
 							UpdateBossHealth(*it);
 						}	
@@ -261,7 +261,7 @@ int main()
 
 			else 
 			{
-				//Fais apparaître le shield du boss 
+				//Fais apparaître le shield du boss si il n'en a pas deja
 				if (game.bossShield.size() == 0)
 				{
 					SpawnBossShield(game, *it);
@@ -338,7 +338,7 @@ int main()
 			window.draw(it->shapeHealthBar);
 		}
 
-		for (auto it = game.bossShield.begin(); it != game.bossShield.end(); ++it) // Pour chaque boss...
+		for (auto it = game.bossShield.begin(); it != game.bossShield.end(); ++it) // Pour chaque Shield du boss...
 		{
 			window.draw(it->shape); // On l'affiche
 			RotateShield(it->shape, game.deltaTime.asSeconds());
