@@ -85,6 +85,8 @@ int main()
 	game.quitText.setOrigin(game.quitText.getLocalBounds().width / 2, game.quitText.getLocalBounds().height - 2); // On met l'origine du texte en son centre
 	game.quitText.setPosition(game.button2.getPosition()); // On assigne une position au texte
 
+	player = SpawnPlayer();
+
 	while (window.isOpen())
 	{
 		// Inputs
@@ -101,7 +103,9 @@ int main()
 				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
 				{
 					std::cout << "A" << std::endl;
-					SpawnBoss(game, wallThickness);
+					game.enemies.clear();
+					game.bosses.clear();
+					game.currentLevel = 4;
 				}
 
 				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
@@ -126,15 +130,24 @@ int main()
 		// Début setup
 		if(game.isNewRoom) // Quand c'est une nouvelle salle, on initialise le joueur et les ennemis.
 		{
-			player = SpawnPlayer();
-			SpawnEnemies(game, wallThickness);
-			SpawnItems(game, wallThickness);
+			if(game.currentLevel % 5 != 0)
+			{
+				SpawnEnemies(game, wallThickness);
+				SpawnItems(game, wallThickness);
+			}
+			else
+			{
+				SpawnBoss(game);
+				SpawnBoss(game);
+			}
+
 			game.isNewRoom = false;
 		}
 
-		if (game.enemies.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
+		if (game.enemies.empty() && game.bosses.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
 		{
 			game.enemies.clear();
+			game.bosses.clear();
 			game.bullets.clear();
 			game.enemyBullet.clear();
 			game.items.clear();
@@ -231,49 +244,49 @@ int main()
 			MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
 		}
 
-		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
-		{
-			UpdateBossState(*it, game.deltaTime.asSeconds());
-
-			if (it->isMoving)
-			{
-				MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
-			}
-
-			else if (it->isShooting)
-			{
-				UpdateBossState(*it, game.deltaTime.asSeconds());
-				std::cout << it->fireCD << std::endl;
-
-				if (it->myState == it->isMoving)
-				{
-					MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
-					std::cout << "moving" << std::endl;
-				}
-
-				else if (it->myState == it->isShooting)
-				{
-					std::cout << "shooting" << std::endl;
-					if (it->fireCD <= 0)
-					{
-						SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
-						it->fireCD = it->fireRate;
-					}
-				}
-
-				else if (it->myState == it->isBlocking)
-				{
-					//Fais apparaître le shield du boss
-					std::cout << "blocking" << std::endl;
-
-					if (it->name == "shield_")
-					{
-						window.draw(it->shape);
-						RotateShield(*it, game.deltaTime.asSeconds());
-					}
-				}
-			}
-		}
+		//for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
+		//{
+		//	UpdateBossState(*it, game.deltaTime.asSeconds());
+		//
+		//	if (it->isMoving)
+		//	{
+		//		MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
+		//	}
+		//
+		//	else if (it->isShooting)
+		//	{
+		//		UpdateBossState(*it, game.deltaTime.asSeconds());
+		//		std::cout << it->fireCD << std::endl;
+		//
+		//		if (it->myState == it->isMoving)
+		//		{
+		//			MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
+		//			std::cout << "moving" << std::endl;
+		//		}
+		//
+		//		else if (it->myState == it->isShooting)
+		//		{
+		//			std::cout << "shooting" << std::endl;
+		//			if (it->fireCD <= 0)
+		//			{
+		//				SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
+		//				it->fireCD = it->fireRate;
+		//			}
+		//		}
+		//
+		//		else if (it->myState == it->isBlocking)
+		//		{
+		//			//Fais apparaître le shield du boss
+		//			std::cout << "blocking" << std::endl;
+		//
+		//			if (it->name == "shield_")
+		//			{
+		//				window.draw(it->shape);
+		//				RotateShield(*it, game.deltaTime.asSeconds());
+		//			}
+		//		}
+		//	}
+		//}
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
 
@@ -287,6 +300,7 @@ int main()
 					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
 					RestartGame(game, player); // On appelle la fonction RestartGame
+					player = SpawnPlayer();
 					game.isPaused = false; // On dépause le jeu
 					player.fireCD = player.fireRate; // Sert juste à pas tirer quand on clique sur le bouton
 				}
@@ -336,12 +350,9 @@ int main()
 			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
+		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it) // Pour chaque boss...
 		{
-			if (it->name != "shield_")
-			{
-				window.draw(it->shape); // On l'affiche
-			}
+			window.draw(it->shape);
 		}
 
 		if(!player.isDead) // Si le joueur n'est pas mort...

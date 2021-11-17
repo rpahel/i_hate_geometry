@@ -262,31 +262,22 @@ void SpawnPlayerParticles(const Player& player, Game& game)
 	}
 }
 
-void SpawnBoss(Game& game, int wallThickness)
+void SpawnBoss(Game& game)
 {
 	Boss boss;
+	boss.name = "boss_" + std::to_string(game.bosses.size());
 	boss.shape.setRadius(50.f);
 	boss.shape.setOutlineThickness(2.f);
-	boss.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
-	boss.bossSpeed = 250.f;
-	boss.fireRate = 1.f;
+	boss.shape.setOutlineColor(sf::Color(58, 58, 194));
 	boss.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
 	boss.shape.setOrigin(boss.shape.getRadius(), boss.shape.getRadius()); // On mets son point d'origine au centre de la forme
 	boss.shape.setPosition(600, 300); // On le fait apparaître au milieu, et légèrement au-dessus du joueur
-	boss.name = "boss_" + std::to_string(game.boss.size());
+	boss.type = 0;
+	boss.bossSpeed = 250.f;
+	boss.fireRate = 1.f;
 	boss.fireCD = boss.fireRate;
-	game.boss.push_back(boss);
-	Boss boss2;
-	boss2.shape.setRadius(20.5f);
-	boss2.shape.setOutlineThickness(2.f);
-	boss2.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
-	boss2.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
-	boss2.shape.setOrigin(boss.shape.getOrigin()); // On mets son point d'origine au centre de la forme
-	float posX = boss.shape.getPosition().x;
-	float posY = boss.shape.getPosition().y;
-	boss2.shape.setPosition(posX, posY);
-	boss2.name = "shield_";
-	game.boss.push_back(boss2);
+	boss.state = bossState::isBlocking;
+	game.bosses.push_back(boss);
 }
 
 void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)
@@ -302,7 +293,7 @@ void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bullet
 		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On définit la taille de la balle
 		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
 
-		enemyBullet.name = "bossBullet" + std::to_string(game.boss.size());
+		enemyBullet.name = "bossBullet" + std::to_string(game.bosses.size());
 
 		enemyBullet.direction = direction;
 		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian

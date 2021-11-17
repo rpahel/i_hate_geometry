@@ -19,32 +19,32 @@ void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window)
 	mouse.y = sf::Mouse::getPosition(window).y;
 }
 
-void UpdateBossState(Boss& boss, float deltaTime)
-{
-	boss.timeBeforeUpdate -= deltaTime;
-	boss.fireCD -= deltaTime;
-	int state = rand()% 3;
-
-	if (boss.timeBeforeUpdate <= 0)
-	{
-		if (state == 0)
-		{
-			std::cout << "0" << std::endl;
-			boss.myState = boss.isMoving;
-		}
-
-		if (state == 1)
-		{
-			std::cout << "1" << std::endl;
-			boss.myState = boss.isShooting;
-		}
-
-		if (state == 2)
-		{
-			std::cout << "2" << std::endl;
-			boss.myState = boss.isBlocking;
-		}
-
-		boss.timeBeforeUpdate = 2.0f;
-	}
-}
+//void UpdateBossState(Boss& boss, float deltaTime)
+//{
+//	boss.timeBeforeUpdate -= deltaTime;
+//	boss.fireCD -= deltaTime;
+//	int state = rand()% 3;
+//
+//	if (boss.timeBeforeUpdate <= 0)
+//	{
+//		if (state == 0)
+//		{
+//			std::cout << "0" << std::endl;
+//			boss.myState = boss.isMoving;
+//		}
+//
+//		if (state == 1)
+//		{
+//			std::cout << "1" << std::endl;
+//			boss.myState = boss.isShooting;
+//		}
+//
+//		if (state == 2)
+//		{
+//			std::cout << "2" << std::endl;
+//			boss.myState = boss.isBlocking;
+//		}
+//
+//		boss.timeBeforeUpdate = 2.0f;
+//	}
+//}
