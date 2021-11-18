@@ -5,4 +5,4 @@
 void UpdatePlayerState(Player& player, float deltaTime);
 void UpdateEnemyState(Enemy& enemy, float deltaTime);
 void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window);
-void UpdateBossState(Boss& boss, float deltaTime, Game& game);
+void UpdateBossState(Boss& boss, float deltaTime, Game& game, Player& player);

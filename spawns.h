@@ -10,5 +10,6 @@ void SpawnParticles(const Enemy& enemy, Game& game);
 void SpawnPlayerParticles(const Player& player, Game& game);
 void SpawnBoss(Game& game);
 void SpawnBossShield(Boss& boss, Game& game);
-void SpawnBossBullet(Game& game, Boss& boss, int bulletNumber = 1);
+void SpawnBossBullet(Game& game, Boss& boss, int numberOfBullets = 1);
+void SpawnBossCAC(Game& game, Boss& boss, int numberOfBossCACs = 1);
 void RestartGame(Game& game, Player& player);

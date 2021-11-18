@@ -246,7 +246,7 @@ int main()
 
 		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it)
 		{
-			UpdateBossState(*it, game.deltaTime.asSeconds(), game);
+			UpdateBossState(*it, game.deltaTime.asSeconds(), game, player);
 		//
 		//	if (it->isMoving)
 		//	{
@@ -356,6 +356,11 @@ int main()
 		}
 
 		for (auto it = game.bossShields.begin(); it != game.bossShields.end(); ++it) // Pour chaque shield du boss;
+		{
+			window.draw(it->shape);
+		}
+
+		for (auto it = game.bossCacs.begin(); it != game.bossCacs.end(); ++it) // Pour chaque corp à corp du boss;
 		{
 			window.draw(it->shape);
 		}

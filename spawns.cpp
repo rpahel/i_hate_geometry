@@ -272,11 +272,17 @@ void SpawnBoss(Game& game)
 	boss.shape.setOrigin(boss.shape.getRadius(), boss.shape.getRadius()); // On mets son point d'origine au centre de la forme
 	boss.shape.setPosition(600, 300); // On le fait apparaître au milieu, et légèrement au-dessus du joueur
 	boss.type = 0;
+	boss.health = 20;
+	boss.state = 2;
 	boss.bossSpeed = 250.f;
 	boss.fireRate = 1.f;
 	boss.fireCD = boss.fireRate;
-	boss.changeStateTime = 5.f;
+	boss.fireSpeed = 0;
+	boss.changeStateTime = 0;
 	boss.shieldsUp = false;
+	boss.isFiring = false;
+	boss.isMoving = false;
+	boss.CacUp = false;
 	game.bosses.push_back(boss);
 }
 
@@ -337,11 +343,11 @@ void SpawnBossShield(Boss& boss, Game& game)
 	}
 }
 
-void SpawnBossBullet(Game& game, Boss& boss, int bulletNumber = 1)
+void SpawnBossBullet(Game& game, Boss& boss, int numberOfBullets = 1)
 {
-	for (int i = 0; i < bulletNumber; i++)
+	for (int i = 0; i < numberOfBullets; i++)
 	{
-		float rot = (i * 2.f) * 3.141592f / bulletNumber; // angle de la direction dans laquelle la particule se dirigera
+		float rot = (i * 2.f) * 3.141592f / numberOfBullets; // angle de la direction dans laquelle la particule se dirigera
 		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
 
 		EnemyBullet enemyBullet;
@@ -355,7 +361,7 @@ void SpawnBossBullet(Game& game, Boss& boss, int bulletNumber = 1)
 		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
 		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.141592f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
 		enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tournée en direction de.. sa direction
-		enemyBullet.shape.setPosition(boss.shape.getPosition()); // La balle sort du centre du cercle
+		enemyBullet.shape.setPosition(boss.shape.getPosition() + (direction * 60.f)); // La balle sort du contour du cercle
 		enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
 		enemyBullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
 		enemyBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
@@ -363,6 +369,33 @@ void SpawnBossBullet(Game& game, Boss& boss, int bulletNumber = 1)
 		enemyBullet.bulletSpeed = 135.0f;
 
 		game.enemyBullet.push_back(enemyBullet); // On rajoute la balle à la liste
+	}
+}
+
+void SpawnBossCAC(Game& game, Boss& boss, int numberOfBossCACs = 1)
+{
+	for (int i = 0; i < numberOfBossCACs; i++)
+	{
+		float rot = (i * 2.f) * 3.141592f / numberOfBossCACs; // angle de la direction dans laquelle la particule se dirigera
+		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
+
+		BossCAC bossCAC;
+
+		bossCAC.shape.setSize(sf::Vector2f(2.f, 15.f)); // On définit la taille de la balle
+		bossCAC.shape.setOrigin(bossCAC.shape.getSize().x / 2, bossCAC.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
+
+		bossCAC.name = "bossCAC_" + std::to_string(i);
+
+		bossCAC.direction = direction;
+		bossCAC.rotation = std::atan2(bossCAC.direction.x, bossCAC.direction.y); // en radian
+		bossCAC.rotation = -bossCAC.rotation * (180.f / 3.141592f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
+		bossCAC.shape.setRotation(bossCAC.rotation); // La balle est tournée en direction de.. sa direction
+		bossCAC.shape.setPosition(boss.shape.getPosition() + (direction * 60.f)); // La balle sort du contour du cercle
+		bossCAC.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
+		bossCAC.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
+		bossCAC.shape.setOutlineColor(sf::Color::Red); // Couleur des contours de la balle
+
+		game.bossCacs.push_back(bossCAC); // On rajoute la balle à la liste
 	}
 }
 

@@ -279,13 +279,13 @@ void MoveParticles(Particles& particle, float deltaTime)
 	particle.shape.move(particle.direction * particle.particleSpeed * deltaTime);
 }
 
-//void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
-//{
-//	boss.direction = player.getPosition() - boss.shape.getPosition();
-//	float amplitude = sqrtf(boss.direction.x * boss.direction.x + boss.direction.y * boss.direction.y); // longueur du vecteur
-//	boss.direction = boss.direction / amplitude; // Normalisation du vecteur
-//	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
-//}
+void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
+{
+	boss.direction = player.getPosition() - boss.shape.getPosition();
+	float amplitude = sqrtf(boss.direction.x * boss.direction.x + boss.direction.y * boss.direction.y); // longueur du vecteur
+	boss.direction = boss.direction / amplitude; // Normalisation du vecteur
+	boss.shape.move(boss.direction * boss.bossSpeed * deltaTime);
+}
 
 void RotateShield(Boss& boss, BossShield& shield, float deltaTime)
 {
@@ -293,4 +293,9 @@ void RotateShield(Boss& boss, BossShield& shield, float deltaTime)
 	sf::Vector2f bossToShield = shield.shape.getPosition() - boss.shape.getPosition();
 	shield.direction = sf::Vector2f(-bossToShield.y, bossToShield.x);
 	shield.direction = -shield.direction / pyth(shield.direction.x, shield.direction.y);
+}
+
+void MoveCACs(BossCAC& cac, Boss& boss)
+{
+	cac.shape.setPosition(boss.shape.getPosition() + (cac.direction * 60.f));
 }

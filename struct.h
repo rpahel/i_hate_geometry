@@ -60,11 +60,25 @@ struct Boss {
 	sf::CircleShape shape;
 	sf::Vector2f direction;
 	int type;
+	int health;
+	int state;
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
+	float fireSpeed;
 	float changeStateTime;
 	bool shieldsUp;
+	bool isFiring;
+	bool isMoving;
+	bool CacUp;
+};
+
+struct BossCAC
+{
+	std::string name;
+	sf::RectangleShape shape;
+	sf::Vector2f direction;
+	float rotation;
 };
 
 struct BossShield {
@@ -82,6 +96,7 @@ struct Game {
 	std::list<Particles> particles;
 	std::list<Boss> bosses;
 	std::list<BossShield> bossShields;
+	std::list<BossCAC> bossCacs;
 	int currentLevel;
 	bool isNewRoom;
 	sf::Font font;
