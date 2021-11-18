@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <list>
+#include <iostream>
 #include "spawns.h"
 #include "struct.h"
 
@@ -288,7 +289,15 @@ void MoveBoss(Boss& boss, sf::CircleShape& player, float deltaTime)
 	boss.shapeHealthBar.move(boss.direction * boss.bossSpeed * deltaTime);
 }
 
-void RotateShield(sf::CircleShape& shield, float deltaTime)
+void RotateShield(Boss& boss, BossShield& shield, float deltaTime)
 {
-	shield.rotate(400.f * deltaTime);
+	shield.shape.move(shield.direction * shield.speed * deltaTime);
+	sf::Vector2f bossToShield = shield.shape.getPosition() - boss.shape.getPosition();
+	shield.direction = sf::Vector2f(-bossToShield.y, bossToShield.x);
+	shield.direction = -shield.direction / pyth(shield.direction.x, shield.direction.y);
+}
+
+void MoveCACs(BossCAC& cac, Boss& boss)
+{
+	cac.shape.setPosition(boss.shape.getPosition() + (cac.direction * 60.f));
 }
