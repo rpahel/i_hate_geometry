@@ -28,7 +28,7 @@ void UpdateBossState(Boss& boss, float deltaTime, Game& game)
 
 	if (boss.changeStateTime <= 0)
 	{
-		int state = 2;
+		int state = 1;
 
 		if (state == 0)
 		{
@@ -38,6 +38,7 @@ void UpdateBossState(Boss& boss, float deltaTime, Game& game)
 		if (state == 1)
 		{
 			boss.shieldsUp = false;
+			SpawnBossBullet(game, boss, 25);
 		}
 
 		if (state == 2) // Shields

@@ -337,12 +337,11 @@ void SpawnBossShield(Boss& boss, Game& game)
 	}
 }
 
-void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)
+void SpawnBossBullet(Game& game, Boss& boss, int bulletNumber = 1)
 {
 	for (int i = 0; i < bulletNumber; i++)
 	{
-		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durée de vie à la particule (entre 0.2f et 0.5f secondes)
-		float rot = (i * 2.f) * 3.14f / bulletNumber; // angle de la direction dans laquelle la particule se dirigera
+		float rot = (i * 2.f) * 3.141592f / bulletNumber; // angle de la direction dans laquelle la particule se dirigera
 		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
 
 		EnemyBullet enemyBullet;
@@ -350,16 +349,16 @@ void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bullet
 		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On définit la taille de la balle
 		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
 
-		enemyBullet.name = "bossBullet" + std::to_string(game.bosses.size());
+		enemyBullet.name = "bossBullet_" + std::to_string(i);
 
 		enemyBullet.direction = direction;
 		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
-		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
+		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.141592f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
 		enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tournée en direction de.. sa direction
 		enemyBullet.shape.setPosition(boss.shape.getPosition()); // La balle sort du centre du cercle
 		enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
 		enemyBullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
-		enemyBullet.shape.setOutlineColor(sf::Color::Blue); // Couleur des contours de la balle
+		enemyBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
 
 		enemyBullet.bulletSpeed = 135.0f;
 
