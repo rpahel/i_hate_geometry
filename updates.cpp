@@ -26,6 +26,7 @@ void UpdateBossState(Boss& boss, float deltaTime, Game& game, Player& player)
 	boss.changeStateTime -= deltaTime;
 	boss.fireCD -= deltaTime;
 	boss.fireSpeed -= deltaTime;
+	boss.previousState = boss.state;
 
 	if (boss.changeStateTime <= 0)
 	{
@@ -68,8 +69,12 @@ void UpdateBossState(Boss& boss, float deltaTime, Game& game, Player& player)
 			game.bossCacs.clear();
 		}
 
-		boss.changeStateTime = 5.f;
-		boss.state = rand() % 3;
+		boss.changeStateTime = (rand() % 500 + 100) / 100;
+
+		while (boss.state == boss.previousState)
+		{
+			boss.state = rand() % 3;
+		}
 	}
 
 	if(boss.isMoving)

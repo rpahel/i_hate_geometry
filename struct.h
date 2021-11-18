@@ -62,6 +62,7 @@ struct Boss {
 	int type;
 	int health;
 	int state;
+	int previousState;
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
@@ -75,7 +76,6 @@ struct Boss {
 
 	sf::RectangleShape shapeContenerHealthBar;
 	sf::RectangleShape shapeHealthBar;
-
 };
 
 struct BossCAC
