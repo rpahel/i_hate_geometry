@@ -106,7 +106,7 @@ int main()
 				}
 				if (event.key.code == sf::Keyboard::W)         // Si on appuie sur W, qqchose se passe (utile pour les tests)
 				{
-					for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
+					for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it) // Pour chaque boss...
 					{
 						if (it->shapeHealthBar.getSize() != sf::Vector2f(0.f, 16.f)) // Update la barre de vie du boss si elle est pas a 0
 						{
@@ -139,7 +139,7 @@ int main()
 		{
 			if (game.currentLevel % 5 == 0)
 			{
-				SpawnBoss(game, wallThickness);
+				SpawnBoss(game);
 				SpawnItems(game, wallThickness);
 				SpawnItemText(game.font, game);
 				game.isNewRoom = false;
@@ -153,7 +153,7 @@ int main()
 			}
 		}
 
-		if (game.enemies.empty() && game.boss.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
+		if (game.enemies.empty() && game.bosses.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
 		{
 			LoadLevel(game, player, game.currentLevel + 1);
 		}

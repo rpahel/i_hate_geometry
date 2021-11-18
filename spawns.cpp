@@ -302,7 +302,7 @@ void SpawnBoss(Game& game)
 	boss.isFiring = false;
 	boss.isMoving = false;
 	boss.CacUp = false;
-	game.bosses.push_back(boss);
+
 	boss.shapeContenerHealthBar.setSize(sf::Vector2f(180.f, 16.f));
 	boss.shapeContenerHealthBar.setOutlineThickness(2.f);
 	boss.shapeContenerHealthBar.setOutlineColor(sf::Color::White);
@@ -314,8 +314,7 @@ void SpawnBoss(Game& game)
 	boss.shapeHealthBar.setFillColor(sf::Color::Red);
 	boss.shapeHealthBar.setOrigin(boss.shape.getOrigin());
 	boss.shapeHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
-	game.boss.push_back(boss);
-}
+	game.bosses.push_back(boss);
 }
 
 void SpawnBossShield(Boss& boss, Game& game)
@@ -439,8 +438,8 @@ void LoadLevel(Game& game, Player& player, int level)
 	game.enemyBullet.clear();
 	game.items.clear();
 	game.particles.clear();
-	game.boss.clear();
-	game.bossShield.clear();
+	game.bosses.clear();
+	game.bossShields.clear();
 	player.playerSpeed = 300.f;
 	player.shape.setPosition(600, 450);
 	game.currentLevel = level;

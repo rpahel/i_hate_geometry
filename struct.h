@@ -72,6 +72,10 @@ struct Boss {
 	bool isFiring;
 	bool isMoving;
 	bool CacUp;
+
+	sf::RectangleShape shapeContenerHealthBar;
+	sf::RectangleShape shapeHealthBar;
+
 };
 
 struct BossCAC
@@ -86,13 +90,6 @@ struct BossShield {
 	std::string name;
 	sf::CircleShape shape;
 	float speed;
-	sf::Vector2f direction;
-};
-
-struct BossShield {
-	std::string name;
-	int type;
-	sf::CircleShape shape;
 	sf::Vector2f direction;
 };
 
