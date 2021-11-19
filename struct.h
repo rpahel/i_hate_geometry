@@ -28,6 +28,7 @@ struct Item {
 	std::string name;
 	std::string effect;
 	sf::RectangleShape shape;
+	sf::Text itemText;
 };
 
 struct Bullet {
@@ -107,8 +108,12 @@ struct Game {
 	sf::Text restartText;
 	sf::RectangleShape button2;
 	sf::Text quitText;
-	sf::Text itemText;
 	bool isPaused;
+};
+
+struct soundManager {
+	sf::SoundBuffer principalBuffer;
+	sf::Sound principalSound;
 };
 
 struct Mouse

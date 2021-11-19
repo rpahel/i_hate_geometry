@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <list>
 #include <unordered_map>
 #include <time.h>
@@ -42,6 +43,7 @@ int main()
 	Game game; // On créer la struct game contenant toutes les listes et autres paramètres de la partie.
 	Player player; // On créer la struct player
 	Mouse mouse; // On créer la struct mouse
+	soundManager sound; //On créer la struct sound
 
 	game.currentLevel = 1; // Niveau actuel. Début = 1
 	game.numberOfEnemies = 1; // Nombre d'ennemis au premier niveau
@@ -141,14 +143,12 @@ int main()
 			{
 				SpawnBoss(game, wallThickness);
 				SpawnItems(game, wallThickness);
-				SpawnItemText(game.font, game);
 				game.isNewRoom = false;
 			}
 			else
 			{
 				SpawnEnemies(game, wallThickness);
 				SpawnItems(game, wallThickness);
-				SpawnItemText(game.font, game);
 				game.isNewRoom = false;
 			}
 		}
@@ -327,6 +327,7 @@ int main()
 		for (auto it = game.items.begin(); it != game.items.end(); ++it) // Pour chaque item...
 		{
 			window.draw(it->shape); // On l'affiche
+			window.draw(it->itemText);
 		}
 
 		for (auto it = game.particles.begin(); it != game.particles.end(); ++it) // Pour chaque particle...

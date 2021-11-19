@@ -170,21 +170,22 @@ void SpawnItems(Game& game, int wallThickness)
 		item.shape.setOutlineThickness(2.f); // Epaisseur des contours de la forme
 
 		int itemType = rand() % 2; // Chiffre entre 0 et X-1 qui va determiner le type d'item
+
  		switch (itemType)
 		{
 			case 0:
 				item.shape.setOutlineColor(sf::Color::White);
-				item.effect = "speedUp";
+				item.effect = "speed+";
 				break;
 
 			case 1:
 				item.shape.setOutlineColor(sf::Color::Red);
-				item.effect = "speedDown";
+				item.effect = "speed-";
 				break;
 
 			default:
 				item.shape.setOutlineColor(sf::Color::White);
-				item.effect = "speedUp";
+				item.effect = "speed+";
 				break;
 
 			//case 2: 
@@ -199,16 +200,14 @@ void SpawnItems(Game& game, int wallThickness)
 				//item qui fait tirer moins vite (malus)
 		}
 
+		item.itemText.setFont(game.font); // On assigne le font au texte
+		item.itemText.setPosition(item.shape.getPosition().x - 30, item.shape.getPosition().y - 40); // On assigne une position au texte
+		item.itemText.setCharacterSize(18); // On assigne une taille de police
+		item.itemText.setString(item.effect); //On affecte un texte au text
+		item.itemText.setFillColor(item.shape.getOutlineColor());
+
 		++i;
 	}
-}
-
-void SpawnItemText(sf::Font font, Game& game)
-{
-	game.itemText.setFont(game.font); // On assigne le font au texte
-	game.itemText.setPosition(1080, 50); // On assigne une position au texte
-	game.itemText.setCharacterSize(24); // On assigne une taille de police
-	game.itemText.setString("level " + std::to_string(game.currentLevel)); //On affecte un texte au text
 }
 
 void SpawnParticles(const Enemy& enemy, Game& game)
