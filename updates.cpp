@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "struct.h"
+#include "spawns.h"
+#include "maths.h"
 #include <iostream>
 
 void UpdatePlayerState(Player& player, float deltaTime)
@@ -19,37 +21,92 @@ void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window)
 	mouse.y = sf::Mouse::getPosition(window).y;
 }
 
-void UpdateBossState(Boss& boss, float deltaTime)
+void UpdateBossState(Boss& boss, float deltaTime, Game& game, Player& player)
 {
-	boss.timeBeforeUpdate -= deltaTime;
+	boss.changeStateTime -= deltaTime;
 	boss.fireCD -= deltaTime;
-	int state = rand()% 3;
+	boss.fireSpeed -= deltaTime;
+	boss.previousState = boss.state;
 
-	if (boss.timeBeforeUpdate <= 0)
+	if (boss.changeStateTime <= 0)
 	{
-		if (state == 0)
+
+		if (boss.state == 0)
 		{
-			std::cout << "0" << std::endl;
-			boss.myState = boss.isMoving;
+			boss.isMoving = true;
+			boss.shieldsUp = false;
+			boss.isFiring = false;
 		}
 
-		if (state == 1)
+		if (boss.state == 1)
 		{
-			std::cout << "1" << std::endl;
-			boss.myState = boss.isShooting;
+			boss.isMoving = false;
+			boss.shieldsUp = false;
+			boss.isFiring = true;
+			boss.CacUp = false;
 		}
 
-		if (state == 2)
+		if (boss.state == 2) // Shields
 		{
-			std::cout << "2" << std::endl;
-			boss.myState = boss.isBlocking;
+			if(!boss.shieldsUp)
+			{
+				SpawnBossShield(boss, game);
+			}
+
+			boss.isMoving = false;
+			boss.shieldsUp = true;
+			boss.isFiring = false;
+			boss.CacUp = false;
 		}
 
-		boss.timeBeforeUpdate = 2.0f;
+		if (!boss.shieldsUp)
+		{
+			game.bossShields.clear();
+		}
+
+		if(!boss.CacUp)
+		{
+			game.bossCacs.clear();
+		}
+
+		boss.changeStateTime = (rand() % 300 + 300) / 100;
+
+		while (boss.state == boss.previousState)
+		{
+			boss.state = rand() % 3;
+		}
+	}
+
+	if(boss.isMoving)
+	{
+		MoveBoss(boss, player.shape, deltaTime);
+
+		if (!boss.CacUp)
+		{
+			SpawnBossCAC(game, boss, 12);
+			boss.CacUp = true;
+		}
+	}
+
+	if(boss.isFiring && boss.fireSpeed <= 0.f)
+	{
+		int numberOfBullets = rand() % 17 + 3;
+		SpawnBossBullet(game, boss, numberOfBullets);
+		boss.fireSpeed = .75f;
+	}
+
+	for(auto& shield : game.bossShields)
+	{
+		RotateShield(boss, shield, deltaTime);
+	}
+
+	for (auto& cac : game.bossCacs)
+	{
+		MoveCACs(cac, boss);
 	}
 }
 
 void UpdateBossHealth(Boss& boss)
 {
-	boss.shapeHealthBar.setSize(boss.shapeHealthBar.getSize() - sf::Vector2f(20.f, 0.f));
+	boss.shapeHealthBar.setSize(sf::Vector2f((float(boss.health) / float(boss.maxHealth)) * 100.f, 10.f));
 }

@@ -3,21 +3,20 @@
 #include "struct.h"
 #include "maths.h"
 
-
 Player SpawnPlayer()
 {
 	Player player;
 
 	player.radius = 20.f; // Rayon du cercle
 
-	// Début propriétés de la forme du joueur
+	// Dï¿½but propriï¿½tï¿½s de la forme du joueur
 	player.shape.setRadius(player.radius);
 	player.shape.setOrigin(player.shape.getRadius(), player.shape.getRadius());
 	player.shape.setFillColor(sf::Color::Transparent);
 	player.shape.setOutlineThickness(2);
 	player.shape.setOutlineColor(sf::Color::Cyan);
 	player.shape.setPosition(600, 450);
-	// Fin propriétés de la forme du joueur
+	// Fin propriï¿½tï¿½s de la forme du joueur
 
 	player.fireRate = .25f; // Cadence de tir
 
@@ -34,7 +33,7 @@ Player SpawnPlayer()
 
 void SpawnEnemies(Game& game, int wallThickness)
 {
-	game.enemies.resize((game.numberOfEnemies + game.currentLevel) - 1); // On génère une liste d'ennemis de taille (nombre d'ennemis au premier niveau + niveau - 1)
+	game.enemies.resize((game.numberOfEnemies + game.currentLevel) - 1); // On gï¿½nï¿½re une liste d'ennemis de taille (nombre d'ennemis au premier niveau + niveau - 1)
 
 
 	int i = 0; // Chiffre utile pour nommer l'ennemi
@@ -42,7 +41,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 	{
 		int enemyType = rand() % 2; // chiffre entre 0 et X-1 qui va determiner le type de l'ennemi
 
-		switch (enemyType) // On génère un type d'ennemi en fonction de enemyType
+		switch (enemyType) // On gï¿½nï¿½re un type d'ennemi en fonction de enemyType
 		{
 			case 0:
 				enemy.shape.setRadius(20.f);
@@ -76,13 +75,13 @@ void SpawnEnemies(Game& game, int wallThickness)
 
 		enemy.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
 		enemy.shape.setOrigin(enemy.shape.getRadius(), enemy.shape.getRadius()); // On mets son point d'origine au centre de la forme
-		enemy.shape.setPosition(rand() % (1200 - wallThickness * 2) + wallThickness, rand() % (900 - wallThickness * 2) + wallThickness); // On le fait apparaître à un endroit au hasard à l'intérieur des murs
+		enemy.shape.setPosition(rand() % (1200 - wallThickness * 2) + wallThickness, rand() % (900 - wallThickness * 2) + wallThickness); // On le fait apparaï¿½tre ï¿½ un endroit au hasard ï¿½ l'intï¿½rieur des murs
 
 		enemy.name = "enemy_" + std::to_string(i) + "_" + "type_" + std::to_string(enemy.type); // Nom de l'ennemi
 
-		enemy.direction = RandomDirection(); // On lui donne une direction de départ aléatoire
+		enemy.direction = RandomDirection(); // On lui donne une direction de dï¿½part alï¿½atoire
 
-		enemy.moveDuration = rand() % 3 + 1; // On lui assigne une durée de déplacement entre 1 et 3 secondes
+		enemy.moveDuration = rand() % 3 + 1; // On lui assigne une durï¿½e de dï¿½placement entre 1 et 3 secondes
 		enemy.moveCD = enemy.moveDuration;
 
 		++i;
@@ -93,8 +92,8 @@ void SpawnEnemiesBullet(Game& game, Enemy& enemy, sf::CircleShape& player, int b
 {
 	EnemyBullet enemyBullet;
 
-	enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On définit la taille de la balle
-	enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
+	enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On dï¿½finit la taille de la balle
+	enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour ï¿½tre au centre de la forme
 
 	enemyBullet.name = "enemyBullet" + std::to_string(game.enemyBullet.size());
 
@@ -117,15 +116,15 @@ void SpawnEnemiesBullet(Game& game, Enemy& enemy, sf::CircleShape& player, int b
 
 	enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
 	enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg
-	enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tournée en direction de.. sa direction
+	enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tournï¿½e en direction de.. sa direction
 	enemyBullet.shape.setPosition(enemy.shape.getPosition()); // La balle sort du centre du cercle
 	enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
-	enemyBullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
+	enemyBullet.shape.setOutlineThickness(2.f); // L'ï¿½paisseur des contours de la balle
 	enemyBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
 
 	enemyBullet.bulletSpeed = 600.f;
 
-	game.enemyBullet.push_back(enemyBullet); // On rajoute la balle à la liste
+	game.enemyBullet.push_back(enemyBullet); // On rajoute la balle ï¿½ la liste
 }
 
 void SpawnBullet(Game& game, const Player& player, const Mouse& mouse)
@@ -141,12 +140,12 @@ void SpawnBullet(Game& game, const Player& player, const Mouse& mouse)
 	bullet.rotation = std::atan2(bullet.direction.x, bullet.direction.y); // en radian
 	bullet.rotation = -bullet.rotation * (180.f / 3.1415f); // Conversion en deg
 
-	bullet.shape.setSize(sf::Vector2f(2, 15)); // On définit la taille de la balle
-	bullet.shape.setOrigin(bullet.shape.getSize().x / 2, bullet.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
-	bullet.shape.setRotation(bullet.rotation); // La balle est tournée en direction de.. sa direction
+	bullet.shape.setSize(sf::Vector2f(2, 15)); // On dï¿½finit la taille de la balle
+	bullet.shape.setOrigin(bullet.shape.getSize().x / 2, bullet.shape.getSize().y / 2); // On change l'origine du rectangle pour ï¿½tre au centre de la forme
+	bullet.shape.setRotation(bullet.rotation); // La balle est tournï¿½e en direction de.. sa direction
 	bullet.shape.setPosition(player.shape.getPosition().x, player.shape.getPosition().y); // La balle sort du centre du cercle
 	bullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
-	bullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
+	bullet.shape.setOutlineThickness(2.f); // L'ï¿½paisseur des contours de la balle
 	bullet.shape.setOutlineColor(sf::Color::Green); // Couleur des contours de la balle
 
 	bullet.bulletSpeed = 800.f;
@@ -156,7 +155,7 @@ void SpawnBullet(Game& game, const Player& player, const Mouse& mouse)
 
 void SpawnItems(Game& game, int wallThickness)
 {
-	game.items.resize(game.numberOfItems); // On génère une liste d'items
+	game.items.resize(game.numberOfItems); // On gï¿½nï¿½re une liste d'items
 
 	int i = 0;
 	for (auto& item : game.items)
@@ -165,7 +164,7 @@ void SpawnItems(Game& game, int wallThickness)
 
 		item.shape.setSize(sf::Vector2f(20.f, 20.f)); // Taille de l'item
 		item.shape.setOrigin(item.shape.getSize().x / 2, item.shape.getSize().y / 2); // On met son origine au centre de la forme
-		item.shape.setPosition(rand() % (1200 - wallThickness * 2) + wallThickness, rand() % (900 - wallThickness * 2) + wallThickness); // On le mets aléatoirement à l'intérieur des murs
+		item.shape.setPosition(rand() % (1200 - wallThickness * 2) + wallThickness, rand() % (900 - wallThickness * 2) + wallThickness); // On le mets alï¿½atoirement ï¿½ l'intï¿½rieur des murs
 		item.shape.setFillColor(sf::Color::Transparent); // Couleur de la forme
 		item.shape.setOutlineThickness(2.f); // Epaisseur des contours de la forme
 
@@ -216,7 +215,7 @@ void SpawnParticles(const Enemy& enemy, Game& game)
 
 	for (int i = 0; i < numberOfParticles; i++)
 	{
-		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durée de vie à la particule (entre 0.2f et 0.5f secondes)
+		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durï¿½e de vie ï¿½ la particule (entre 0.2f et 0.5f secondes)
 		float rot = (i * 2.f) * 3.14f / numberOfParticles; // angle de la direction dans laquelle la particule se dirigera
 		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
 
@@ -224,24 +223,24 @@ void SpawnParticles(const Enemy& enemy, Game& game)
 
 		particle.name = "particle" + std::to_string(game.particles.size()); // On nomme la particule
 
-		particle.direction = direction; // On assigne la direction à la particule
+		particle.direction = direction; // On assigne la direction ï¿½ la particule
 
 		particle.rotation = std::atan2(particle.direction.x, particle.direction.y); // en radian
 		particle.rotation = -particle.rotation * (180.f / 3.1415f); // Conversion en deg
 
 		particle.shape.setSize(sf::Vector2f(1.f, 5.f)); // Taille de la particule
-		particle.shape.setOrigin(particle.shape.getSize().x / 2, particle.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre
+		particle.shape.setOrigin(particle.shape.getSize().x / 2, particle.shape.getSize().y / 2); // On change l'origine du rectangle pour ï¿½tre au centre
 		particle.shape.setRotation(particle.rotation); // On dirige la particule en direction de sa direction
 		particle.shape.setPosition(enemy.shape.getPosition()); // La balle sort du centre du cercle
 		particle.shape.setFillColor(sf::Color::Transparent); // Couleur de la particule
 		particle.shape.setOutlineThickness(1.f); // Epaisseur des contours de la forme
 		particle.shape.setOutlineColor(enemy.shape.getOutlineColor()); // Couleur des contours de la forme
 
-		particle.lifeTime = lifeTime; // On assigne la durée de vie
+		particle.lifeTime = lifeTime; // On assigne la durï¿½e de vie
 
 		particle.particleSpeed = rand() % 200 + 400;
 
-		game.particles.push_back(particle); // On rajoute la particule à la liste
+		game.particles.push_back(particle); // On rajoute la particule ï¿½ la liste
 	}
 }
 
@@ -251,7 +250,7 @@ void SpawnPlayerParticles(const Player& player, Game& game)
 
 	for (int i = 0; i < numberOfParticles; i++)
 	{
-		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durée de vie à la particule (entre 0.2f et 0.5f secondes)
+		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durï¿½e de vie ï¿½ la particule (entre 0.2f et 0.5f secondes)
 		float rot = (i * 2.f) * 3.14f / numberOfParticles; // angle de la direction dans laquelle la particule se dirigera
 		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
 
@@ -259,111 +258,189 @@ void SpawnPlayerParticles(const Player& player, Game& game)
 
 		particle.name = "particle" + std::to_string(game.particles.size()); // On nomme la particule
 
-		particle.direction = direction; // On assigne la direction à la particule
+		particle.direction = direction; // On assigne la direction ï¿½ la particule
 
 		particle.rotation = std::atan2(particle.direction.x, particle.direction.y); // en radian
 		particle.rotation = -particle.rotation * (180.f / 3.1415f); // Conversion en deg
 
 		particle.shape.setSize(sf::Vector2f(1.f, 5.f)); // Taille de la particule
-		particle.shape.setOrigin(particle.shape.getSize().x / 2, particle.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre
+		particle.shape.setOrigin(particle.shape.getSize().x / 2, particle.shape.getSize().y / 2); // On change l'origine du rectangle pour ï¿½tre au centre
 		particle.shape.setRotation(particle.rotation); // On dirige la particule en direction de sa direction
 		particle.shape.setPosition(player.shape.getPosition()); // La balle sort du centre du cercle
 		particle.shape.setFillColor(sf::Color::Transparent); // Couleur de la particule
 		particle.shape.setOutlineThickness(1.f); // Epaisseur des contours de la forme
 		particle.shape.setOutlineColor(player.shape.getOutlineColor()); // Couleur des contours de la forme
 
-		particle.lifeTime = lifeTime; // On assigne la durée de vie
+		particle.lifeTime = lifeTime; // On assigne la durï¿½e de vie
 
 		particle.particleSpeed = rand() % 200 + 400;
 
-		game.particles.push_back(particle); // On rajoute la particule à la liste
+		game.particles.push_back(particle); // On rajoute la particule ï¿½ la liste
 	}
 }
 
-void SpawnBoss(Game& game, int wallThickness)
+void SpawnBoss(Game& game)
 {
 	Boss boss;
+	boss.name = "boss_" + std::to_string(game.bosses.size());
 	boss.shape.setRadius(50.f);
 	boss.shape.setOutlineThickness(2.f);
-	boss.shape.setOutlineColor(sf::Color(1, 0, 255)); // 
-	boss.bossSpeed = 250.f;
-	boss.fireRate = 1.f;
+	boss.shape.setOutlineColor(sf::Color(58, 58, 194));
 	boss.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
 	boss.shape.setOrigin(boss.shape.getRadius(), boss.shape.getRadius()); // On mets son point d'origine au centre de la forme
-	boss.shape.setPosition(600, 300); // On le fait apparaître au milieu, et légèrement au-dessus du joueur
-	boss.name = "boss_" + std::to_string(game.boss.size());
+	boss.shape.setPosition(600, 300); // On le fait apparaï¿½tre au milieu, et lï¿½gï¿½rement au-dessus du joueur
+	boss.type = 0;
+	boss.maxHealth = 50;
+	boss.health = boss.maxHealth;
+	boss.state = 2;
+	boss.bossSpeed = 250.f;
+	boss.fireRate = 1.f;
 	boss.fireCD = boss.fireRate;
+	boss.fireSpeed = 0;
+	boss.changeStateTime = 0;
+	boss.shieldsUp = false;
+	boss.isFiring = false;
+	boss.isMoving = false;
+	boss.CacUp = false;
 
-	boss.shapeContenerHealthBar.setSize(sf::Vector2f(180.f, 16.f));
+	boss.shapeContenerHealthBar.setSize(sf::Vector2f((float(boss.health) / float(boss.maxHealth)) * 100.f, 10.f));
 	boss.shapeContenerHealthBar.setOutlineThickness(2.f);
 	boss.shapeContenerHealthBar.setOutlineColor(sf::Color::White);
 	boss.shapeContenerHealthBar.setFillColor(sf::Color::Transparent);
 	boss.shapeContenerHealthBar.setOrigin(boss.shape.getOrigin());
-	boss.shapeContenerHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
+	boss.shapeContenerHealthBar.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y - 80);
 
-	boss.shapeHealthBar.setSize(sf::Vector2f(180.f, 16.f));
+	boss.shapeHealthBar.setSize(sf::Vector2f((float(boss.health) / float(boss.maxHealth)) * 100.f, 10.f));
 	boss.shapeHealthBar.setFillColor(sf::Color::Red);
 	boss.shapeHealthBar.setOrigin(boss.shape.getOrigin());
-	boss.shapeHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
-	game.boss.push_back(boss);
+	boss.shapeHealthBar.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y - 80);
+	game.bosses.push_back(boss);
 }
 
-void SpawnBossShield(Game& game, Boss& boss)
+void SpawnBossShield(Boss& boss, Game& game)
 {
-	BossShield bossShield;
-	bossShield.shape.setRadius(20.5f);
-	bossShield.shape.setOutlineThickness(2.f);
-	bossShield.shape.setOutlineColor(sf::Color::Cyan); // 
-	bossShield.shape.setFillColor(sf::Color::Transparent); // On rend sa couleur de remplissage transparente
-	bossShield.shape.setOrigin(boss.shape.getOrigin()); // On mets son point d'origine au centre de la forme
-	float posX = boss.shape.getPosition().x;
-	float posY = boss.shape.getPosition().y;
-	bossShield.shape.setPosition(posX, posY);
-	bossShield.name = "shield_";
-	game.bossShield.push_back(bossShield);
-}
-
-
-
-void SpawnBossBullet(Game& game, Boss& boss, sf::CircleShape& player, int bulletNumber)
-{
-	for (int i = 0; i < bulletNumber; i++)
+	for(int i = 0; i < 8; i++)
 	{
-		float lifeTime = ((rand() % 301) / 1000.f) + 0.2f; // On donne une durée de vie à la particule (entre 0.2f et 0.5f secondes)
-		float rot = (i * 2.f) * 3.14f / bulletNumber; // angle de la direction dans laquelle la particule se dirigera
-		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
+		BossShield shield;
+
+		shield.name = "bossShield_" + std::to_string(i);
+
+		shield.shape.setRadius(15);
+		shield.shape.setOutlineThickness(2);
+		shield.shape.setOrigin(shield.shape.getRadius(), shield.shape.getRadius());
+		shield.shape.setFillColor(sf::Color::Transparent);
+		shield.shape.setOutlineColor(sf::Color::White);
+
+		shield.speed = 100.f;
+
+		sf::Vector2f bossToShield;
+		float quotient;
+		switch (i)
+		{
+		case 0:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y);
+			break;
+		case 1:
+			shield.shape.setPosition(boss.shape.getPosition().x - boss.shape.getRadius() - shield.shape.getRadius() - 5, boss.shape.getPosition().y);
+			break;
+		case 2:
+			shield.shape.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y + boss.shape.getRadius() + shield.shape.getRadius() + 5);
+			break;
+		case 3:
+			shield.shape.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y - boss.shape.getRadius() - shield.shape.getRadius() - 5);
+			break;
+		case 4:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y - boss.shape.getRadius() - shield.shape.getRadius() - 5);
+			break;
+		case 5:
+			shield.shape.setPosition(boss.shape.getPosition().x - boss.shape.getRadius() - shield.shape.getRadius() - 5, boss.shape.getPosition().y + boss.shape.getRadius() + shield.shape.getRadius() + 5);
+			break;
+		case 6:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y + boss.shape.getRadius() + shield.shape.getRadius() + 5);
+			break;
+		case 7:
+			shield.shape.setPosition(boss.shape.getPosition().x - boss.shape.getRadius() - shield.shape.getRadius() - 5, boss.shape.getPosition().y - boss.shape.getRadius() - shield.shape.getRadius() - 5);
+			break;
+		default:
+			shield.shape.setPosition(boss.shape.getPosition().x + boss.shape.getRadius() + shield.shape.getRadius() + 5, boss.shape.getPosition().y);
+			break;
+		}
+
+		bossToShield = shield.shape.getPosition() - boss.shape.getPosition();
+		shield.direction = sf::Vector2f(-bossToShield.y, bossToShield.x);
+		shield.direction = shield.direction / pyth(shield.direction.x, shield.direction.y);
+
+		game.bossShields.push_back(shield);
+	}
+}
+
+void SpawnBossBullet(Game& game, Boss& boss, int numberOfBullets = 1)
+{
+	for (int i = 0; i < numberOfBullets; i++)
+	{
+		float rot = (i * 2.f) * 3.141592f / numberOfBullets;
+		sf::Vector2f direction(cos(rot), sin(rot));
 
 		EnemyBullet enemyBullet;
 
-		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On définit la taille de la balle
-		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour être au centre de la forme
+		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f));
+		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2);
 
-		enemyBullet.name = "bossBullet" + std::to_string(game.boss.size());
+		enemyBullet.name = "bossBullet_" + std::to_string(i);
 
 		enemyBullet.direction = direction;
-		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
-		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
-		enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tournée en direction de.. sa direction
-		enemyBullet.shape.setPosition(boss.shape.getPosition()); // La balle sort du centre du cercle
-		enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
-		enemyBullet.shape.setOutlineThickness(2.f); // L'épaisseur des contours de la balle
-		enemyBullet.shape.setOutlineColor(sf::Color::Blue); // Couleur des contours de la balle
+		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y);
+		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.141592f);
+		enemyBullet.shape.setRotation(enemyBullet.rotation);
+		enemyBullet.shape.setPosition(boss.shape.getPosition() + (direction * 60.f));
+		enemyBullet.shape.setFillColor(sf::Color::Transparent);
+		enemyBullet.shape.setOutlineThickness(2.f);
+		enemyBullet.shape.setOutlineColor(sf::Color::Yellow);
 
 		enemyBullet.bulletSpeed = 135.0f;
 
-		game.enemyBullet.push_back(enemyBullet); // On rajoute la balle à la liste
+		game.enemyBullet.push_back(enemyBullet);
+	}
+}
+
+void SpawnBossCAC(Game& game, Boss& boss, int numberOfBossCACs = 1)
+{
+	for (int i = 0; i < numberOfBossCACs; i++)
+	{
+		float rot = (i * 2.f) * 3.141592f / numberOfBossCACs;
+		sf::Vector2f direction(cos(rot), sin(rot));
+
+		BossCAC bossCAC;
+
+		bossCAC.shape.setSize(sf::Vector2f(2.f, 15.f));
+		bossCAC.shape.setOrigin(bossCAC.shape.getSize().x / 2, bossCAC.shape.getSize().y / 2);
+
+		bossCAC.name = "bossCAC_" + std::to_string(i);
+
+		bossCAC.direction = direction;
+		bossCAC.rotation = std::atan2(bossCAC.direction.x, bossCAC.direction.y);
+		bossCAC.rotation = -bossCAC.rotation * (180.f / 3.141592f);
+		bossCAC.shape.setRotation(bossCAC.rotation);
+		bossCAC.shape.setPosition(boss.shape.getPosition() + (direction * 60.f));
+		bossCAC.shape.setFillColor(sf::Color::Transparent);
+		bossCAC.shape.setOutlineThickness(2.f);
+		bossCAC.shape.setOutlineColor(sf::Color::Red);
+
+		game.bossCacs.push_back(bossCAC);
 	}
 }
 
 void LoadLevel(Game& game, Player& player, int level)
 {
 	game.enemies.clear();
+	game.bosses.clear();
 	game.bullets.clear();
 	game.enemyBullet.clear();
 	game.items.clear();
 	game.particles.clear();
-	game.boss.clear();
-	game.bossShield.clear();
+	game.bosses.clear();
+	game.bossShields.clear();
+	game.bossCacs.clear();
 	player.playerSpeed = 300.f;
 	player.shape.setPosition(600, 450);
 	game.currentLevel = level;

@@ -58,31 +58,40 @@ struct Particles {
 
 struct Boss {
 	std::string name;
-	int type;
 	sf::CircleShape shape;
 	sf::Vector2f direction;
+	int type;
+	int maxHealth;
+	int health;
+	int state;
+	int previousState;
 	float bossSpeed;
 	float fireRate;
 	float fireCD;
 	float timeBeforeUpdate = 2.f;
+	float fireSpeed;
+	float changeStateTime;
+	bool shieldsUp;
+	bool isFiring;
+	bool isMoving;
+	bool CacUp;
 
-	enum bossState
-	{
-		isMoving,
-		isShooting,
-		isBlocking,
-	};
-
-	bossState myState = bossState::isBlocking;
-
-	sf::RectangleShape shapeContenerHealthBar;   //barre de vie du boss
+	sf::RectangleShape shapeContenerHealthBar;
 	sf::RectangleShape shapeHealthBar;
+};
+
+struct BossCAC
+{
+	std::string name;
+	sf::RectangleShape shape;
+	sf::Vector2f direction;
+	float rotation;
 };
 
 struct BossShield {
 	std::string name;
-	int type;
 	sf::CircleShape shape;
+	float speed;
 	sf::Vector2f direction;
 };
 
@@ -92,18 +101,19 @@ struct Game {
 	std::list<EnemyBullet> enemyBullet;
 	std::list<Item> items;
 	std::list<Particles> particles;
-	std::list<Boss> boss;
-	std::list<BossShield> bossShield;
+	std::list<Boss> bosses;
+	std::list<BossShield> bossShields;
+	std::list<BossCAC> bossCacs;
 	int currentLevel;
 	bool isNewRoom;
 	sf::Font font;
 	sf::Text levelText;
-	sf::Text pauseText;
 	sf::Clock clock;
 	int numberOfEnemies;
 	int numberOfItems;
 	sf::Time deltaTime;
 	float timeSinceStartLevel;
+	sf::Text pauseText;
 	sf::RectangleShape button1;
 	sf::Text restartText;
 	sf::RectangleShape button2;

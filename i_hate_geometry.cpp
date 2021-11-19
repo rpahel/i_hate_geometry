@@ -87,7 +87,7 @@ int main()
 	game.quitText.setOrigin(game.quitText.getLocalBounds().width / 2, game.quitText.getLocalBounds().height - 2); // On met l'origine du texte en son centre
 	game.quitText.setPosition(game.button2.getPosition()); // On assigne une position au texte
 
-	player = SpawnPlayer();
+	player = SpawnPlayer(); // On fait spawn le joueur
 
 	while (window.isOpen())
 	{
@@ -104,17 +104,7 @@ int main()
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
 				{	
-					LoadLevel(game, player, 5);
-				}
-				if (event.key.code == sf::Keyboard::W)         // Si on appuie sur W, qqchose se passe (utile pour les tests)
-				{
-					for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
-					{
-						if (it->shapeHealthBar.getSize() != sf::Vector2f(0.f, 16.f)) // Update la barre de vie du boss si elle est pas a 0
-						{
-							UpdateBossHealth(*it);
-						}	
-					}	
+					LoadLevel(game, player, 5); // On va directement au level 5
 				}
 
 				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
@@ -141,7 +131,7 @@ int main()
 		{
 			if (game.currentLevel % 5 == 0)
 			{
-				SpawnBoss(game, wallThickness);
+				SpawnBoss(game);
 				SpawnItems(game, wallThickness);
 				game.isNewRoom = false;
 			}
@@ -153,7 +143,7 @@ int main()
 			}
 		}
 
-		if (game.enemies.empty() && game.boss.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
+		if (game.enemies.empty() && game.bosses.empty()) // Si on a tué tout les ennemis, charge une nouvelle room
 		{
 			LoadLevel(game, player, game.currentLevel + 1);
 		}
@@ -174,7 +164,7 @@ int main()
 		}
 		else
 		{
-			player.shape.setRadius(0);
+			player.shape.setRadius(0); // On mets son rayon à 0 pour qu'ils n'entre plus en collision avec quoi que ce soit
 		}
 
 		for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque ennemi...
@@ -191,6 +181,7 @@ int main()
 
 			if (it->fireCD <= 0 && !player.isDead) // Si fireCD est inférieur ou égal à 0...
 			{
+				//Peut mieux faire, à revoir
 				switch (it->type) // En fonction du type de l'ennemi...
 				{
 					case 0:
@@ -207,7 +198,7 @@ int main()
 						break;
 				}
 
-				it->fireCD = it->fireRate;
+				it->fireCD = it->fireRate; // On réinitialise fireCD
 			}
 		}
 
@@ -237,39 +228,18 @@ int main()
 			}
 		}
 
-		for (auto it = game.particles.begin(); it != game.particles.end(); ++it) // Pour chaque particule...
+		for (auto it = game.bosses.begin(); it != game.bosses.end();) // Pour chaque boss..
 		{
-			MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
-		}
+			UpdateBossState(*it, game.deltaTime.asSeconds(), game, player); // On update le boss
 
-		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque balle ennemie...
-		{
-			UpdateBossState(*it, game.deltaTime.asSeconds());
-
-		    if (it->myState == it->isMoving)
+			if(it->health <= 0) // Si le boss n'a plus de vie..
 			{
-				game.bossShield.clear();
-				MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
+				it = game.bosses.erase(it); // On le supprime de la liste
 			}
-
-			else if (it->myState == it->isShooting)
+			else
 			{
-				game.bossShield.clear();
-				if (it->fireCD <= 0)
-				{
-					SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
-					it->fireCD = it->fireRate;
-				}
+				++it; // On passe au prochain boss
 			}
-
-			else 
-			{
-				//Fais apparaître le shield du boss si il n'en a pas deja
-				if (game.bossShield.size() == 0)
-				{
-					SpawnBossShield(game, *it);
-				}
-			}	
 		}
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
@@ -278,13 +248,13 @@ int main()
 		{
 			UpdateMousePos(mouse, window); // On update les coordonnées de la souris
 
-			if(game.isPaused || player.isDead)
+			if(game.isPaused || player.isDead) // Si le jeu est en pause ou si le joueur est mort...
 			{
 				if(mouse.x >= game.button1.getPosition().x - (game.button1.getSize().x/2) && mouse.x <= game.button1.getPosition().x + (game.button1.getSize().x / 2)
 					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
 					LoadLevel(game, player, 1); // On appelle la fonction RestartGame
-					player = SpawnPlayer();
+					player = SpawnPlayer(); // On respawn le joueur
 					game.isPaused = false; // On dépause le jeu
 					player.fireCD = player.fireRate; // Sert juste à pas tirer quand on clique sur le bouton
 				}
@@ -292,7 +262,7 @@ int main()
 				if (mouse.x >= game.button2.getPosition().x - (game.button2.getSize().x / 2) && mouse.x <= game.button2.getPosition().x + (game.button2.getSize().x / 2)
 					&& mouse.y >= game.button2.getPosition().y - (game.button2.getSize().y / 2) && mouse.y <= game.button2.getPosition().y + (game.button2.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
-					window.close();
+					window.close(); // On ferme la fenêtre
 				}
 			}
 
@@ -335,23 +305,26 @@ int main()
 			window.draw(it->shape); // On l'affiche
 		}
 
-		for (auto it = game.boss.begin(); it != game.boss.end(); ++it) // Pour chaque boss...
+		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it) // Pour chaque boss...
 		{
 			window.draw(it->shape); // On l'affiche
-			window.draw(it->shapeContenerHealthBar);
-			window.draw(it->shapeHealthBar);
+			window.draw(it->shapeHealthBar); // On affiche sa barre de vie
+			window.draw(it->shapeContenerHealthBar); // On affiche le conteneur de la barre de vie
 		}
 
-		for (auto it = game.bossShield.begin(); it != game.bossShield.end(); ++it) // Pour chaque Shield du boss...
+		for (auto it = game.bossShields.begin(); it != game.bossShields.end(); ++it) // Pour chaque shield du boss
 		{
 			window.draw(it->shape); // On l'affiche
-			RotateShield(it->shape, game.deltaTime.asSeconds());
+		}
 
+		for (auto it = game.bossCacs.begin(); it != game.bossCacs.end(); ++it) // Pour chaque corp à corp du boss
+		{
+			window.draw(it->shape); // On l'affiche
 		}
 
 		if(!player.isDead) // Si le joueur n'est pas mort...
 		{
-			window.draw(player.shape); // On le dessine
+			window.draw(player.shape); // On l'affiche
 		}
 
 		// Début affichage des murs
@@ -363,26 +336,26 @@ int main()
 
 		window.draw(game.levelText); // On affiche le texte
 
-		if(player.isDead)
+		if(player.isDead) // Si le joueur est mort ...
 		{
 			game.pauseText.setString("Game Over."); //On affecte un texte au text
 			game.pauseText.setOrigin(game.pauseText.getLocalBounds().width / 2, game.pauseText.getLocalBounds().height / 2); // On met l'origine du texte en son centre
-			window.draw(game.pauseText); // On affiche le texte
-			window.draw(game.button1); // On affiche le texte
-			window.draw(game.button2); // On affiche le texte
-			window.draw(game.restartText); // On affiche le texte
-			window.draw(game.quitText); // On affiche le texte
+			window.draw(game.pauseText); // On affiche le game over
+			window.draw(game.button1); // On affiche le button 1
+			window.draw(game.button2); // On affiche le button 2
+			window.draw(game.restartText); // On affiche le texte du button 1
+			window.draw(game.quitText); // On affiche le texte du button 2
 		}
 
 		if (game.isPaused)
 		{
 			game.pauseText.setString("Paused."); //On affecte un texte au text
 			game.pauseText.setOrigin(game.pauseText.getLocalBounds().width / 2, game.pauseText.getLocalBounds().height / 2); // On met l'origine du texte en son centre
-			window.draw(game.pauseText); // On affiche le texte
-			window.draw(game.button1); // On affiche le texte
-			window.draw(game.button2); // On affiche le texte
-			window.draw(game.restartText); // On affiche le texte
-			window.draw(game.quitText); // On affiche le texte
+			window.draw(game.pauseText); // On affiche le pause
+			window.draw(game.button1); // On affiche le button 1
+			window.draw(game.button2); // On affiche le button 2
+			window.draw(game.restartText); // On affiche le texte du button 1
+			window.draw(game.quitText); // On affiche le texte du button 2
 		}
 
 		// Fin Rendu
