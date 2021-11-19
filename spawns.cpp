@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "struct.h"
 #include "maths.h"
 
@@ -447,4 +448,18 @@ void LoadLevel(Game& game, Player& player, int level)
 	game.levelText.setString("level " + std::to_string(game.currentLevel));
 	game.timeSinceStartLevel = 0;
 	game.isNewRoom = true;
+}
+
+void LoadSong(Game& game, std::string path, float deltaTime, int number)
+{
+	if (number == 0)
+	{
+		soundManager sound;
+		sound.playerShootBuffer.loadFromFile(path);
+		sound.playerShootSound.setBuffer(sound.playerShootBuffer);
+		sound.playerShootSound.setVolume(100.f);
+		sound.playerShootSoundLifetime = 2.f;
+		sound.playerShootSound.play();
+		game.playerShootSound.push_back(sound);
+	}
 }
