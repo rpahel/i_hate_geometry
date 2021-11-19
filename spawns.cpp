@@ -379,28 +379,28 @@ void SpawnBossBullet(Game& game, Boss& boss, int numberOfBullets = 1)
 {
 	for (int i = 0; i < numberOfBullets; i++)
 	{
-		float rot = (i * 2.f) * 3.141592f / numberOfBullets; // angle de la direction dans laquelle la particule se dirigera
-		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
+		float rot = (i * 2.f) * 3.141592f / numberOfBullets;
+		sf::Vector2f direction(cos(rot), sin(rot));
 
 		EnemyBullet enemyBullet;
 
-		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On d�finit la taille de la balle
-		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour �tre au centre de la forme
+		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f));
+		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2);
 
 		enemyBullet.name = "bossBullet_" + std::to_string(i);
 
 		enemyBullet.direction = direction;
-		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
-		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.141592f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
-		enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tourn�e en direction de.. sa direction
-		enemyBullet.shape.setPosition(boss.shape.getPosition() + (direction * 60.f)); // La balle sort du contour du cercle
-		enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
-		enemyBullet.shape.setOutlineThickness(2.f); // L'�paisseur des contours de la balle
-		enemyBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
+		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y);
+		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.141592f);
+		enemyBullet.shape.setRotation(enemyBullet.rotation);
+		enemyBullet.shape.setPosition(boss.shape.getPosition() + (direction * 60.f));
+		enemyBullet.shape.setFillColor(sf::Color::Transparent);
+		enemyBullet.shape.setOutlineThickness(2.f);
+		enemyBullet.shape.setOutlineColor(sf::Color::Yellow);
 
 		enemyBullet.bulletSpeed = 135.0f;
 
-		game.enemyBullet.push_back(enemyBullet); // On rajoute la balle � la liste
+		game.enemyBullet.push_back(enemyBullet);
 	}
 }
 
@@ -408,26 +408,26 @@ void SpawnBossCAC(Game& game, Boss& boss, int numberOfBossCACs = 1)
 {
 	for (int i = 0; i < numberOfBossCACs; i++)
 	{
-		float rot = (i * 2.f) * 3.141592f / numberOfBossCACs; // angle de la direction dans laquelle la particule se dirigera
-		sf::Vector2f direction(cos(rot), sin(rot)); // direction de la particule
+		float rot = (i * 2.f) * 3.141592f / numberOfBossCACs;
+		sf::Vector2f direction(cos(rot), sin(rot));
 
 		BossCAC bossCAC;
 
-		bossCAC.shape.setSize(sf::Vector2f(2.f, 15.f)); // On d�finit la taille de la balle
-		bossCAC.shape.setOrigin(bossCAC.shape.getSize().x / 2, bossCAC.shape.getSize().y / 2); // On change l'origine du rectangle pour �tre au centre de la forme
+		bossCAC.shape.setSize(sf::Vector2f(2.f, 15.f));
+		bossCAC.shape.setOrigin(bossCAC.shape.getSize().x / 2, bossCAC.shape.getSize().y / 2);
 
 		bossCAC.name = "bossCAC_" + std::to_string(i);
 
 		bossCAC.direction = direction;
-		bossCAC.rotation = std::atan2(bossCAC.direction.x, bossCAC.direction.y); // en radian
-		bossCAC.rotation = -bossCAC.rotation * (180.f / 3.141592f); // Conversion en deg(180.f / 3.1415f); // Conversion en deg
-		bossCAC.shape.setRotation(bossCAC.rotation); // La balle est tourn�e en direction de.. sa direction
-		bossCAC.shape.setPosition(boss.shape.getPosition() + (direction * 60.f)); // La balle sort du contour du cercle
-		bossCAC.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
-		bossCAC.shape.setOutlineThickness(2.f); // L'�paisseur des contours de la balle
-		bossCAC.shape.setOutlineColor(sf::Color::Red); // Couleur des contours de la balle
+		bossCAC.rotation = std::atan2(bossCAC.direction.x, bossCAC.direction.y);
+		bossCAC.rotation = -bossCAC.rotation * (180.f / 3.141592f);
+		bossCAC.shape.setRotation(bossCAC.rotation);
+		bossCAC.shape.setPosition(boss.shape.getPosition() + (direction * 60.f));
+		bossCAC.shape.setFillColor(sf::Color::Transparent);
+		bossCAC.shape.setOutlineThickness(2.f);
+		bossCAC.shape.setOutlineColor(sf::Color::Red);
 
-		game.bossCacs.push_back(bossCAC); // On rajoute la balle � la liste
+		game.bossCacs.push_back(bossCAC);
 	}
 }
 
