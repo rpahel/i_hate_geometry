@@ -225,6 +225,22 @@ bool CheckBossBulletCollision(sf::CircleShape& boss, Game& game)
 	return false;
 }
 
+bool CheckBulletShieldCollision(sf::RectangleShape bullet, Game& game)
+{
+	for (auto shield = game.bossShields.begin(); shield != game.bossShields.end();) // Pour chaque balle de la liste...
+	{
+		float D = pyth(bullet.getPosition().x - shield->shape.getPosition().x, bullet.getPosition().y - shield->shape.getPosition().y); // Distance entre la balle et le boss
+
+		if (D <= shield->shape.getRadius()) // Si la balle et le boss se superposent...
+		{
+			return true;
+		}
+		++shield; // On passe à la prochaine balle
+	}
+
+	return false;
+}
+
 // Gestion de toutes les collisions
 void CheckAllTheCollisions(Player& player, Game& game, sf::FloatRect boundingBoxes[4])
 {
@@ -251,7 +267,7 @@ void CheckAllTheCollisions(Player& player, Game& game, sf::FloatRect boundingBox
 
 	for(auto it = game.bullets.begin(); it != game.bullets.end();) // Pour chaque balle...
 	{
-		if (CheckBulletWallCollision(it->shape, boundingBoxes)) // Si la balle touche un mur...
+		if (CheckBulletWallCollision(it->shape, boundingBoxes) || CheckBulletShieldCollision(it->shape, game)) // Si la balle touche un mur...
 		{
 			it = game.bullets.erase(it); // Supprime la balle et pas à la prochaine
 		}
