@@ -276,7 +276,7 @@ int main()
 			if (player.fireCD <= 0.f && !player.isDead && !game.isPaused) // Si fireCD est inférieur ou égal à 0 et que le joueur n'est pas mort et que le jeu n'est pas en pause...
 			{
 				SpawnBullet(game, player, mouse); // On spawn une balle
-				LoadSong(game, getAssetsPath(getAppPath()) + "playerShoot.wav", game.deltaTime.asSeconds(), 0);
+				//LoadSong(game, getAssetsPath(getAppPath()) + "playerShoot.wav", game.deltaTime.asSeconds(), 0);
 				player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
 			}
 		}
