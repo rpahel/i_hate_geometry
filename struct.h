@@ -60,6 +60,7 @@ struct Boss {
 	sf::CircleShape shape;
 	sf::Vector2f direction;
 	int type;
+	int maxHealth;
 	int health;
 	int state;
 	int previousState;

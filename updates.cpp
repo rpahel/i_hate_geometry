@@ -69,7 +69,7 @@ void UpdateBossState(Boss& boss, float deltaTime, Game& game, Player& player)
 			game.bossCacs.clear();
 		}
 
-		boss.changeStateTime = (rand() % 500 + 100) / 100;
+		boss.changeStateTime = (rand() % 300 + 300) / 100;
 
 		while (boss.state == boss.previousState)
 		{
@@ -108,5 +108,5 @@ void UpdateBossState(Boss& boss, float deltaTime, Game& game, Player& player)
 
 void UpdateBossHealth(Boss& boss)
 {
-	boss.shapeHealthBar.setSize(boss.shapeHealthBar.getSize() - sf::Vector2f(20.f, 0.f));
+	boss.shapeHealthBar.setSize(sf::Vector2f((float(boss.health) / float(boss.maxHealth)) * 100.f, 10.f));
 }

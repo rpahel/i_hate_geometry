@@ -242,48 +242,17 @@ int main()
 			MoveParticles(*it, game.deltaTime.asSeconds()); // On déplace la particule
 		}
 
-		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it)
+		for (auto it = game.bosses.begin(); it != game.bosses.end();) // Pour chaque boss..
 		{
-			UpdateBossState(*it, game.deltaTime.asSeconds(), game, player);
-		//
-		//	if (it->isMoving)
-		//	{
-		//		MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
-		//	}
-		//
-		//	else if (it->isShooting)
-		//	{
-		//		UpdateBossState(*it, game.deltaTime.asSeconds());
-		//		std::cout << it->fireCD << std::endl;
-		//
-		//		if (it->myState == it->isMoving)
-		//		{
-		//			MoveBoss(*it, player.shape, game.deltaTime.asSeconds()); // On déplace le(s) boss
-		//			std::cout << "moving" << std::endl;
-		//		}
-		//
-		//		else if (it->myState == it->isShooting)
-		//		{
-		//			std::cout << "shooting" << std::endl;
-		//			if (it->fireCD <= 0)
-		//			{
-		//				SpawnBossBullet(game, *it, player.shape, rand() % 20 + 5);
-		//				it->fireCD = it->fireRate;
-		//			}
-		//		}
-		//
-		//		else if (it->myState == it->isBlocking)
-		//		{
-		//			//Fais apparaître le shield du boss
-		//			std::cout << "blocking" << std::endl;
-		//
-		//			if (it->name == "shield_")
-		//			{
-		//				window.draw(it->shape);
-		//				RotateShield(*it, game.deltaTime.asSeconds());
-		//			}
-		//		}
-		//	}
+			UpdateBossState(*it, game.deltaTime.asSeconds(), game, player); // On update le boss
+			if(it->health <= 0)
+			{
+				it = game.bosses.erase(it);
+			}
+			else
+			{
+				++it;
+			}
 		}
 
 		UpdatePlayerState(player, game.deltaTime.asSeconds()); // On update les valeurs du player à update
@@ -351,8 +320,8 @@ int main()
 		for (auto it = game.bosses.begin(); it != game.bosses.end(); ++it) // Pour chaque boss...
 		{
 			window.draw(it->shape); // On l'affiche
-			window.draw(it->shapeContenerHealthBar);
 			window.draw(it->shapeHealthBar);
+			window.draw(it->shapeContenerHealthBar);
 		}
 
 		for (auto it = game.bossShields.begin(); it != game.bossShields.end(); ++it) // Pour chaque shield du boss;

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "spawns.h"
 #include "struct.h"
+#include "updates.h"
 
 float car(float a) // fonction carré
 {
@@ -188,11 +189,48 @@ bool CheckEnemyBulletCollision(sf::CircleShape& enemy, Game &game)
 	return false;
 }
 
+// Gestion des collisions Player - Pics du boss
+void CheckPlayerBossCacCollision(Player& player, Game& game)
+{
+	for (auto spike = game.bossCacs.begin(); spike != game.bossCacs.end();) // Pour chaque pic de la liste...
+	{
+		float D = pyth(player.shape.getPosition().x - spike->shape.getPosition().x, player.shape.getPosition().y - spike->shape.getPosition().y); // On prend la distance entre le joueur et le pic
+
+		if (D <= player.shape.getRadius()) // Si la distance est inférieur au rayon du joueur (donc si le pic est superposé au joueur) ...
+		{
+			player.isDead = true; // On dit que le joueur est mort
+			SpawnPlayerParticles(player, game); // On fait apparaitre des particules
+		}
+
+		++spike; // On passe à la prochaine balle de la liste
+	}
+}
+
+// Check des collisions Boss - Balles
+bool CheckBossBulletCollision(sf::CircleShape& boss, Game& game)
+{
+	for (auto pew = game.bullets.begin(); pew != game.bullets.end();) // Pour chaque balle de la liste...
+	{
+		float D = pyth(boss.getPosition().x - pew->shape.getPosition().x, boss.getPosition().y - pew->shape.getPosition().y); // Distance entre la balle et le boss
+
+		if (D <= boss.getRadius()) // Si la balle et le boss se superposent...
+		{
+			pew = game.bullets.erase(pew); // On supprime la balle et on répond true
+			return true;
+		}
+
+		++pew; // On passe à la prochaine balle
+	}
+
+	return false;
+}
+
 // Gestion de toutes les collisions
 void CheckAllTheCollisions(Player& player, Game& game, sf::FloatRect boundingBoxes[4])
 {
 	CheckPlayerWallCollision(player.shape, boundingBoxes, player.playerSpeed);
 	CheckPlayerBulletCollision(player, game);
+	CheckPlayerBossCacCollision(player, game);
 
 	for(auto it = game.enemies.begin(); it != game.enemies.end();) // Pour chaque ennemi...
 	{
@@ -247,6 +285,17 @@ void CheckAllTheCollisions(Player& player, Game& game, sf::FloatRect boundingBox
 		{
 			++it; // Passe au prochain item
 		}
+	}
+
+	for (auto it = game.bosses.begin(); it != game.bosses.end();) // Pour cchaque boss
+	{
+		if (CheckBossBulletCollision(it->shape, game)) // Si le boss touche une balle
+		{
+			it->health -= 1; // On lui retire un pv
+			UpdateBossHealth(*it);
+		}
+
+		++it; // Passe au prochain boss
 	}
 }
 

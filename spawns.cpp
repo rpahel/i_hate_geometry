@@ -291,7 +291,8 @@ void SpawnBoss(Game& game)
 	boss.shape.setOrigin(boss.shape.getRadius(), boss.shape.getRadius()); // On mets son point d'origine au centre de la forme
 	boss.shape.setPosition(600, 300); // On le fait appara�tre au milieu, et l�g�rement au-dessus du joueur
 	boss.type = 0;
-	boss.health = 20;
+	boss.maxHealth = 50;
+	boss.health = boss.maxHealth;
 	boss.state = 2;
 	boss.bossSpeed = 250.f;
 	boss.fireRate = 1.f;
@@ -303,17 +304,17 @@ void SpawnBoss(Game& game)
 	boss.isMoving = false;
 	boss.CacUp = false;
 
-	boss.shapeContenerHealthBar.setSize(sf::Vector2f(180.f, 16.f));
+	boss.shapeContenerHealthBar.setSize(sf::Vector2f((float(boss.health) / float(boss.maxHealth)) * 100.f, 10.f));
 	boss.shapeContenerHealthBar.setOutlineThickness(2.f);
 	boss.shapeContenerHealthBar.setOutlineColor(sf::Color::White);
 	boss.shapeContenerHealthBar.setFillColor(sf::Color::Transparent);
 	boss.shapeContenerHealthBar.setOrigin(boss.shape.getOrigin());
-	boss.shapeContenerHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
+	boss.shapeContenerHealthBar.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y - 80);
 
-	boss.shapeHealthBar.setSize(sf::Vector2f(180.f, 16.f));
+	boss.shapeHealthBar.setSize(sf::Vector2f((float(boss.health) / float(boss.maxHealth)) * 100.f, 10.f));
 	boss.shapeHealthBar.setFillColor(sf::Color::Red);
 	boss.shapeHealthBar.setOrigin(boss.shape.getOrigin());
-	boss.shapeHealthBar.setPosition(boss.shape.getPosition().x - 38, boss.shape.getPosition().y - 40);
+	boss.shapeHealthBar.setPosition(boss.shape.getPosition().x, boss.shape.getPosition().y - 80);
 	game.bosses.push_back(boss);
 }
 
@@ -440,6 +441,7 @@ void LoadLevel(Game& game, Player& player, int level)
 	game.particles.clear();
 	game.bosses.clear();
 	game.bossShields.clear();
+	game.bossCacs.clear();
 	player.playerSpeed = 300.f;
 	player.shape.setPosition(600, 450);
 	game.currentLevel = level;
