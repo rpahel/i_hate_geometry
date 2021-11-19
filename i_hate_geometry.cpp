@@ -108,26 +108,27 @@ int main()
 
 			case sf::Event::KeyPressed:
 				if (event.key.code == sf::Keyboard::A)         // Si on appuie sur A, qqchose se passe (utile pour les tests)
-				{	
+				{
 					LoadLevel(game, player, 5); // On va directement au level 5
 				}
 
 				if (event.key.code == sf::Keyboard::Escape && !player.isDead)         // Si on appuie sur échap, pause le jeu.
 				{
-					if(!game.isPaused)
+					if (!game.isPaused)
 					{
 						game.isPaused = true;
 					}
 					else
 					{
 						game.isPaused = false;
+						sound.principalSound.play(); //On relance la musique principale
 					}
-				}
 
-				break;
+					break;
 
 			default:
 				break;
+				}
 			}
 		}
 
@@ -258,6 +259,7 @@ int main()
 				if(mouse.x >= game.button1.getPosition().x - (game.button1.getSize().x/2) && mouse.x <= game.button1.getPosition().x + (game.button1.getSize().x / 2)
 					&& mouse.y >= game.button1.getPosition().y - (game.button1.getSize().y / 2) && mouse.y <= game.button1.getPosition().y + (game.button1.getSize().y / 2)) // Si la souris est dans l'espace occupé par le rectangle...
 				{
+					sound.principalSound.play(); //On relance la musique principale
 					LoadLevel(game, player, 1); // On appelle la fonction RestartGame
 					player = SpawnPlayer(); // On respawn le joueur
 					game.isPaused = false; // On dépause le jeu
@@ -372,7 +374,7 @@ int main()
 
 		if(player.isDead) // Si le joueur est mort ...
 		{
-			sound.principalSound.stop(); //On arrete la musique principale
+			sound.principalSound.pause(); //On arrete la musique principale
 			game.pauseText.setString("Game Over."); //On affecte un texte au text
 			game.pauseText.setOrigin(game.pauseText.getLocalBounds().width / 2, game.pauseText.getLocalBounds().height / 2); // On met l'origine du texte en son centre
 			window.draw(game.pauseText); // On affiche le game over
@@ -384,6 +386,7 @@ int main()
 
 		if (game.isPaused)
 		{
+			sound.principalSound.pause(); //On arrete la musique principale
 			game.pauseText.setString("Paused."); //On affecte un texte au text
 			game.pauseText.setOrigin(game.pauseText.getLocalBounds().width / 2, game.pauseText.getLocalBounds().height / 2); // On met l'origine du texte en son centre
 			window.draw(game.pauseText); // On affiche le pause
