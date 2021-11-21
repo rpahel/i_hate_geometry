@@ -189,18 +189,53 @@ void SpawnItems(Game& game, int wallThickness)
 		item.shape.setOutlineThickness(2.f); // Epaisseur des contours de la forme
 
 		int itemType = rand() % 2; // Chiffre entre 0 et X-1 qui va determiner le type d'item
+		int rand1 = rand() % 3;
+		int rand2 = rand() % 3;
 
  		switch (itemType)
 		{
 			case 0:
-				item.shape.setOutlineColor(sf::Color::White);
-				item.effect = "speed+";
-				break;
+				if (rand1 == 0)
+				{
+					item.shape.setOutlineColor(sf::Color::White);
+					item.effect = "speed+";
+					break;
+				}
+
+				else if (rand1 == 1)
+				{
+					item.shape.setOutlineColor(sf::Color::Red);
+					item.effect = "speed-";
+					break;
+
+				}
+				else if (rand1 == 2)
+				{
+					item.shape.setOutlineColor(sf::Color::Red);
+					item.effect = "fire+";
+					break;
+				}
 
 			case 1:
-				item.shape.setOutlineColor(sf::Color::Red);
-				item.effect = "speed-";
-				break;
+				if (rand2 == 0)
+				{
+					item.shape.setOutlineColor(sf::Color::Blue);
+					item.effect = "fire-";
+					break;
+				}
+
+				else if (rand2 == 1)
+				{
+					item.shape.setOutlineColor(sf::Color::Yellow);
+					item.effect = "enemy-";
+					break;
+				}
+				else if (rand2 == 2)
+				{
+					item.shape.setOutlineColor(sf::Color::Magenta);
+					item.effect = "enemySize+";
+					break;
+				}
 
 			default:
 				item.shape.setOutlineColor(sf::Color::White);

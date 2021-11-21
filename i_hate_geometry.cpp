@@ -52,7 +52,7 @@ int main()
 
 	game.currentLevel = 1; // Niveau actuel. Début = 1
 	game.numberOfEnemies = 1; // Nombre d'ennemis au premier niveau
-	game.numberOfItems = 2; // Nombre d'items
+	game.numberOfItems = 2; // Nombre d'items par level
 	game.isNewRoom = true; // Est-ce que c'est une nouvelle pièce ? Début = oui
 	game.isPaused = false; // Le jeu démarre pas en pause.
 
@@ -132,6 +132,7 @@ int main()
 			}
 		}
 
+		std::cout << player.fireRate << std::endl;
 		// Début setup
 		if(game.isNewRoom) // Quand c'est une nouvelle salle, on initialise le joueur et les ennemis.
 		{
