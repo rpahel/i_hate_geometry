@@ -175,7 +175,7 @@ int main()
 
 		for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque ennemi...
 		{
-			UpdateEnemyState(*it, game.deltaTime.asSeconds()); // On l'update
+			UpdateEnemyState(*it, game.deltaTime.asSeconds(), player.shape, game); // On l'update
 
 			if (it->moveCD <= 0) // Si moveCD est inférieur ou égal à 0...
 			{
@@ -184,28 +184,6 @@ int main()
 			}
 
 			MoveEnemies(*it, game.deltaTime.asSeconds()); // On déplace l'ennemi
-
-			if (it->fireCD <= 0 && !player.isDead) // Si fireCD est inférieur ou égal à 0...
-			{
-				//Peut mieux faire, à revoir
-				switch (it->type) // En fonction du type de l'ennemi...
-				{
-					case 0:
-						SpawnEnemiesBullet(game, *it, player.shape, 0); // On fait apparaitre une balle ennemie
-						break;
-					case 1:
-						for(int i=0; i < 2; ++i)
-						{
-							SpawnEnemiesBullet(game, *it, player.shape, i); // i représente le numéro de la balle, utile pour determiner sa direction
-						}
-						break;
-					default:
-						SpawnEnemiesBullet(game, *it, player.shape, 0);
-						break;
-				}
-
-				it->fireCD = it->fireRate; // On réinitialise fireCD
-			}
 		}
 
 		for (auto it = game.bullets.begin(); it != game.bullets.end(); ++it) // Pour chaque balle...

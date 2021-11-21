@@ -40,7 +40,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 	int i = 0; // Chiffre utile pour nommer l'ennemi
 	for (auto& enemy : game.enemies)
 	{
-		int enemyType = rand() % 2; // chiffre entre 0 et X-1 qui va determiner le type de l'ennemi
+		int enemyType = rand() % 3; // chiffre entre 0 et X-1 qui va determiner le type de l'ennemi
 
 		switch (enemyType) // On g�n�re un type d'ennemi en fonction de enemyType
 		{
@@ -50,7 +50,8 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setOutlineColor(sf::Color(255, 0, 255)); // Magenta
 				enemy.type = enemyType;
 				enemy.enemySpeed = 300.f;
-				enemy.fireRate = 1.f;
+				enemy.numberOfBullets = 1;
+				enemy.fireRate = .75f;
 				break;
 
 			case 1:
@@ -59,7 +60,18 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setOutlineColor(sf::Color(255, 165, 0)); // Orange
 				enemy.type = enemyType;
 				enemy.enemySpeed = 250.f;
-				enemy.fireRate = 1.2f;
+				enemy.numberOfBullets = 2;
+				enemy.fireRate = 1.f;
+				break;
+
+			case 2:
+				enemy.shape.setRadius(15.f);
+				enemy.shape.setOutlineThickness(2.f);
+				enemy.shape.setOutlineColor(sf::Color(47, 206, 0)); // Vert
+				enemy.type = enemyType;
+				enemy.enemySpeed = 300.f;
+				enemy.numberOfBullets = 3;
+				enemy.fireRate = 1.5f;
 				break;
 
 			default:
@@ -68,6 +80,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setOutlineColor(sf::Color(255, 0, 255)); // Magenta
 				enemy.type = 0;
 				enemy.enemySpeed = 300.f;
+				enemy.numberOfBullets = 1;
 				enemy.fireRate = 1;
 				break;
 		}
@@ -89,43 +102,38 @@ void SpawnEnemies(Game& game, int wallThickness)
 	}
 }
 
-void SpawnEnemiesBullet(Game& game, Enemy& enemy, sf::CircleShape& player, int bulletNumber)
+void SpawnEnemiesBullet(Game& game, Enemy& enemy, sf::CircleShape& player)
 {
-	EnemyBullet enemyBullet;
-
-	enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On d�finit la taille de la balle
-	enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour �tre au centre de la forme
-
-	enemyBullet.name = "enemyBullet" + std::to_string(game.enemyBullet.size());
-
-	enemyBullet.direction = player.getPosition() - enemy.shape.getPosition();
-	float amplitude = sqrtf(enemyBullet.direction.x * enemyBullet.direction.x + enemyBullet.direction.y * enemyBullet.direction.y); // longueur du vecteur
-	enemyBullet.direction = enemyBullet.direction / amplitude; // Normalisation du vecteur
-
-	switch (bulletNumber)
+	for(int i =0; i < enemy.numberOfBullets; ++i)
 	{
-		case 0:
-			break;
+		EnemyBullet enemyBullet;
 
-		case 1:
-			enemyBullet.direction = -enemyBullet.direction;
-			break;
+		enemyBullet.shape.setSize(sf::Vector2f(2.f, 15.f)); // On d�finit la taille de la balle
+		enemyBullet.shape.setOrigin(enemyBullet.shape.getSize().x / 2, enemyBullet.shape.getSize().y / 2); // On change l'origine du rectangle pour �tre au centre de la forme
 
-		default:
-			break;
+		enemyBullet.name = "enemyBullet" + std::to_string(game.enemyBullet.size());
+
+		enemyBullet.direction = player.getPosition() - enemy.shape.getPosition();
+		float amplitude = sqrtf(enemyBullet.direction.x * enemyBullet.direction.x + enemyBullet.direction.y * enemyBullet.direction.y); // longueur du vecteur
+		enemyBullet.direction = enemyBullet.direction / amplitude; // Normalisation du vecteur
+
+		float rot = (i * 2.f) * 3.141592f / enemy.numberOfBullets;
+		sf::Vector2f trigDir(cos(rot), sin(rot));
+		float angle = atan2(enemyBullet.direction.y, enemyBullet.direction.x) - atan2(trigDir.y, trigDir.x);
+		enemyBullet.direction = sf::Vector2f(cos(angle), sin(angle));
+
+		enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
+		enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg
+		enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tourn�e en direction de.. sa direction
+		enemyBullet.shape.setPosition(enemy.shape.getPosition()); // La balle sort du centre du cercle
+		enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
+		enemyBullet.shape.setOutlineThickness(2.f); // L'�paisseur des contours de la balle
+		enemyBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
+
+		enemyBullet.bulletSpeed = 600.f;
+
+		game.enemyBullet.push_back(enemyBullet); // On rajoute la balle � la liste
 	}
-
-	enemyBullet.rotation = std::atan2(enemyBullet.direction.x, enemyBullet.direction.y); // en radian
-	enemyBullet.rotation = -enemyBullet.rotation * (180.f / 3.1415f); // Conversion en deg
-	enemyBullet.shape.setRotation(enemyBullet.rotation); // La balle est tourn�e en direction de.. sa direction
-	enemyBullet.shape.setPosition(enemy.shape.getPosition()); // La balle sort du centre du cercle
-	enemyBullet.shape.setFillColor(sf::Color::Transparent); // La couleur de la balle
-	enemyBullet.shape.setOutlineThickness(2.f); // L'�paisseur des contours de la balle
-	enemyBullet.shape.setOutlineColor(sf::Color::Yellow); // Couleur des contours de la balle
-
-	enemyBullet.bulletSpeed = 600.f;
-
-	game.enemyBullet.push_back(enemyBullet); // On rajoute la balle � la liste
 }
 
 void SpawnBullet(Game& game, const Player& player, const Mouse& mouse)

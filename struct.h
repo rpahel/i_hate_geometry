@@ -19,6 +19,7 @@ struct Enemy {
 	sf::CircleShape shape;
 	sf::Vector2f direction;
 	float enemySpeed;
+	int numberOfBullets;
 	float fireRate;
 	float fireCD;
 	float moveDuration;

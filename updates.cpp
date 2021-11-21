@@ -2,17 +2,22 @@
 #include "struct.h"
 #include "spawns.h"
 #include "maths.h"
-#include <iostream>
 
 void UpdatePlayerState(Player& player, float deltaTime)
 {
 	player.fireCD -= deltaTime;
 }
 
-void UpdateEnemyState(Enemy& enemy, float deltaTime)
+void UpdateEnemyState(Enemy& enemy, float deltaTime, sf::CircleShape& player, Game& game)
 {
 	enemy.fireCD -= deltaTime;
 	enemy.moveCD -= deltaTime;
+
+	if(enemy.fireCD <= 0)
+	{
+		SpawnEnemiesBullet(game, enemy, player);
+		enemy.fireCD = enemy.fireRate;
+	}
 }
 
 void UpdateMousePos(Mouse& mouse, const sf::RenderWindow& window)
