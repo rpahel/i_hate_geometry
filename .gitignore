@@ -348,3 +348,17 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+Debug/i_hate_geometry.exe
+
+Debug/i_hate_geometry.exe.recipe
+
+Debug/i_hate_geometry.tlog/CL.read.1.tlog
+
+Debug/i_hate_geometry.tlog/CL.write.1.tlog
+
+Debug/i_hate_geometry.tlog/i_hate_geometry.lastbuildstate
+
+Debug/i_hate_geometry.tlog/link.read.1.tlog
+
+Debug/vc142.idb
