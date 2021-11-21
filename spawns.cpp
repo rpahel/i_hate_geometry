@@ -48,7 +48,6 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setRadius(20.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(255, 0, 255)); // Magenta
-				enemy.type = enemyType;
 				enemy.enemySpeed = 300.f;
 				enemy.numberOfBullets = 1;
 				enemy.fireRate = .5f;
@@ -58,7 +57,6 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setRadius(25.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(255, 165, 0)); // Orange
-				enemy.type = enemyType;
 				enemy.enemySpeed = 250.f;
 				enemy.numberOfBullets = 3;
 				enemy.fireRate = 2.f;
@@ -68,7 +66,6 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setRadius(30.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(47, 206, 0)); // Vert
-				enemy.type = enemyType;
 				enemy.enemySpeed = 200.f;
 				enemy.numberOfBullets = 5;
 				enemy.fireRate = 3.f;
@@ -78,7 +75,6 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.shape.setRadius(20.f);
 				enemy.shape.setOutlineThickness(2.f);
 				enemy.shape.setOutlineColor(sf::Color(255, 0, 255)); // Magenta
-				enemy.type = 0;
 				enemy.enemySpeed = 300.f;
 				enemy.numberOfBullets = 1;
 				enemy.fireRate = 1;
@@ -91,7 +87,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 		enemy.shape.setOrigin(enemy.shape.getRadius(), enemy.shape.getRadius()); // On mets son point d'origine au centre de la forme
 		enemy.shape.setPosition(rand() % (1200 - wallThickness * 2) + wallThickness, rand() % (900 - wallThickness * 2) + wallThickness); // On le fait appara�tre � un endroit au hasard � l'int�rieur des murs
 
-		enemy.name = "enemy_" + std::to_string(i) + "_" + "type_" + std::to_string(enemy.type); // Nom de l'ennemi
+		enemy.name = "enemy_" + std::to_string(i); // Nom de l'ennemi
 
 		enemy.direction = RandomDirection(); // On lui donne une direction de d�part al�atoire
 

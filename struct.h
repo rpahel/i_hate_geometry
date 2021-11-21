@@ -15,7 +15,6 @@ struct Player {
 
 struct Enemy {
 	std::string name;
-	int type;
 	sf::CircleShape shape;
 	sf::Vector2f direction;
 	float enemySpeed;
