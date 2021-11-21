@@ -131,8 +131,7 @@ int main()
 				}
 			}
 		}
-
-		std::cout << player.fireRate << std::endl;
+		
 		// Début setup
 		if(game.isNewRoom) // Quand c'est une nouvelle salle, on initialise le joueur et les ennemis.
 		{

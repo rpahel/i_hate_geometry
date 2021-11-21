@@ -51,7 +51,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.type = enemyType;
 				enemy.enemySpeed = 300.f;
 				enemy.numberOfBullets = 1;
-				enemy.fireRate = .75f;
+				enemy.fireRate = .5f;
 				break;
 
 			case 1:
@@ -61,7 +61,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.type = enemyType;
 				enemy.enemySpeed = 250.f;
 				enemy.numberOfBullets = 3;
-				enemy.fireRate = 1.f;
+				enemy.fireRate = 2.f;
 				break;
 
 			case 2:
@@ -71,7 +71,7 @@ void SpawnEnemies(Game& game, int wallThickness)
 				enemy.type = enemyType;
 				enemy.enemySpeed = 200.f;
 				enemy.numberOfBullets = 5;
-				enemy.fireRate = 2.f;
+				enemy.fireRate = 3.f;
 				break;
 
 			default:
@@ -188,77 +188,63 @@ void SpawnItems(Game& game, int wallThickness)
 		item.shape.setFillColor(sf::Color::Transparent); // Couleur de la forme
 		item.shape.setOutlineThickness(2.f); // Epaisseur des contours de la forme
 
-		int itemType = rand() % 2; // Chiffre entre 0 et X-1 qui va determiner le type d'item
-		int rand1 = rand() % 3;
-		int rand2 = rand() % 3;
+		int itemType = rand() % 5; // Chiffre entre 0 et X-1 qui va determiner le type d'item
+		//int itemType = 4; // Utile pour les tests
 
  		switch (itemType)
 		{
 			case 0:
-				if (rand1 == 0)
-				{
-					item.shape.setOutlineColor(sf::Color::White);
-					item.effect = "speed+";
-					break;
-				}
-
-				else if (rand1 == 1)
-				{
-					item.shape.setOutlineColor(sf::Color::Red);
-					item.effect = "speed-";
-					break;
-
-				}
-				else if (rand1 == 2)
-				{
-					item.shape.setOutlineColor(sf::Color::Red);
-					item.effect = "fire+";
-					break;
-				}
+				item.shape.setOutlineColor(sf::Color::White);
+				item.effect = "speed+";
+				break;
 
 			case 1:
-				if (rand2 == 0)
-				{
-					item.shape.setOutlineColor(sf::Color::Blue);
-					item.effect = "fire-";
-					break;
-				}
+				item.shape.setOutlineColor(sf::Color::Red);
+				item.effect = "speed-";
+				break;
 
-				else if (rand2 == 1)
+			case 2:
+				item.shape.setOutlineColor(sf::Color::White);
+				item.effect = "fire+";
+				break;
+
+			case 3:
+				item.shape.setOutlineColor(sf::Color::Red);
+				item.effect = "fire-";
+				break;
+
+			case 4:
+				if(game.currentLevel % 5 == 0) // Si le level est un level de boss, on change l'effet sinon ça crash
 				{
-					item.shape.setOutlineColor(sf::Color::Yellow);
+					item.shape.setOutlineColor(sf::Color::White);
+					item.effect = "fire+";
+				}
+				else
+				{
+					item.shape.setOutlineColor(sf::Color::White);
 					item.effect = "enemy-";
-					break;
 				}
-				else if (rand2 == 2)
-				{
-					item.shape.setOutlineColor(sf::Color::Magenta);
-					item.effect = "enemySize+";
-					break;
-				}
+				break;
 
 			default:
 				item.shape.setOutlineColor(sf::Color::White);
 				item.effect = "speed+";
 				break;
-
-			//case 2: 
-				//item qui fait tirer plus vite (bonus)
-			//case 3:
-				//item qui grossit les ennemis (bonus)
-			//case 4:
-				//item item qui slow les ennemis (bonus)
-			//case 5:
-				//item qui accelere les ennemis (malus)
-			//case 6:
-				//item qui fait tirer moins vite (malus)
 		}
 
 		item.itemText.setFont(game.font); // On assigne le font au texte
-		item.itemText.setPosition(item.shape.getPosition().x - 30, item.shape.getPosition().y - 40); // On assigne une position au texte
 		item.itemText.setCharacterSize(18); // On assigne une taille de police
 		item.itemText.setString(item.effect); //On affecte un texte au text
 		item.itemText.setFillColor(item.shape.getOutlineColor());
+		item.itemText.setOrigin(item.itemText.getLocalBounds().width / 2, item.itemText.getLocalBounds().height / 2);
+		if(item.shape.getPosition().y - 40 > 20)
+		{
+			item.itemText.setPosition(item.shape.getPosition().x, item.shape.getPosition().y - 40); // On assigne une position au texte
+		}
+		else
+		{
+			item.itemText.setPosition(item.shape.getPosition().x, item.shape.getPosition().y + 20); // On assigne une position au texte
+		}
 
 		++i;
 	}

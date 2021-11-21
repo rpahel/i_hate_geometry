@@ -151,36 +151,30 @@ void CheckPlayerBulletCollision(Player& player, Game &game)
 // Check des collisions Joueur - Item
 bool CheckPlayerItemCollision(Player& player, Item& item, Game& game)
 {
-	float D = pyth(player.shape.getPosition().x - item.shape.getPosition().x, player.shape.getPosition().y - item.shape.getPosition().y); // Distance entre le joueur et l'item
+	sf::FloatRect playerBox = player.shape.getGlobalBounds();
+	sf::FloatRect itemBox = item.shape.getGlobalBounds();
 
-	if (D <= player.shape.getRadius()) // Si le joueur et l'item se superposent...
+	if (playerBox.intersects(itemBox)) // Si le joueur et l'item se superposent...
 	{
 		if(item.effect == "speed+") // Si l'effet de l'item est X...
 		{
-			player.playerSpeed *= 2.f; // On double la vitesse du joueur
+			player.playerSpeed += 200.f; // On augmente la vitesse du joueur
 		}
 		else if(item.effect == "speed-") // Si l'effet de l'item est X...
 		{
-			player.playerSpeed *= .5f; // On diminue sa vitesse de moitié
+			player.playerSpeed -= 200.f; // On diminue sa vitesse
 		}
 		else if (item.effect == "fire+") // Si l'effet de l'item est X...
 		{
-			player.fireRate -= .05f; // On diminue la fireRate du joueur
+			player.fireRate *= .5f; // On diminue la fireRate du joueur
 		}
 		else if (item.effect == "fire-") // Si l'effet de l'item est X...
 		{
-			player.fireRate += .05f; // On augmente la fireRate du joueur
+			player.fireRate *= 2.f; // On augmente la fireRate du joueur
 		}
 		else if (item.effect == "enemy-") // Si l'effet de l'item est X...
 		{
-			game.enemies.pop_back();
-		}
-		else if (item.effect == "enemySize+") // Si l'effet de l'item est X...
-		{
-			for (auto it = game.enemies.begin(); it != game.enemies.end(); ++it) // Pour chaque enemy...
-			{
-				it->shape.setRadius(it->shape.getRadius() + 5.f);  // On agrandi la size des ennemi
-			}
+			game.enemies.pop_back(); // Retire un ennemi de la liste
 		}
 
 		return true;
