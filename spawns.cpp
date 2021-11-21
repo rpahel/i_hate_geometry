@@ -497,6 +497,7 @@ void LoadLevel(Game& game, Player& player, int level)
 	game.bossShields.clear();
 	game.bossCacs.clear();
 	player.playerSpeed = 300.f;
+	player.fireRate = .25f;
 	player.shape.setPosition(600, 450);
 	game.currentLevel = level;
 	game.levelText.setString("level " + std::to_string(game.currentLevel));
