@@ -366,3 +366,11 @@ Debug/vc142.idb
 Debug/i_hate_geometry.tlog/CL.command.1.tlog
 
 Debug/i_hate_geometry.tlog/link.write.1.tlog
+
+Release/i_hate_geometry.exe
+
+Release/i_hate_geometry.tlog/CL.read.1.tlog
+
+Release/i_hate_geometry.tlog/i_hate_geometry.write.1u.tlog
+
+Release/i_hate_geometry.tlog/link.read.1.tlog

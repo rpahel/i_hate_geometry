@@ -96,15 +96,9 @@ struct BossShield {
 	sf::Vector2f direction;
 };
 
-struct soundManager {
+struct Theme {
 	sf::SoundBuffer principalBuffer;
 	sf::Sound principalSound;
-	sf::SoundBuffer playerShootBuffer;
-	sf::Sound playerShootSound;
-	float playerShootSoundLifetime;
-	sf::SoundBuffer enemyShootBuffer;
-	sf::Sound enemyShootSound;
-	float enemyShootLifetime;
 };
 
 struct Game {
@@ -116,8 +110,6 @@ struct Game {
 	std::list<Boss> bosses;
 	std::list<BossShield> bossShields;
 	std::list<BossCAC> bossCacs;
-	std::list<soundManager> playerShootSound;
-	std::list<soundManager> enemyShootSound;
 	int currentLevel;
 	bool isNewRoom;
 	sf::Font font;

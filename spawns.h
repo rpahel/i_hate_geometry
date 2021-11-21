@@ -13,4 +13,4 @@ void SpawnBossShield(Boss& boss, Game& game);
 void SpawnBossBullet(Game& game, Boss& boss, int numberOfBullets = 1);
 void SpawnBossCAC(Game& game, Boss& boss, int numberOfBossCACs = 1);
 void LoadLevel(Game& game, Player& player, int level);
-void LoadSong(Game& game, std::string path, float deltaTime, int number);
+void LoadSong(Game& game, std::string path, int number);

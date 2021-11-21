@@ -43,11 +43,12 @@ int main()
 	Game game; // On créer la struct game contenant toutes les listes et autres paramètres de la partie.
 	Player player; // On créer la struct player
 	Mouse mouse; // On créer la struct mouse
-	soundManager sound; //On créer la struct sound
+	Theme sound; //On créer la struct sound
 	
 	sound.principalBuffer.loadFromFile(getAssetsPath(getAppPath()) + "song1.wav");
 	sound.principalSound.setBuffer(sound.principalBuffer);
 	sound.principalSound.setVolume(75.f);
+	sound.principalSound.setLoop(true);
 	sound.principalSound.play();
 
 	game.currentLevel = 1; // Niveau actuel. Début = 1
@@ -254,36 +255,7 @@ int main()
 			if (player.fireCD <= 0.f && !player.isDead && !game.isPaused) // Si fireCD est inférieur ou égal à 0 et que le joueur n'est pas mort et que le jeu n'est pas en pause...
 			{
 				SpawnBullet(game, player, mouse); // On spawn une balle
-				//LoadSong(game, getAssetsPath(getAppPath()) + "playerShoot.wav", game.deltaTime.asSeconds(), 0);
 				player.fireCD = player.fireRate; // On remet fireCoolDown à fireRate
-			}
-		}
-
-		for (std::list<soundManager>::iterator it = game.playerShootSound.begin(); it != game.playerShootSound.end();)
-		{
-			it->playerShootSoundLifetime -= game.deltaTime.asSeconds(); // On réduit deltaTime de lifeTime du son du tir du joueur
-
-			if (it->playerShootSoundLifetime <= 0) // Quand lifeTime atteint 0...
-			{
-				it = game.playerShootSound.erase(it); // On efface le son de la liste et on se met sur le nouveau son
-			}
-			else
-			{
-				++it; // On passe au prochain son
-			}
-		}
-
-		for (std::list<soundManager>::iterator it = game.enemyShootSound.begin(); it != game.enemyShootSound.end();)
-		{
-			it->enemyShootLifetime -= game.deltaTime.asSeconds(); // On réduit deltaTime de lifeTime du son du tir de l'ennemi
-
-			if (it->enemyShootLifetime <= 0) // Quand lifeTime atteint 0...
-			{
-				it = game.enemyShootSound.erase(it); // On efface le son de la liste et on se met sur le nouveau son
-			}
-			else
-			{
-				++it; // On passe au prochain son
 			}
 		}
 			
